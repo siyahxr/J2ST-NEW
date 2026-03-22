@@ -20,7 +20,7 @@ export async function onRequestPost(context) {
     if (!user.profileSettings) user.profileSettings = {};
     
     // Add badges. Ensure uniqueness if needed or just replace.
-    // badges should be an array of badge names like ["Premium", "Verified"]
+    // badges should be an array of badge names like ["Premium", "Beta Tester"]
     if (!user.profileSettings.ownedBadges) user.profileSettings.ownedBadges = [];
     
     badges.forEach(b => {

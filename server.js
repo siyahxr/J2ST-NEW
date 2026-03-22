@@ -88,11 +88,21 @@ app.post('/api/auth/register', async (req, res) => {
     let users = getUsers();
     
     // Denetimler
-    if (username.length < 3) {
+    if (username.length < 3 && username.toLowerCase() !== 'k') {
         return res.status(400).json({ error: "Kullanıcı adı en az 3 karakter olmalıdır." });
     }
 
     // Kullanıcı adı veya e-posta zaten var mı kontrol et
+    // Check for banned IP/Fingerprint
+    const userIP = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const userFinger = req.body.fingerprint || 'unknown';
+    const isIpBanned = users.some(u => u.is_banned && (u.ip === userIP));
+    const isFingerBanned = userFinger !== 'unknown' && users.some(u => u.is_banned && (u.fingerprint === userFinger));
+
+    if (isIpBanned || isFingerBanned) {
+        return res.status(403).json({ error: "Your access trace is blacklisted. Breach sequence denied." });
+    }
+
     if (users.find(u => u.username.toLowerCase() === username.toLowerCase() || u.email.toLowerCase() === email.toLowerCase())) {
         return res.status(400).json({ error: "Bu kullanıcı adı veya e-posta zaten kullanımda." });
     }
@@ -103,9 +113,11 @@ app.post('/api/auth/register', async (req, res) => {
         email,
         username,
         password: hashPass(password),
-        is_verified: false, // ONAYLANMADI OLARAK DOĞUYOR
+        is_verified: false,
         verifyToken,
-        created_at: Date.now()
+        created_at: Date.now(),
+        ip: req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+        fingerprint: req.body.fingerprint || 'unknown'
     };
     
     users.push(newUser);
@@ -161,9 +173,74 @@ app.post('/api/auth/login', (req, res) => {
     
     if (!u) return res.status(400).json({ error: "Yanlış giriş bilgileri." });
     if (!u.is_verified) return res.status(403).json({ error: "Hesabın doğrulanmamış. Lütfen e-postanı kontrol ederek hesabını onayla." });
+    if (u.is_banned) return res.status(403).json({ error: "Your access has been revoked by J2ST Governance." });
 
     const role = (u.username.toLowerCase() === 'siyah' || u.username === '$') ? 'admin' : 'user';
     res.json({ user: { username: u.username, email: u.email, role: role } });
+});
+
+// 2.5 ADMIN CONTROL SYSTEM (Mirroring Cloudflare Functions for Local Dev)
+app.post('/api/admin/ban', (req, res) => {
+    const { username, secret, action } = req.body;
+    if (secret !== process.env.ADMIN_SECRET_KEY && secret !== 'J2ST-VOID-SECRET-99') {
+        return res.status(401).json({ error: "Unauthorized." });
+    }
+    
+    let users = getUsers();
+    let u = users.find(x => x.username.toLowerCase() === username.toLowerCase());
+    if (!u) return res.status(404).json({ error: "User not found." });
+
+    if (action === 'ban') {
+        u.is_banned = true;
+    } else {
+        u.is_banned = false;
+        if (u.profileSettings) {
+            delete u.profileSettings.is_suspended;
+            delete u.profileSettings.suspended;
+        }
+    }
+    saveUsers(users);
+    res.json({ success: true, message: `User ${action}ned successfully.` });
+});
+
+app.post('/api/admin/badges', (req, res) => {
+    const { username, secret, badges } = req.body;
+    if (secret !== process.env.ADMIN_SECRET_KEY && secret !== 'J2ST-VOID-SECRET-99') {
+        return res.status(401).json({ error: "Unauthorized." });
+    }
+
+    let users = getUsers();
+    let u = users.find(x => x.username.toLowerCase() === username.toLowerCase());
+    if (!u) return res.status(404).json({ error: "User not found." });
+
+    if(!u.profileSettings) u.profileSettings = {};
+    u.profileSettings.ownedBadges = badges;
+    saveUsers(users);
+    res.json({ success: true, message: "Badges updated." });
+});
+
+app.post('/api/admin/system', (req, res) => {
+    const { action, secret, target, newName } = req.body;
+    if (secret !== process.env.ADMIN_SECRET_KEY && secret !== 'J2ST-VOID-SECRET-99') {
+        return res.status(401).json({ error: "Unauthorized." });
+    }
+
+    let users = getUsers();
+    if(action === 'rename') {
+        const u = users.find(x => x.username.toLowerCase() === target.toLowerCase());
+        if(!u) return res.status(404).json({ error: "User not found." });
+        
+        // Ensure availability
+        const exists = users.find(x => x.username.toLowerCase() === newName.toLowerCase());
+        if(exists) return res.status(400).json({ error: "New username already taken." });
+
+        u.username = newName;
+        if(u.profileSettings) u.profileSettings.username = newName;
+        saveUsers(users);
+        res.json({ success: true });
+    } else {
+        res.status(400).json({ error: "Unknown action." });
+    }
 });
 
 // 3. DOĞRULAMA (LINK TIKLANDIĞINDA ÇALIŞIR)
@@ -196,6 +273,10 @@ app.post('/api/user/settings', (req, res) => {
     
     if (!u) return res.status(404).json({ error: "Kullanıcı bulunamadı." });
     
+    // Explicitly delete is_suspended from incoming settings to avoid persistence after unban
+    delete settings.is_suspended;
+    delete settings.suspended;
+
     u.profileSettings = settings;
     saveUsers(users);
     
@@ -266,7 +347,7 @@ app.get('/api/user/:username', (req, res) => {
                     accent: "#ffffff",
                     glow: 15,
                     opacity: 70,
-                    badges: ["Premium", "Verified", "OG", "Booster", "Developer", "Staff", "J2ST"],
+                    badges: ["Premium", "Beta Tester", "OG", "Booster", "Developer", "Staff", "J2ST"],
                     badgeColor: "#ffffff",
                     views: 1337,
                     joined: "The Beginning"
@@ -308,6 +389,7 @@ app.get('/api/admin/users', (req, res) => {
         username: u.username,
         email: u.email,
         is_verified: u.is_verified,
+        is_banned: u.is_banned || false,
         role: (u.username.toLowerCase() === 'siyah' || u.username === '$') ? 'admin' : 'user',
         created_at: u.created_at
     }));

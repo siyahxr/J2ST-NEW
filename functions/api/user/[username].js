@@ -42,7 +42,7 @@ export async function onRequestGet(context) {
                 accent: "#ffffff",
                 glow: 15,
                 opacity: 70,
-                badges: ["Premium", "Verified", "OG", "Booster", "Developer", "Staff", "J2ST"],
+                badges: ["Premium", "Beta Tester", "OG", "Booster", "Developer", "Staff", "J2ST"],
                 badgeColor: "#ffffff",
                 views: 1337,
                 joined: "The Beginning"
@@ -82,7 +82,7 @@ export async function onRequestGet(context) {
 
     // OMNIPOTENCE: Give admin status, but respect saved aesthetics
     if (isMaster) {
-        const eliteBadges = ["Premium", "Verified", "OG", "Booster", "Developer", "Staff", "J2ST"];
+        const eliteBadges = ["Premium", "Beta Tester", "OG", "Booster", "Developer", "Staff", "J2ST"];
         if (!profile.badges) profile.badges = [];
         // Unique merge
         eliteBadges.forEach(b => {

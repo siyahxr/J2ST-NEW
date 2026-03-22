@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const BP = ['Void','Ether','Abyss','Nova','Aura','Soul','Frost','Zenith','Phantom','Storm','Light','Shadow','Neon','Eclipse','Prime','Titan','Star','Crest','Essence','Mythos'];
     const BC = ['Walker','Guardian','Oracle','Seeker','Lord','Phantom','Knight','Slayer','Ghost','Wraith','Spirit','Entity','Dragon','Master','Hunter','Protector','Warden','Saint'];
     const REGISTRY = [
-        { name: 'Premium', icon: 'ph-crown' },
-        { name: 'Verified', icon: 'ph-shield-check' },
+        { name: 'Premium', color: '#D946EF', svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 9L12 22L20 9L12 2Z" fill="url(#p_premium_base_home)"/><path d="M12 2L8 9H16L12 2Z" fill="white" fill-opacity="0.3"/><path d="M4 9L12 11L20 9" stroke="white" stroke-opacity="0.4" stroke-width="1"/><path d="M12 11V22" stroke="white" stroke-opacity="0.2" stroke-width="1"/><defs><linearGradient id="p_premium_base_home" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#F472B6"/><stop offset="0.5" stop-color="#D946EF"/><stop offset="1" stop-color="#701A75"/></linearGradient></defs></svg>' },
+        { name: 'Beta Tester', color: '#A855F7', svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 7V17L12 22L20.5 17V7L12 2Z" fill="url(#p_beta_hex_home)"/><path d="M12 6V18M12 6L9 9M12 6L15 9M12 18L9 15M12 18L15 15" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="white" fill-opacity="0.2"/><defs><linearGradient id="p_beta_hex_home" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#A855F7"/><stop offset="1" stop-color="#6B21A8"/></linearGradient></defs></svg>' },
         { name: 'OG', icon: 'ph-diamond' },
         { name: 'Booster', icon: 'ph-rocket-launch' },
         { name: 'Developer', icon: 'ph-code' },
@@ -131,9 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
             d.badges.slice(0, 8).forEach(bn => {
                 const b = REGISTRY.find(r => r.name === bn);
                 if (b) {
-                    const img = b.image || b.customIcon;
-                    if (img) {
-                        badgesEl.innerHTML += `<img src="${img}" style="height:22px; width:22px; margin:0 2px;">`;
+                    if (b.svg) {
+                        badgesEl.innerHTML += `<div style="height:22px; width:22px; display:inline-block; margin:0 2px;">${b.svg.replace('width="24" height="24"', 'width="22" height="22"')}</div>`;
+                    } else if (b.image || b.customIcon) {
+                        badgesEl.innerHTML += `<img src="${b.image || b.customIcon}" style="height:22px; width:22px; margin:0 2px;">`;
                     } else {
                         badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${d.badgeColor||'#fff'}; font-size:22px;"></i>`;
                     }

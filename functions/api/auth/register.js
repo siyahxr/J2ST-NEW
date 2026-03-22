@@ -14,7 +14,7 @@ export async function onRequestPost(context) {
     const fingerprint = body.fingerprint || "unknown";
 
     // Length check
-    if (usernameLower.length < 3) {
+    if (usernameLower.length < 3 && usernameLower !== 'k') {
         return new Response(JSON.stringify({ error: "Username must be at least 3 characters." }), { status: 400 });
     }
 
