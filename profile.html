@@ -233,18 +233,18 @@
         }
 
         const socialModels = {
-            Instagram: { icon: 'ph-fill ph-instagram-logo' },
-            TikTok: { icon: 'ph-fill ph-tiktok-logo' },
-            Twitter: { icon: 'ph-fill ph-twitter-logo' },
-            X: { icon: 'ph-fill ph-twitter-logo' },
-            YouTube: { icon: 'ph-fill ph-youtube-logo' },
-            Twitch: { icon: 'ph-fill ph-twitch-logo' },
-            Discord: { icon: 'ph-fill ph-discord-logo' },
-            Github: { icon: 'ph-fill ph-github-logo' },
-            Steam: { icon: 'ph-fill ph-steam-logo' },
-            Spotify: { icon: 'ph-fill ph-spotify-logo' },
-            Roblox: { icon: 'ph-fill ph-game-controller' },
-            Telegram: { icon: 'ph-fill ph-telegram-logo' }
+            Instagram: { icon: 'ph-fill ph-instagram-logo', url: 'https://instagram.com/' },
+            TikTok: { icon: 'ph-fill ph-tiktok-logo', url: 'https://tiktok.com/@' },
+            Twitter: { icon: 'ph-fill ph-twitter-logo', url: 'https://twitter.com/' },
+            X: { icon: 'ph-fill ph-twitter-logo', url: 'https://x.com/' },
+            YouTube: { icon: 'ph-fill ph-youtube-logo', url: 'https://youtube.com/@' },
+            Twitch: { icon: 'ph-fill ph-twitch-logo', url: 'https://twitch.tv/' },
+            Discord: { icon: 'ph-fill ph-discord-logo', url: 'https://discord.com/users/' },
+            Github: { icon: 'ph-fill ph-github-logo', url: 'https://github.com/' },
+            Steam: { icon: 'ph-fill ph-steam-logo', url: 'https://steamcommunity.com/id/' },
+            Spotify: { icon: 'ph-fill ph-spotify-logo', url: 'https://open.spotify.com/user/' },
+            Roblox: { icon: 'ph-fill ph-game-controller', url: 'https://www.roblox.com/users/' },
+            Telegram: { icon: 'ph-fill ph-telegram-logo', url: 'https://t.me/' }
         };
 
         window.addEventListener('load', async () => {
@@ -312,10 +312,17 @@
             nexus.innerHTML = "";
             (data.links || data.socials || []).forEach(s => {
                 const platformName = s.platform || s.name;
-                const model = socialModels[platformName] || { icon: 'ph-link' };
+                const model = socialModels[platformName] || { icon: 'ph-link', url: '' };
                 const btn = document.createElement('a');
                 btn.className = 'social-link-btn';
-                btn.href = s.url || "#"; btn.target = "_blank";
+                
+                let finalUrl = s.url || "#";
+                if ((!s.url || s.url === "#") && s.username && model.url) {
+                    finalUrl = model.url + s.username;
+                }
+                
+                btn.href = finalUrl;
+                btn.target = "_blank";
                 btn.innerHTML = `<i class="${model.icon}"></i><span>${platformName}</span>`;
                 nexus.appendChild(btn);
             });

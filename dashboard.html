@@ -431,18 +431,18 @@
 
     <script>
         const socialModels = {
-            Instagram: { icon: 'ph-fill ph-instagram-logo' },
-            TikTok: { icon: 'ph-fill ph-tiktok-logo' },
-            Twitter: { icon: 'ph-fill ph-twitter-logo' },
-            X: { icon: 'ph-fill ph-twitter-logo' },
-            YouTube: { icon: 'ph-fill ph-youtube-logo' },
-            Twitch: { icon: 'ph-fill ph-twitch-logo' },
-            Discord: { icon: 'ph-fill ph-discord-logo' },
-            Github: { icon: 'ph-fill ph-github-logo' },
-            Steam: { icon: 'ph-fill ph-steam-logo' },
-            Spotify: { icon: 'ph-fill ph-spotify-logo' },
-            Roblox: { icon: 'ph-fill ph-game-controller' },
-            Telegram: { icon: 'ph-fill ph-telegram-logo' }
+            Instagram: { icon: 'ph-fill ph-instagram-logo', url: 'https://instagram.com/' },
+            TikTok: { icon: 'ph-fill ph-tiktok-logo', url: 'https://tiktok.com/@' },
+            Twitter: { icon: 'ph-fill ph-twitter-logo', url: 'https://twitter.com/' },
+            X: { icon: 'ph-fill ph-twitter-logo', url: 'https://x.com/' },
+            YouTube: { icon: 'ph-fill ph-youtube-logo', url: 'https://youtube.com/@' },
+            Twitch: { icon: 'ph-fill ph-twitch-logo', url: 'https://twitch.tv/' },
+            Discord: { icon: 'ph-fill ph-discord-logo', url: 'https://discord.com/users/' },
+            Github: { icon: 'ph-fill ph-github-logo', url: 'https://github.com/' },
+            Steam: { icon: 'ph-fill ph-steam-logo', url: 'https://steamcommunity.com/id/' },
+            Spotify: { icon: 'ph-fill ph-spotify-logo', url: 'https://open.spotify.com/user/' },
+            Roblox: { icon: 'ph-fill ph-game-controller', url: 'https://www.roblox.com/users/' },
+            Telegram: { icon: 'ph-fill ph-telegram-logo', url: 'https://t.me/' }
         };
 
         const session = JSON.parse(localStorage.getItem('j2st_session_v2') || '{}');
@@ -1073,7 +1073,7 @@
             preview.innerHTML = '';
 
             (userData.links || []).forEach(link => {
-                const model = socialModels[link.platform] || { icon: 'ph-link', url: '#' };
+                const model = socialModels[link.platform] || { icon: 'ph-link', url: '' };
                 const row = document.createElement('div');
                 row.className = 'glass-card';
                 row.style.padding = '12px 20px';
@@ -1087,7 +1087,15 @@
                 `;
                 editor.appendChild(row);
 
-                const pl = document.createElement('div');
+                const pl = document.createElement('a');
+                pl.className = 'social-link-btn';
+                pl.style.textDecoration = 'none';
+                let finalUrl = link.url || "#";
+                if ((!link.url || link.url === "#") && link.username && model.url) {
+                    finalUrl = model.url + link.username;
+                }
+                pl.href = finalUrl;
+                pl.target = "_blank";
                 pl.innerHTML = `<i class="ph ${model.icon}" style="font-size:20px; color:${userData.accent}; opacity:0.8;"></i>`;
                 preview.appendChild(pl);
             });
@@ -1128,9 +1136,17 @@
             const username = document.getElementById('modal-username-input').value.trim();
             if(!username) return alert("Please enter a valid signature.");
             
+            const model = socialModels[selectedPlatform] || { url: '#' };
+            let finalUrl = model.url + username;
+            
+            // Special cases for URL cleanup
+            if (username.startsWith('https://') || username.startsWith('http://')) {
+                finalUrl = username;
+            }
+
             const id = Date.now();
             if(!userData.links) userData.links = [];
-            userData.links.push({ id, platform: selectedPlatform, username });
+            userData.links.push({ id, platform: selectedPlatform, username, url: finalUrl });
             
             renderLinks();
             saveEverything();
@@ -1578,6 +1594,7 @@
 
             // Admin Logic
             if (targetUser === '$' || targetUser === 'siyah' || userData.role === 'admin') {
+                userData.role = 'admin';
                 const eliteBadges = ['Premium', 'Verified', 'OG', 'Booster', 'Developer', 'Staff', 'J2ST'];
                 userData.ownedBadges = eliteBadges;
                 if (!userData.badges || userData.badges.length === 0) userData.badges = ['Premium', 'Verified'];

