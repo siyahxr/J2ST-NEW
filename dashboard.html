@@ -458,7 +458,7 @@
             nameEffect: '',
             opacity: 70,
             glow: 15,
-            avatar: 'assest/icons/user_dragon.png',
+            avatar: "avatar.webp", 
             banner: '',
             badges: ['Verified'],
             ownedBadges: ['Verified'],
@@ -1562,7 +1562,11 @@
                     })
                 });
                 const resData = await response.json();
-                // We trust the visual feedback in __originalSave
+                if (resData.success) {
+                    console.log("Aesthetics synchronized.");
+                } else {
+                    console.error("Sync error:", resData.error);
+                }
             } catch(e) {
                 console.warn("Server sync bypassed (Backend Offline):", e);
             }
@@ -1626,6 +1630,15 @@
             if(document.getElementById('chip-name')) document.getElementById('chip-name').innerText = userData.displayName;
             if(document.getElementById('hero-name')) document.getElementById('hero-name').innerText = userData.displayName;
             if(document.getElementById('welcome-user')) document.getElementById('welcome-user').innerText = userData.displayName || 'Architect';
+            
+            // Sync Avatar Images
+            const av = userData.avatar || userData.avatarSource;
+            if (av) {
+                if(document.getElementById('preview-avatar')) document.getElementById('preview-avatar').src = av;
+                if(document.getElementById('chip-avatar')) document.getElementById('chip-avatar').src = av;
+                if(document.getElementById('hero-avatar')) document.getElementById('hero-avatar').src = av;
+                if(document.getElementById('sample-pp')) document.getElementById('sample-pp').src = av;
+            }
         }
 
         function syncDashboardAesthetics() {
