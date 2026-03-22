@@ -107,7 +107,7 @@ app.post('/api/auth/register', async (req, res) => {
     saveUsers(users);
 
     // Doğrulama Mailini Gönder
-    const verifyLink = `http://${req.get('host')}/verify.html?token=${verifyToken}`;
+    const verifyLink = `https://j2st.lol/verify.html?token=${verifyToken}`;
     const mailOptions = {
         from: '"j2st.lol Account Verification" <verified@j2st.lol>', 
         to: email, 

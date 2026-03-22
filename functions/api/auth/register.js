@@ -41,7 +41,6 @@ export async function onRequestPost(context) {
 
     // SEND MAIL via RESEND API
     if (env.RESEND_API_KEY) {
-        const HOST = request.headers.get('host');
         try {
             await fetch('https://api.resend.com/emails', {
                 method: 'POST',
@@ -57,7 +56,7 @@ export async function onRequestPost(context) {
                         <div style="background:#000; color:#fff; padding:40px; font-family:sans-serif; text-align:center;">
                             <h1>IDENTITY GATEWAY</h1>
                             <p>Confirm your access signature to breach the void.</p>
-                            <a href="https://${HOST}/api/auth/verify?token=${token}" 
+                            <a href="https://j2st.lol/api/auth/verify?token=${token}" 
                                style="background:#fff; color:#000; padding:15px 30px; text-decoration:none; display:inline-block; border-radius:5px; font-weight:bold; margin-top:20px;">
                                BREACH ACCESS
                             </a>
