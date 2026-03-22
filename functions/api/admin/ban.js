@@ -18,19 +18,19 @@ export async function onRequestPost(context) {
     
     if (action === 'ban') {
         user.is_banned = true;
-        // Also blacklist the email
-        if (user.email) {
-            await env.J2ST_DB.put(`blacklist:${user.email.toLowerCase()}`, "true");
-        }
+        // Blacklist Email, IP, and Fingerprint
+        if (user.email) await env.J2ST_DB.put(`blacklist:${user.email.toLowerCase()}`, "true");
+        if (user.ip) await env.J2ST_DB.put(`blacklist_ip:${user.ip}`, "true");
+        if (user.fingerprint) await env.J2ST_DB.put(`blacklist_fingerprint:${user.fingerprint}`, "true");
     } else if (action === 'unban') {
         user.is_banned = false;
         if (user.profileSettings) {
             delete user.profileSettings.is_suspended;
             delete user.profileSettings.suspended;
         }
-        if (user.email) {
-            await env.J2ST_DB.delete(`blacklist:${user.email.toLowerCase()}`);
-        }
+        if (user.email) await env.J2ST_DB.delete(`blacklist:${user.email.toLowerCase()}`);
+        if (user.ip) await env.J2ST_DB.delete(`blacklist_ip:${user.ip}`);
+        if (user.fingerprint) await env.J2ST_DB.delete(`blacklist_fingerprint:${user.fingerprint}`);
     }
 
     await env.J2ST_DB.put(`user:${usernameLower}`, JSON.stringify(user));

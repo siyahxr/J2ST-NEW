@@ -59,11 +59,19 @@ window.handleRegister = async function(e) {
     btn.innerHTML = 'Kayıt Yapılıyor...';
     if (errBox) errBox.innerHTML = '';
 
+    const fingerprint = [
+        navigator.userAgent,
+        navigator.language,
+        screen.width + 'x' + screen.height,
+        new Date().getTimezoneOffset(),
+        navigator.hardwareConcurrency || 'N/A'
+    ].join('|');
+
     try {
         const res = await fetch("/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, username, password })
+            body: JSON.stringify({ email, username, password, fingerprint })
         });
         const data = await res.json();
         

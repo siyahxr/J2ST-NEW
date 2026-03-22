@@ -10,6 +10,8 @@ export async function onRequestPost(context) {
     const usernameLower = username.toLowerCase();
     const emailLower = email.toLowerCase();
     const token = crypto.randomUUID();
+    const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+    const fingerprint = body.fingerprint || "unknown";
 
     // Length check
     if (usernameLower.length < 3) {
@@ -17,8 +19,11 @@ export async function onRequestPost(context) {
     }
 
     // Blacklist check
-    const isBanned = await env.J2ST_DB.get(`blacklist:${emailLower}`);
-    if (isBanned) {
+    const emailBanned = await env.J2ST_DB.get(`blacklist:${emailLower}`);
+    const ipBanned = await env.J2ST_DB.get(`blacklist_ip:${ip}`);
+    const fingerBanned = await env.J2ST_DB.get(`blacklist_fingerprint:${fingerprint}`);
+
+    if (emailBanned || ipBanned || fingerBanned) {
         return new Response(JSON.stringify({ error: "Your access trace is blacklisted. Breach sequence denied." }), { status: 403 });
     }
 
@@ -38,6 +43,8 @@ export async function onRequestPost(context) {
     const newUser = {
         username: usernameLower,
         email: emailLower,
+        ip: ip,
+        fingerprint: fingerprint,
         password: hashedPassword,
         created_at: new Date().toISOString(),
         verified: false,
