@@ -131,8 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
             d.badges.slice(0, 8).forEach(bn => {
                 const b = REGISTRY.find(r => r.name === bn);
                 if (b) {
-                    if (b.image) {
-                        badgesEl.innerHTML += `<img src="${b.image}" style="height:22px; width:22px; margin:0 2px;">`;
+                    const img = b.image || b.customIcon;
+                    if (img) {
+                        badgesEl.innerHTML += `<img src="${img}" style="height:22px; width:22px; margin:0 2px;">`;
                     } else {
                         badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${d.badgeColor||'#fff'}; font-size:22px;"></i>`;
                     }
@@ -260,10 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (av && user.avatar) {
                 av.src = user.avatar;
-                av.style.width = '100%';
-                av.style.height = '100%';
-                av.style.objectFit = 'cover';
-                av.style.borderRadius = '20%';
+                av.classList.add('real');
+                av.style.cssText = 'width:100% !important;height:100% !important;object-fit:cover !important;transform:none !important;border-radius:20%;';
             }
             if (bannerEl && user.banner) {
                 bannerEl.style.backgroundImage = `url(${user.banner})`;
@@ -274,8 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 user.badges.slice(0, 8).forEach(bn => {
                     const b = REGISTRY.find(r => r.name === bn);
                     if (b) {
-                        if (b.image) {
-                            badgesEl.innerHTML += `<img src="${b.image}" style="height:22px; width:22px; margin:0 2px;">`;
+                        const img = b.image || b.customIcon;
+                        if (img) {
+                            badgesEl.innerHTML += `<img src="${img}" style="height:22px; width:22px; margin:0 2px;">`;
                         } else {
                             badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${user.badgeColor||user.accent||'#fff'}; font-size:22px;"></i>`;
                         }
