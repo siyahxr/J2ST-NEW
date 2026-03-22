@@ -22,6 +22,10 @@ export async function onRequestPost(context) {
 
     const user = JSON.parse(rawUser);
 
+    if (user.verified === false) {
+        return new Response(JSON.stringify({ error: "Lütfen e-posta adresinizi onaylayın." }), { status: 403 });
+    }
+
     // Hash input password
     const msgUint8 = new TextEncoder().encode(password);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
