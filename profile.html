@@ -284,12 +284,15 @@
             const fx = document.getElementById('p-avatar-fx');
 
             if (data.is_suspended || data.suspended) {
-                const overlay = document.createElement('div');
-                overlay.style.position = 'fixed'; overlay.top=0; overlay.left=0; overlay.width='100%'; overlay.height='100%';
-                overlay.style.display='flex'; overlay.alignItems='center'; overlay.justifyContent='center'; overlay.zIndex=9999;
-                overlay.style.pointerEvents='none'; overlay.style.background = 'rgba(26, 0, 0, 0.4)';
-                overlay.innerHTML = `<div style="background:rgba(255,0,0,0.85); color:#fff; padding:15px 35px; font-weight:900; font-size:32px; border-radius:12px; transform:rotate(-10deg); border: 3px solid #fff; box-shadow: 0 0 30px rgba(255,0,0,0.6); letter-spacing:1px; font-family:'Outfit', sans-serif;">J2ST / SUSPENDED</div>`;
-                document.body.appendChild(overlay);
+                document.body.innerHTML = `
+                <div style="background:#000; color:#fff; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Outfit',sans-serif;">
+                    <div style="background:rgba(255,0,0,0.9); color:#fff; padding:20px 50px; font-weight:900; font-size:40px; border-radius:12px; transform:rotate(-5deg); border: 4px solid #fff; box-shadow: 0 0 100px rgba(255,0,0,0.4); text-align:center;">
+                        J2ST / SUSPENDED
+                        <div style="font-size:12px; margin-top:10px; opacity:0.8; font-weight:600;">ACCESS REVOKED BY GOVERNANCE</div>
+                    </div>
+                    <button onclick="window.location.href='/'" style="margin-top:40px; background:none; border:1px solid rgba(255,255,255,0.2); color:#fff; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:700;">RETURN TO THE VOID</button>
+                </div>`;
+                return;
             }
 
             document.getElementById('p-name').innerText = data.displayName || data.name || "User";

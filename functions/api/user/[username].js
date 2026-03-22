@@ -55,10 +55,19 @@ export async function onRequestGet(context) {
     }
 
     const u = JSON.parse(uRaw);
-    let profile = { ...(u.profileSettings || {}) };
     if (u.is_banned) {
-        profile.is_suspended = true;
+        return new Response(JSON.stringify({ 
+            success: true, 
+            profile: {
+                username: usernameLower,
+                displayName: "ACCESS DENIED",
+                is_suspended: true,
+                accent: "#ff0000"
+            }
+        }), { headers: { 'Content-Type': 'application/json' } });
     }
+    
+    let profile = { ...(u.profileSettings || {}) };
     
     // Ensure base properties exist if settings were partial
     
