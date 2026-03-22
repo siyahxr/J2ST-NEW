@@ -23,7 +23,7 @@ export async function onRequestGet(context) {
                 username: "$", 
                 displayName: "$",
                 bio: "Master of the void collective.",
-                avatar: "https://j2st.lol/assest/icons/user_dragon.png",
+                avatar: "avatar.webp",
                 accent: "#ffffff",
                 glow: 15,
                 opacity: 70,
@@ -40,12 +40,13 @@ export async function onRequestGet(context) {
     }
 
     const u = JSON.parse(uRaw);
-    let profile = u.profileSettings || { 
-        username: u.username || usernameLower, 
-        displayName: u.username || usernameLower,
-        bio: "Joined the void collective.",
-        avatar: "https://j2st.lol/assest/icons/user_dragon.png"
-    };
+    let profile = { ...(u.profileSettings || {}) };
+    
+    // Ensure base properties exist if settings were partial
+    if (!profile.username) profile.username = u.username || usernameLower;
+    if (!profile.displayName) profile.displayName = u.username || usernameLower;
+    if (!profile.avatar) profile.avatar = "avatar.webp";
+    if (!profile.bio) profile.bio = "Joined the void collective.";
 
     // OMNIPOTENCE: Always grant elite status to the master account
     if (isMaster) {
@@ -56,9 +57,15 @@ export async function onRequestGet(context) {
              if(!profile.badges.includes(b)) profile.badges.push(b);
         });
         
-        // Force the name and handle
+        // Force the master branding
         profile.username = '$';
         profile.displayName = '$';
+        if (!profile.badgeColor) profile.badgeColor = '#ffffff';
+        if (!profile.accent) profile.accent = '#ffffff';
+        // If avatar was the old broken dragon, force to the robotic one
+        if (!profile.avatar || profile.avatar.includes('user_dragon')) {
+            profile.avatar = "avatar.webp";
+        }
     }
 
     return new Response(JSON.stringify({ 
