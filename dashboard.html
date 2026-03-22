@@ -72,7 +72,7 @@
                     <p id="page-sub">Sync with the void collective.</p>
                 </div>
                 <div class="top-actions">
-                    <div id="user-profile-chip" style="display: flex; align-items: center; gap: 15px; margin-right: 25px; padding: 10px 20px; background: rgba(255,255,255,0.03); border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="window.location.href='profile.html'">
+                    <div id="user-profile-chip" style="display: flex; align-items: center; gap: 15px; margin-right: 25px; padding: 10px 20px; background: rgba(255,255,255,0.03); border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;" onclick="window.location.href='/' + encodeURIComponent(userData.username || userData.displayName)">
                         <img src="assest/icons/user_dragon.png" id="chip-avatar" style="width: 28px; height: 28px; border-radius: 50%;">
                         <span id="chip-name" style="font-size: 15px; font-weight: 800; opacity: 1;">siyah</span>
                     </div>
@@ -129,7 +129,7 @@
                                 <div style="position: absolute; bottom: 0; right: 0; width: 15px; height: 15px; background: #2ecc71; border: 2px solid #000; border-radius: 50%;"></div>
                             </div>
                             <h3 id="hero-name" style="margin-bottom: 10px;">siyah</h3>
-                            <button class="btn-ghost" style="width: 100%; margin-top: 15px;" onclick="window.open('/', '_blank')"><i class="ph-bold ph-arrow-square-out"></i> Live Profile View</button>
+                            <button class="btn-ghost" style="width: 100%; margin-top: 15px;" onclick="window.open('/' + encodeURIComponent(userData.username || userData.displayName), '_blank')"><i class="ph-bold ph-arrow-square-out"></i> Live Profile View</button>
                         </div>
                         
                         <div class="glass-card" style="padding: 24px;">
@@ -861,7 +861,7 @@
             saveEverything();
             alert("Essence Restored. Returning to profile...");
             setTimeout(() => {
-                window.location.href = 'profile.html';
+                window.location.href = '/' + encodeURIComponent(userData.username || userData.displayName);
             }, 800);
         }
 

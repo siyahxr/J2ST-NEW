@@ -15,10 +15,8 @@ export async function onRequest(context) {
         return context.next();
     }
 
-    // Vanity redirect to profile.html
+    // Vanity Rewrite: Render profile.html at the current URL (keeps /username in address bar)
     const url = new URL(request.url);
-    return new Response(null, {
-        status: 302,
-        headers: { 'Location': `/profile.html?u=${encodeURIComponent(username)}` }
-    });
+    url.pathname = '/profile.html';
+    return env.ASSETS.fetch(url);
 }
