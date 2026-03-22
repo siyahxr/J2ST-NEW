@@ -11,10 +11,23 @@ export async function onRequestGet(context) {
     
     // Fetch user from KV - try both possible master IDs
     let uRaw = await env.J2ST_DB.get(`user:${usernameLower}`);
-    if (!uRaw && isMaster) {
-        // Look for the other one
+    let otherRaw = null;
+    if (isMaster) {
         const otherId = (usernameLower === '$') ? 'siyah' : '$';
-        uRaw = await env.J2ST_DB.get(`user:${otherId}`);
+        otherRaw = await env.J2ST_DB.get(`user:${otherId}`);
+    }
+
+    // Prioritize the one that has actual settings
+    if (isMaster && otherRaw) {
+        if (!uRaw) {
+            uRaw = otherRaw;
+        } else {
+            const uCurrent = JSON.parse(uRaw);
+            const uOther = JSON.parse(otherRaw);
+            if (!uCurrent.profileSettings && uOther.profileSettings) {
+                uRaw = otherRaw;
+            }
+        }
     }
     
     // Fallback for Master User $ or siyah if ABSOLUTELY no record exists

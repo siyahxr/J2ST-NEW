@@ -238,7 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchHomeCardProfile(username) {
         try {
-            const res = await fetch(`/api/user/${encodeURIComponent(username)}?t=${Date.now()}`);
+            const uParam = (username === '$' ? '$' : encodeURIComponent(username));
+            const res = await fetch(`/api/user/${uParam}?t=${Date.now()}`);
             const data = await res.json();
             if (!data.success || !data.profile) return;
             const user = data.profile;
@@ -250,6 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const badgesEl = document.getElementById('card-badges');
             const bannerEl = document.getElementById('card-banner');
 
+            console.log("Card sync master:", cardMaster, user);
+
             if (nameEl) {
                 nameEl.textContent = cardMaster ? '$' : (user.displayName || user.username || '$');
             }
@@ -260,13 +263,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 barUrl.textContent = `j2st.lol/${cardMaster ? '$' : (user.username || 'you')}`;
             }
             if (av && user.avatar) {
-                av.src = user.avatar;
+                console.log("Updating card avatar to:", user.avatar);
+                av.src = user.avatar + (user.avatar.includes('?') ? '&' : '?') + 'cv=' + Date.now();
                 av.classList.add('real');
-                av.style.cssText = 'width:100% !important;height:100% !important;object-fit:cover !important;transform:none !important;border-radius:20%;';
+                av.style.cssText = 'width:100% !important;height:100% !important;object-fit:cover !important;transform:none !important;border-radius:20% !important;display:block !important;';
             }
             if (bannerEl && user.banner) {
                 bannerEl.style.backgroundImage = `url(${user.banner})`;
                 bannerEl.style.backgroundSize = 'cover';
+                bannerEl.style.backgroundPosition = 'center';
             }
             if (badgesEl && user.badges) {
                 badgesEl.innerHTML = '';
@@ -275,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (b) {
                         const img = b.image || b.customIcon;
                         if (img) {
-                            badgesEl.innerHTML += `<img src="${img}" style="height:22px; width:22px; margin:0 2px;">`;
+                            badgesEl.innerHTML += `<img src="${img}" style="height:18px; width:auto; border-radius:3px; margin:0 2px;">`;
                         } else {
                             badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${user.badgeColor||user.accent||'#fff'}; font-size:22px;"></i>`;
                         }
