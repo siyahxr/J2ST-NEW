@@ -124,9 +124,12 @@ window.togglePw = function(id, btn) {
             const data = JSON.parse(session);
             if (data && (data.username || data.email)) {
                 console.log("Active session found. Redirecting to dashboard...");
-                // Only redirect if we are on login or register pages
-                const p = window.location.pathname;
-                if (p.includes('login.html') || p.includes('register.html')) {
+                // Only redirect if we are on landing, login or register pages
+                const p = window.location.pathname.toLowerCase();
+                const isHome = p === '/' || p === '/index.html' || p === '/index';
+                const isAuth = p.includes('login') || p.includes('register');
+                
+                if (isHome || isAuth) {
                     window.location.href = "dashboard.html";
                 }
             }
