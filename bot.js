@@ -46,6 +46,32 @@ const commands = [
             option.setName('memo')
             .setDescription('Who is this for?')
             .setRequired(false)),
+
+    new SlashCommandBuilder()
+        .setName('say')
+        .setDescription('Make the bot say something')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .addStringOption(option => 
+            option.setName('message')
+            .setDescription('Message to send')
+            .setRequired(true)),
+
+    new SlashCommandBuilder()
+        .setName('embed')
+        .setDescription('Make the bot send an announcement embed')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .addStringOption(option => 
+            option.setName('title')
+            .setDescription('Embed Title')
+            .setRequired(true))
+        .addStringOption(option => 
+            option.setName('description')
+            .setDescription('Embed Description (Use \n for new lines)')
+            .setRequired(true))
+        .addStringOption(option => 
+            option.setName('color')
+            .setDescription('Embed Hex Color (e.g. #000000)')
+            .setRequired(false)),
 ];
 
 const rest = new REST({ version: '10' }).setToken(TOKEN);
@@ -70,6 +96,7 @@ client.once('ready', (c) => {
 });
 
 client.on('interactionCreate', async interaction => {
+    // Buttons
     if (interaction.isButton()) {
         if (interaction.customId === 'dashboard_gen') {
             const modal = new ModalBuilder().setCustomId('gen_modal').setTitle('Forge New Signature');
@@ -79,6 +106,7 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
+    // Modal Submit
     if (interaction.isModalSubmit()) {
         if (interaction.customId === 'gen_modal') {
             await interaction.deferReply({ ephemeral: true });
@@ -107,6 +135,7 @@ client.on('interactionCreate', async interaction => {
 
     if (!interaction.isChatInputCommand()) return;
 
+    // Command: /setup
     if (interaction.commandName === 'setup') {
         const embed = new EmbedBuilder()
             .setTitle('🗝 VOID CONTROL CENTER')
@@ -116,6 +145,7 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ embeds: [embed], components: [row] });
     }
 
+    // Command: /genkey
     if (interaction.commandName === 'genkey') {
         await interaction.deferReply();
         const memo = interaction.options.getString('memo') || 'No memo';
@@ -138,6 +168,28 @@ client.on('interactionCreate', async interaction => {
         } catch (e) {
             await interaction.editReply({ content: `❌ Failed to connect to Backend: ${API_BASE}` });
         }
+    }
+
+    // Command: /say
+    if (interaction.commandName === 'say') {
+        const msg = interaction.options.getString('message');
+        await interaction.channel.send(msg);
+        await interaction.reply({ content: '✅ Broadcast sent.', ephemeral: true });
+    }
+
+    // Command: /embed
+    if (interaction.commandName === 'embed') {
+        const title = interaction.options.getString('title');
+        const desc  = interaction.options.getString('description').replace(/\\n/g, '\n');
+        const color = (interaction.options.getString('color') || '#000000').replace('#', '');
+        
+        const embed = new EmbedBuilder()
+            .setTitle(title)
+            .setDescription(desc)
+            .setColor(parseInt(color, 16) || 0x000000);
+            
+        await interaction.channel.send({ embeds: [embed] });
+        await interaction.reply({ content: '✅ Embed forged.', ephemeral: true });
     }
 });
 
