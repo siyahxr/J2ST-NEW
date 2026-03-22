@@ -84,7 +84,7 @@ window.handleRegister = async function(e) {
             successDiv.style.marginTop = '20px';
             successDiv.style.fontSize = '14px';
             successDiv.style.fontWeight = '600';
-            successDiv.innerHTML = '🎉 Kayıt başarılı!<br><br>Giriş yapabilmek için lütfen e-posta adresini (<b>' + email + '</b>) kontrol ederek hesabını onayla. Spam klasörünü kontrol etmeyi unutma!';
+            successDiv.innerHTML = '🎉 Kayıt başarılı!<br><br>Hesabın <b>AKTİF EDİLDİ</b>. Hemen giriş yapabilirsin! ✅';
             
             btn.parentNode.insertBefore(successDiv, btn.nextSibling);
             
