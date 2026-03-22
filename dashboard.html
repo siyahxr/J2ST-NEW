@@ -1128,144 +1128,7 @@
             t.innerText = remains > 0 ? "COOLDOWN" : "READY";
         }
 
-        window.onload = () => {
-            const saved = localStorage.getItem('j2st_settings');
-            if(saved) {
-                const parsed = JSON.parse(saved);
-                userData = { ...userData, ...parsed };
-                // SYNC INPUTS
-                document.getElementById('input-discord-id').value = userData.discordId || '';
-                document.getElementById('input-mu-title').value = userData.muTitle || '';
-                document.getElementById('input-mu-artist').value = userData.muArtist || '';
-                if(userData.muCover) document.getElementById('editor-mu-preview').style.backgroundImage = `url(${userData.muCover})`;
-
-                // Restore custom badges to registry
-                if(userData.customBadges) {
-                    userData.customBadges.forEach(cb => {
-                        if(!badgeRegistry.some(r => r.name === cb.name)) {
-                            badgeRegistry.unshift(cb);
-                        }
-                    });
-                }
-                
-                // ENSURE CORE BADGES ARE ALWAYS OWNED (RECOVERY)
-                if(!userData.ownedBadges) userData.ownedBadges = ['Verified', 'J2ST'];
-                if(!userData.ownedBadges.includes('Verified')) userData.ownedBadges.push('Verified');
-                if(!userData.ownedBadges.includes('J2ST')) userData.ownedBadges.push('J2ST');
-                
-                const urlParams = new URLSearchParams(window.location.search);
-                const linkedId = urlParams.get('discord_linked_id');
-                if(linkedId) {
-                    userData.discordId = linkedId;
-                    if(document.getElementById('input-discord-id')) document.getElementById('input-discord-id').value = linkedId;
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    saveEverything();
-                    alert("✅ Discord Essence Synchronized: " + linkedId);
-                }
-            }
-
-            // ── Apply Pending Template ──
-            const pending = localStorage.getItem('j2st_pending_template');
-            if (pending) {
-                try {
-                    const t = JSON.parse(pending);
-                    // Use defaults for missing fields in template
-                    userData.bgColor = t.banner.includes('linear-gradient') ? t.banner : '#000000';
-                    userData.banner = t.banner.includes('url') ? t.banner : (t.banner.includes('linear-gradient') ? '' : t.banner);
-                    if (t.banner === t.banner.toLowerCase() && !t.banner.includes('gradient') && t.banner.startsWith('#')) {
-                        userData.banner = t.banner;
-                    }
-                    userData.accent = t.color;
-                    userData.linkColor = t.color;
-                    userData.badgeColor = t.color;
-                    userData.buttonColor = t.color;
-                    userData.accentColor = t.color; // Some parts use accent, some accentColor
-
-                    // Sync UI inputs immediately
-                    if(document.getElementById('input-accent')) document.getElementById('input-accent').value = t.color;
-                    if(document.getElementById('input-badge-color')) document.getElementById('input-badge-color').value = t.color;
-                    if(document.getElementById('input-link-color')) document.getElementById('input-link-color').value = t.color;
-                    
-                    localStorage.removeItem('j2st_pending_template');
-                    saveEverything();
-                    // Don't alert here to avoid blocking render
-                    console.log(`Template Applied: ${t.name}`);
-                } catch(e) { console.error("Template failed:", e); }
-            }
-            if(!userData.views) userData.views = 0;
-            if(!userData.ownedBadges) userData.ownedBadges = ['Verified'];
-            if(!userData.badges) userData.badges = ['Verified'];
-            
-            // Auto-clean any deprecated artifacts mapped from old iterations
-            userData.ownedBadges = userData.ownedBadges.filter(bn => badgeRegistry.some(r => r.name === bn));
-            userData.badges = userData.badges.filter(bn => userData.ownedBadges.includes(bn));
-            
-            // Hard-bind Architect role for 'siyah'
-            if(userData.displayName === 'siyah') userData.role = 'admin';
-            if(!userData.role) userData.role = 'user';
-            
-            if(userData.role === 'admin') {
-                const navAdmin = document.getElementById('nav-admin');
-                if(navAdmin) navAdmin.style.display = 'flex';
-            }
-            
-            if(!sessionStorage.getItem('v')) { userData.views++; sessionStorage.setItem('v','1'); }
-            
-            document.getElementById('chip-name').innerText = userData.displayName;
-            document.getElementById('metric-views').innerText = userData.views;
-            document.getElementById('setting-username').value = userData.displayName;
-            document.getElementById('input-display-name').value = userData.displayName;
-            document.getElementById('input-bio').value = userData.bio;
-            
-            // Sync Avatar Images
-            if(userData.avatar) {
-                document.getElementById('editor-avatar-preview').src = userData.avatar;
-                document.getElementById('p-avatar').src = userData.avatar;
-                document.getElementById('chip-avatar').src = userData.avatar;
-            }
-
-            // Sync Banner Preview
-            const bp = document.getElementById('editor-banner-preview');
-            const cp = document.getElementById('preview-color-box');
-            if(userData.banner) {
-                if(userData.banner.includes('linear-gradient')) {
-                    bp.style.background = userData.banner;
-                    cp.style.background = userData.banner;
-                } else {
-                    bp.style.backgroundImage = `url(${userData.banner})`;
-                    cp.style.backgroundImage = `url(${userData.banner})`;
-                }
-            }
-            
-            document.getElementById('input-accent').value = userData.accent;
-            document.getElementById('input-card-color').value = userData.cardColor;
-            document.getElementById('input-opacity').value = userData.opacity;
-            document.getElementById('input-effect').value = userData.nameEffect;
-            document.getElementById('input-cursor').value = userData.cursor || '';
-            document.getElementById('input-avatar-effect').value = userData.avatarEffect;
-            document.getElementById('input-avatar-effect-color').value = userData.avatarEffectColor || '#ff0000';
-            document.getElementById('input-avatar-effect-opacity').value = userData.avatarEffectOpacity || 100;
-            document.getElementById('input-card-effect').value = userData.cardEffect;
-            document.getElementById('input-card-shape').value = userData.cardShape;
-            document.getElementById('input-card-size').value = userData.cardSize;
-            document.getElementById('input-glow').value = userData.glow;
-            document.getElementById('input-badge-color').value = userData.badgeColor;
-            document.getElementById('input-link-color').value = userData.linkItemColor;
-            document.getElementById('input-badge-size').value = userData.badgeSize || 18;
-            document.getElementById('input-social-size').value = userData.socialSize || 18;
-
-            updateColors(); renderBadges(); renderLinks(); updatePreview(); updateCanvas(); updateBadgeTimer();
-            renderFriends(); renderDMContacts(); renderAdminUsers();
-            initDraggableNodes();
-
-            document.getElementById('btn-preview').onclick = () => {
-                saveEverything();
-                setTimeout(() => {
-                    const u = userData.username || userData.displayName || '$';
-                    window.location.href = `/${encodeURIComponent(u)}`;
-                }, 500);
-            };
-        };
+        // Legacy load removed, superseded by Unified Load Orchestrator
 
         // ADMIN GOVERNANCE MOCK DATA
         const mockAdminUsers = [
@@ -1576,50 +1439,8 @@
         // ==========================================
         // DUAL-CHANNEL INITIALIZATION (UNIFIED)
         // ==========================================
-        window.addEventListener('load', async () => {
-            // 1. Load Local
-            const local = localStorage.getItem('j2st_settings');
-            if(local) {
-                try {
-                    const parsed = JSON.parse(local);
-                    userData = { ...userData, ...parsed };
-                } catch(e) { console.error("Local load failed:", e); }
-            }
-
-            // 2. Fetch Server (Optional Override)
-            const sess = JSON.parse(localStorage.getItem('j2st_session_v2') || '{}');
-            const targetUser = sess.username || '$';
-            try {
-                const res = await fetch('/api/user/' + targetUser);
-                const apiData = await res.json();
-                if(apiData.success && apiData.profile && Object.keys(apiData.profile).length > 0) {
-                    userData = { ...userData, ...apiData.profile };
-                }
-            } catch(e) { console.warn("Sync mode: LOCAL (Offline)"); }
-
-            // 3. Special Case: Owner
-            if (targetUser === '$' || targetUser === 'siyah') {
-                const eliteBadges = ['Premium', 'Verified', 'OG', 'Booster', 'Developer', 'Staff', 'J2ST'];
-                userData.ownedBadges = eliteBadges;
-                if (!userData.badges) userData.badges = eliteBadges;
-            }
-
-            // 4. Force Render
-            if(typeof syncDataToUI === 'function') syncDataToUI();
-            
-            updateColors(); renderBadges(); renderLinks(); updatePreview(); updateCanvas(); updateBadgeTimer();
-            renderFriends(); renderDMContacts(); renderAdminUsers();
-            syncDashboardAesthetics();
-            
-            // Pending Template
-            const pending = localStorage.getItem('j2st_pending_template');
-            if (pending) {
-                applyTemplate(JSON.parse(pending).id);
-                localStorage.removeItem('j2st_pending_template');
-            }
-        });
-
         function syncDataToUI() {
+            // Text Inputs
             if(document.getElementById('input-display-name')) document.getElementById('input-display-name').value = userData.displayName || '';
             if(document.getElementById('input-bio')) document.getElementById('input-bio').value = userData.bio || '';
             if(document.getElementById('input-mu-title')) document.getElementById('input-mu-title').value = userData.muTitle || '';
@@ -1627,19 +1448,86 @@
             if(document.getElementById('input-accent')) document.getElementById('input-accent').value = userData.accent || '#ffffff';
             if(document.getElementById('input-card-color')) document.getElementById('input-card-color').value = userData.cardColor || '#000000';
             if(document.getElementById('input-opacity')) document.getElementById('input-opacity').value = userData.opacity || 20;
+            if(document.getElementById('input-media-url')) document.getElementById('input-media-url').value = userData.mediaSource || '';
+            if(document.getElementById('input-avatar-effect')) document.getElementById('input-avatar-effect').value = userData.avatarEffect || '';
+            if(document.getElementById('input-avatar-effect-color')) document.getElementById('input-avatar-effect-color').value = userData.avatarEffectColor || '#ffffff';
+
+            // Displays
             if(document.getElementById('chip-name')) document.getElementById('chip-name').innerText = userData.displayName;
             if(document.getElementById('hero-name')) document.getElementById('hero-name').innerText = userData.displayName;
             if(document.getElementById('welcome-user')) document.getElementById('welcome-user').innerText = userData.displayName || 'Architect';
+            if(document.getElementById('p-name')) document.getElementById('p-name').innerText = userData.displayName || 'Architect';
+            if(document.getElementById('p-bio')) document.getElementById('p-bio').innerText = userData.bio || '';
             
-            // Sync Avatar Images
-            const av = userData.avatar || userData.avatarSource;
-            if (av) {
-                if(document.getElementById('preview-avatar')) document.getElementById('preview-avatar').src = av;
-                if(document.getElementById('chip-avatar')) document.getElementById('chip-avatar').src = av;
-                if(document.getElementById('hero-avatar')) document.getElementById('hero-avatar').src = av;
-                if(document.getElementById('sample-pp')) document.getElementById('sample-pp').src = av;
+            // Sync Avatars (EVERYWHERE)
+            const av = userData.avatar || userData.avatarSource || 'avatar.webp';
+            const avIDs = ['editor-avatar-preview', 'p-avatar', 'chip-avatar', 'hero-avatar', 'sample-pp', 'preview-avatar'];
+            avIDs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.src = av;
+            });
+            
+            // Sync Banners
+            const ban = userData.banner || userData.bannerSource;
+            if(ban) {
+                const targets = ['editor-banner-preview', 'preview-color-box', 'hero-banner'];
+                targets.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) {
+                        el.style.backgroundImage = `url(${ban})`;
+                        el.style.backgroundSize = 'cover';
+                        el.style.backgroundPosition = 'center';
+                    }
+                });
             }
         }
+
+        // Unified Load Orchestrator
+        window.addEventListener('load', async () => {
+            // Load from Local Storage
+            const local = localStorage.getItem('j2st_settings');
+            if(local) {
+                try {
+                    const parsed = JSON.parse(local);
+                    userData = { ...userData, ...parsed };
+                } catch(e) { console.error("Local Load Fail:", e); }
+            }
+
+            // Sync with High-Fidelity Server State
+            const sess = JSON.parse(localStorage.getItem('j2st_session_v2') || '{}');
+            const targetUser = sess.username || userData.username || '$';
+            try {
+                const res = await fetch('/api/user/' + targetUser + '?t=' + Date.now());
+                const apiData = await res.json();
+                if(apiData.success && apiData.profile) {
+                    userData = { ...userData, ...apiData.profile };
+                    // Ensure server-bound name updates local displayName for UI
+                    if (apiData.profile.displayName) userData.displayName = apiData.profile.displayName;
+                }
+            } catch(e) { console.warn("Network Sync Bypassed"); }
+
+            // Admin Logic
+            if (targetUser === '$' || targetUser === 'siyah' || userData.role === 'admin') {
+                const eliteBadges = ['Premium', 'Verified', 'OG', 'Booster', 'Developer', 'Staff', 'J2ST'];
+                userData.ownedBadges = eliteBadges;
+                if (!userData.badges || userData.badges.length === 0) userData.badges = ['Premium', 'Verified'];
+                const navAdmin = document.getElementById('nav-admin');
+                if(navAdmin) navAdmin.style.display = 'flex';
+            }
+
+            // Initial UI Pass
+            syncDataToUI();
+            updateColors(); renderBadges(); renderLinks(); updatePreview(); updateCanvas(); updateBadgeTimer();
+            renderFriends(); renderDMContacts(); renderAdminUsers();
+            syncDashboardAesthetics();
+
+            // Auto-load template if requested from main site
+            const pending = localStorage.getItem('j2st_pending_template');
+            if (pending) {
+                applyTemplate(JSON.parse(pending).id);
+                localStorage.removeItem('j2st_pending_template');
+            }
+        });
 
         function syncDashboardAesthetics() {
             const bgContainer = document.getElementById('bg-media-wrap');
