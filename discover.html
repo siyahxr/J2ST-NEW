@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function buildProfileCard(user) {
         const card = document.createElement('div');
         card.className = 'disc-card';
-        card.onclick = () => window.location.href = `profile.html?u=${encodeURIComponent(user.displayName)}`;
+        card.onclick = () => window.location.href = `/${encodeURIComponent(user.displayName)}`;
 
         const bannerStyle = user.banner ? `background-image:url(${user.banner});background-size:cover;background-position:center;` : '';
         const avHtml = user.avatar ? `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">` : `<img src="assest/j2st.logo.png" style="width:100%;height:100%;object-fit:contain;transform:scale(4.5);">`;
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="disc-name">${user.displayName || 'Unknown'}</div>
                 <div class="disc-bio">${user.bio || 'No bio yet.'}</div>
                 ${badgesHtml ? `<div class="disc-badges">${badgesHtml}</div>` : ''}
-                <a href="profile.html?u=${encodeURIComponent(user.displayName)}" class="disc-view-btn" onclick="event.stopPropagation()">
+                <a href="/${encodeURIComponent(user.displayName)}" class="disc-view-btn" onclick="event.stopPropagation()">
                     <i class="ph ph-arrow-square-out"></i> View Profile
                 </a>
             </div>`;

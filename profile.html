@@ -248,6 +248,13 @@
         };
 
         window.addEventListener('load', async () => {
+            const url = new URL(window.location.href);
+            const u = url.searchParams.get('u');
+            if (u && window.location.pathname.endsWith('profile.html')) {
+                window.location.href = `/${encodeURIComponent(u)}`;
+                return;
+            }
+            
             let data = {};
             
             // DİNAMİK PROFİL MOTORU: Eğer URL'de bir isim varsa (örn: localhost:5500/$) sunucudan çek.

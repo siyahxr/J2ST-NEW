@@ -1261,7 +1261,8 @@
             document.getElementById('btn-preview').onclick = () => {
                 saveEverything();
                 setTimeout(() => {
-                    window.location.href = 'profile.html';
+                    const u = userData.username || userData.displayName || '$';
+                    window.location.href = `/${encodeURIComponent(u)}`;
                 }, 500);
             };
         };
