@@ -162,31 +162,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ── Render Discover grid ─── */
-    function renderDiscover() {
+    async function renderDiscover() {
         const grid    = document.getElementById('disc-grid');
         const empty   = document.getElementById('disc-empty');
         if (!grid) return;
 
         let dir = [];
-        try { dir = JSON.parse(localStorage.getItem('j2st_directory') || '[]'); } catch {}
-
-        // Also include current user if they have a profile but haven't saved yet
-        const currentRaw = localStorage.getItem('j2st_settings');
-        if (currentRaw) {
-            try {
-                const c = JSON.parse(currentRaw);
-                if (c.displayName && !dir.find(u => u.displayName === c.displayName)) {
-                    dir.unshift({
-                        displayName: c.displayName,
-                        bio: c.bio || '',
-                        avatar: c.avatar || '',
-                        banner: c.banner || '',
-                        badges: (c.badges || []).slice(0, 5),
-                        badgeColor: c.badgeColor || '#ffffff',
-                        links: (c.links || []).slice(0, 3)
-                    });
-                }
-            } catch {}
+        try {
+            const res = await fetch('/api/user/list');
+            const data = await res.json();
+            if (data.success) {
+                dir = data.profiles || [];
+            }
+        } catch (e) {
+            console.error("Home Discover fetch failed.");
+            // Fallback to local
+            try { dir = JSON.parse(localStorage.getItem('j2st_directory') || '[]'); } catch {}
         }
 
         if (!dir.length) { if (empty) empty.style.display = 'flex'; return; }
@@ -318,10 +309,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Always fetch the latest admin card from API for professional sync
+    fetchHomeCardProfile('$');
+
     if (localStorage.getItem('j2st_session_v2')) {
         syncProfile();
-    } else {
-        fetchHomeCardProfile('$');
     }
 
     renderDiscover();

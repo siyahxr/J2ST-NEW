@@ -232,25 +232,29 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeTab = 'profiles';
 
     // Load directory
-    let dir = [];
-    try { dir = JSON.parse(localStorage.getItem('j2st_directory') || '[]'); } catch {}
-
-    // Include current user
-    const currentRaw = localStorage.getItem('j2st_settings');
-    if (currentRaw) {
-        try {
-            const c = JSON.parse(currentRaw);
-            if (c.displayName && !dir.find(u => u.displayName === c.displayName)) {
-                dir.unshift({ displayName: c.displayName, bio: c.bio||'', avatar: c.avatar||'', banner: c.banner||'', badges:(c.badges||[]).slice(0,5), badgeColor:c.badgeColor||'#fff', links:(c.links||[]).slice(0,3) });
-            }
-        } catch {}
-    }
-
     const grid    = document.getElementById('disc-page-grid');
     const empty   = document.getElementById('disc-page-empty');
     const tabs    = document.querySelectorAll('.disc-tab');
     const sProf   = document.getElementById('stats-profiles');
     const sTempl  = document.getElementById('stats-templates');
+
+    let dir = [];
+
+    async function initialFetch() {
+        try {
+            const res = await fetch('/api/user/list');
+            const data = await res.json();
+            if (data.success) {
+                dir = data.profiles || [];
+                // Update stats
+                document.getElementById('total-count').textContent = dir.length;
+                document.getElementById('badge-count').textContent = dir.reduce((a, u) => a + (u.badges||[]).length, 0);
+                document.getElementById('link-count').textContent  = dir.reduce((a, u) => a + (u.links||[]).length, 0);
+                render();
+            }
+        } catch(e) { console.error("Could not fetch profile list."); }
+    }
+    initialFetch();
 
     function buildProfileCard(user) {
         const card = document.createElement('div');
