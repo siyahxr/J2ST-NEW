@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>j2st.lol — Your Digital Identity</title>
+    <meta name="description" content="The most premium link-in-bio platform. Built for gamers and creators.">
+    <link rel="stylesheet" href="home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        if(localStorage.getItem('j2st_vault_access') !== 'true') {
+            window.location.href = 'invite.html';
+        }
+    </script>
+</head>
+    <style>
+        body { background: #000 !important; color: #fff !important; }
+        .hero-title em { color: #fff !important; text-shadow: 0 0 20px rgba(255,255,255,0.3); font-style: normal; }
+        .hero-title { letter-spacing: -3px; }
+        .grid-bg { opacity: 0.1 !important; filter: invert(1); }
+        .ambient { display: none; }
+        .nav-logo, .halo-logo, .card-av, .mq-logo, .cta-logo-big, .ft-logo { filter: brightness(0) invert(1); }
+        .glass-card { background: rgba(255,255,255,0.03) !important; border-color: rgba(255,255,255,0.08) !important; }
+        .profile-card { background: #0a0a0a !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+    </style>
+</head>
+<body>
+
+<!-- Ambient background -->
+<div class="ambient"></div>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav class="nav" id="navbar">
+    <div class="nav-wrap">
+        <div class="nav-logo-area">
+            <img src="assest/j2st.logo.png" class="nav-logo" alt="j2st">
+        </div>
+        <div class="nav-center">
+            <a href="#why" class="nl">Why j2st</a>
+            <a href="#features" class="nl">Features</a>
+            <a href="discover.html" class="nl disc-nav-btn">✦ Discover</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html" class="nl muted">Sign in</a>
+            <a href="register.html" class="nav-cta">Start free →</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-wrap">
+
+    <!-- Left content -->
+    <div class="hero-content">
+        <div class="hero-tag">
+            <div class="green-dot"></div>
+            <span>j2st.lol is live — 1,847 profiles</span>
+        </div>
+
+        <h1 class="hero-title">
+            Your entire<br>
+            digital life<br>
+            <em>in one link.</em>
+        </h1>
+
+        <p class="hero-desc">
+            Designed from the ground up for gamers, streamers, and creators. 
+            One sleek page. Unlimited expression.
+        </p>
+
+        <div class="hero-btns">
+            <a href="register.html" class="btn-white">Create your page →</a>
+            <a href="profile.html" class="btn-outline">
+                <img src="" id="sample-pp" class="btn-pp" alt="">
+                See a live profile
+            </a>
+        </div>
+
+        <div class="proof-strip">
+            <div class="proof-avatars" id="proof-avatars">
+                <div class="proof-av"></div>
+                <div class="proof-av"></div>
+                <div class="proof-av"></div>
+            </div>
+            <span class="proof-text">Join 1,847+ creators already on j2st.lol</span>
+        </div>
+    </div>
+
+    <!-- Right: Profile Card -->
+    <div class="hero-card-wrap">
+        <div class="card-glow-ring"></div>
+        <div class="logo-halo">
+            <img src="assest/j2st.logo.png" class="halo-logo" alt="">
+        </div>
+
+        <div class="profile-card" id="profile-card">
+            <!-- chrome bar -->
+            <div class="card-top-bar">
+                <div class="bar-dots"><s></s><s></s><s></s></div>
+                <span class="bar-url" id="bar-url">j2st.lol/you</span>
+                <div style="width:44px"></div>
+            </div>
+
+            <!-- banner -->
+            <div class="card-banner" id="card-banner"></div>
+
+            <!-- body -->
+            <div class="card-body">
+                <div class="card-av-wrap" style="border-radius: 20px; border: 2px solid rgba(255,255,255,0.1);">
+                    <img src="assest/icons/user_dragon.png" class="card-av" id="card-av">
+                </div>
+                <div class="card-name" id="card-name" style="font-family: 'Outfit', sans-serif; font-weight: 1000; font-size: 32px; letter-spacing: -2px; color: #fff;">$siyah</div>
+                <div class="card-bio" id="card-bio">Your bio here</div>
+                <div class="card-badges" id="card-badges">
+                    <i class="ph ph-shield-check" style="color:#60a5fa"></i>
+                    <i class="ph ph-crown" style="color:#fbbf24"></i>
+                    <i class="ph ph-star" style="color:#a78bfa"></i>
+                </div>
+                <div class="card-links" id="card-links">
+                    <div class="cl-item"><i class="ph ph-instagram-logo"></i><span>Instagram</span></div>
+                    <div class="cl-item"><i class="ph ph-discord-logo"></i><span>Discord</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- floating pills -->
+        <div class="f-pill fp-a">
+            <i class="ph ph-crown" style="color:#fbbf24"></i>
+            Premium Badge
+        </div>
+        <div class="f-pill fp-b">
+            <i class="ph ph-waveform" style="color:#a78bfa"></i>
+            Music Active
+        </div>
+        <div class="f-pill fp-c">
+            <i class="ph ph-eye"></i>
+            128 views today
+        </div>
+    </div>
+</section>
+
+<!-- LOGO MARQUEE -->
+<div class="marquee-wrap" id="features">
+    <div class="marquee-track">
+        <div class="marquee-items">
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">j2st.lol</span>
+            <span class="mq-dot">·</span>
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">Premium Profiles</span>
+            <span class="mq-dot">·</span>
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">300+ Badges</span>
+            <span class="mq-dot">·</span>
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">Custom Music</span>
+            <span class="mq-dot">·</span>
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">One Link</span>
+            <span class="mq-dot">·</span>
+            <!-- duplicate for seamless loop -->
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">j2st.lol</span>
+            <span class="mq-dot">·</span>
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">Premium Profiles</span>
+            <span class="mq-dot">·</span>
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">300+ Badges</span>
+            <span class="mq-dot">·</span>
+            <img src="assest/j2st.logo.png" class="mq-logo">
+            <span class="mq-dot">·</span>
+            <span class="mq-text">Custom Music</span>
+            <span class="mq-dot">·</span>
+        </div>
+    </div>
+</div>
+
+<!-- WHY SECTION -->
+<section class="why-section" id="why">
+    <div class="section-wrap">
+        <div class="sec-eyebrow">WHY J2ST.LOL</div>
+        <h2 class="sec-title">Built different.<br><span class="dim-text">Just like you.</span></h2>
+
+        <div class="why-grid">
+            <div class="why-card wc-big glass-card">
+                <div class="wc-icon-row">
+                    <div class="wc-icon"><i class="ph ph-palette"></i></div>
+                </div>
+                <h3>Full Customization</h3>
+                <p>Custom banners, profile photos, color themes, background music, cursor effects. Every pixel is yours.</p>
+                <div class="wc-preview">
+                    <div class="color-dots">
+                        <div class="cd" style="background:#ff5f56"></div>
+                        <div class="cd" style="background:#fbbf24"></div>
+                        <div class="cd" style="background:#10b981"></div>
+                        <div class="cd" style="background:#60a5fa"></div>
+                        <div class="cd" style="background:#a78bfa"></div>
+                        <div class="cd" style="background:#ffffff"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="why-card glass-card">
+                <div class="wc-icon"><i class="ph ph-medal"></i></div>
+                <h3>300+ Badges</h3>
+                <p>Collect and display exclusive badges. Verified, OG, Dev, Staff, and hundreds more.</p>
+                <div class="badge-row">
+                    <i class="ph ph-shield-check" style="color:#60a5fa"></i>
+                    <i class="ph ph-crown" style="color:#fbbf24"></i>
+                    <i class="ph ph-diamond" style="color:#a78bfa"></i>
+                    <i class="ph ph-code" style="color:#10b981"></i>
+                </div>
+            </div>
+
+            <div class="why-card glass-card">
+                <div class="wc-icon"><i class="ph ph-music-notes"></i></div>
+                <h3>Audio Engine</h3>
+                <p>Let your profile speak with music. Set any track as background audio when visitors arrive.</p>
+            </div>
+
+            <div class="why-card glass-card">
+                <div class="wc-icon"><i class="ph ph-link-simple"></i></div>
+                <h3>Unlimited Links</h3>
+                <p>Instagram, Discord, Twitch, Steam, YouTube — add everything. All styled beautifully.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DISCOVER SECTION -->
+<section class="discover-section" id="discover">
+    <div class="section-wrap">
+        <div class="discover-head">
+            <div>
+                <div class="sec-eyebrow">COMMUNITY</div>
+                <h2 class="sec-title">Discover <span class="dim-text">Profiles.</span></h2>
+                <p class="discover-sub">Browse real profiles created on j2st.lol. Click to explore anyone's digital identity.</p>
+            </div>
+            <a href="register.html" class="disc-create-btn">
+                <i class="ph ph-plus"></i>
+                Create yours
+            </a>
+        </div>
+
+        <div class="disc-grid" id="disc-grid">
+            <!-- populated by home.js -->
+            <div class="disc-empty" id="disc-empty">
+                <i class="ph ph-users-three"></i>
+                <p>No profiles yet. Be the first to <a href="register.html">join</a>!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BIG CTA -->
+
+<section class="cta-section">
+    <div class="cta-outer glass-card">
+        <img src="assest/j2st.logo.png" class="cta-watermark" alt="">
+        <div class="cta-left">
+            <h2>Claim your spot.</h2>
+            <p>j2st.lol/yourname is waiting for you right now.</p>
+            <div class="claim-box">
+                <span class="cb-prefix">j2st.lol/</span>
+                <input type="text" id="claim-input" placeholder="yourname" class="cb-input">
+                <button class="cb-btn" onclick="window.location.href='register.html'">Claim →</button>
+            </div>
+        </div>
+        <div class="cta-right">
+            <img src="assest/j2st.logo.png" class="cta-logo-big" alt="">
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="ft-wrap">
+        <div class="ft-brand">
+            <img src="assest/j2st.logo.png" class="ft-logo" alt="j2st">
+        </div>
+        <div class="ft-links">
+            <a href="#">Terms of Use</a>
+            <a href="#">Privacy Policy</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+        </div>
+        <div class="ft-rights">© 2026 j2st.lol — All rights reserved.</div>
+    </div>
+</footer>
+
+<script src="home.js"></script>
+</body>
+</html>

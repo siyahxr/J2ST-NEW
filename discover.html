@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover — j2st.lol</title>
+    <meta name="description" content="Browse real profiles on j2st.lol">
+    <link rel="stylesheet" href="home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        if(localStorage.getItem('j2st_vault_access') !== 'true') {
+            window.location.href = 'invite.html';
+        }
+    </script>
+    <style>
+        .discover-page { max-width: 1240px; margin: 0 auto; padding: 140px 40px 100px; }
+
+        .disc-page-head {
+            display: flex; align-items: flex-end;
+            justify-content: space-between; margin-bottom: 60px; gap: 24px;
+        }
+        .disc-page-eyebrow {
+            font-size: 11px; font-weight: 900; letter-spacing: 3px;
+            color: var(--dim); text-transform: uppercase; margin-bottom: 14px;
+        }
+        .disc-page-title {
+            font-size: clamp(42px, 6vw, 80px); font-weight: 900;
+            letter-spacing: -3px; line-height: 1.0;
+        }
+        .disc-page-sub { font-size: 16px; color: var(--muted); margin-top: 12px; line-height: 1.6; }
+
+        .disc-page-actions { display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
+
+        .disc-search-wrap {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border-lit);
+            border-radius: 99px; padding: 12px 20px;
+            display: flex; align-items: center; gap: 10px; width: 280px;
+        }
+        .disc-search-wrap i { color: var(--muted); font-size: 18px; }
+        .disc-search {
+            background: none; border: none; outline: none;
+            color: #fff; font-size: 14px; font-weight: 600;
+            font-family: 'Outfit'; width: 100%;
+        }
+        .disc-search::placeholder { color: var(--dim); }
+
+        .disc-stats-row {
+            display: flex; gap: 40px; margin-bottom: 48px;
+            padding-bottom: 40px; border-bottom: 1px solid var(--glass-border);
+        }
+        .disc-stat { display: flex; flex-direction: column; gap: 4px; }
+        .disc-stat-num { font-size: 32px; font-weight: 900; letter-spacing: -1.5px; }
+        .disc-stat-label { font-size: 12px; color: var(--dim); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .disc-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .disc-page-empty {
+            grid-column: 1/-1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 20px;
+            padding: 120px 40px; text-align: center; color: var(--dim);
+        }
+        .disc-page-empty i { font-size: 64px; opacity: 0.4; }
+        .disc-page-empty h3 { font-size: 24px; font-weight: 800; color: var(--muted); }
+        .disc-page-empty p { font-size: 15px; max-width: 360px; line-height: 1.6; }
+        .disc-page-empty a { color: #fff; text-decoration: none; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.3); }
+
+        /* TABS */
+        .disc-tabs { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px; }
+        .disc-tab {
+            background: none; border: none; color: var(--dim);
+            padding: 10px 24px; border-radius: 12px; cursor: pointer;
+            font-family: 'Outfit'; font-size: 15px; font-weight: 700;
+            display: flex; align-items: center; gap: 10px; transition: 0.2s;
+        }
+        .disc-tab:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .disc-tab.active { color: #fff; background: rgba(255,255,255,0.1); }
+        .disc-tab i { font-size: 18px; }
+
+        /* Multi-grid handling */
+        .grid-hidden { display: none !important; }
+
+        /* Template preview specific */
+        .tpl-preview-box { height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .tpl-btn-use { margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .discover-page { padding: 120px 20px 80px; }
+            .disc-page-head { flex-direction: column; align-items: flex-start; }
+            .disc-stats-row { gap: 24px; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+<div class="ambient">
+    <div class="amb-blob a1"></div>
+    <div class="amb-blob a2"></div>
+    <div class="amb-blob a3"></div>
+</div>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav class="nav" id="navbar">
+    <div class="nav-wrap">
+        <div class="nav-logo-area">
+            <a href="index.html"><img src="assest/j2st.logo.png" class="nav-logo" alt="j2st"></a>
+        </div>
+        <div class="nav-center">
+            <a href="index.html" class="nl">Home</a>
+            <a href="index.html#why" class="nl">Features</a>
+            <a href="discover.html" class="nl disc-nav-btn" style="pointer-events:none;opacity:0.7;">✦ Discover</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html" class="nl muted">Sign in</a>
+            <a href="register.html" class="nav-cta">Start free →</a>
+        </div>
+    </div>
+</nav>
+
+<main class="discover-page">
+
+    <div class="disc-page-head">
+        <div>
+            <div class="disc-page-eyebrow">COMMUNITY · j2st.lol</div>
+            <h1 class="disc-page-title">Discover<br><span style="color:var(--dim)">Profiles.</span></h1>
+            <p class="disc-page-sub">
+                Explore real profiles from the j2st community.<br>
+                Find creators, gamers, and digital identities.
+            </p>
+        </div>
+        <div class="disc-page-actions">
+            <div class="disc-search-wrap">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" id="disc-search" class="disc-search" placeholder="Search profiles…">
+            </div>
+            <a href="register.html" class="btn-white" style="white-space:nowrap;">
+                + Create yours
+            </a>
+        </div>
+    </div>
+
+    <div class="disc-tabs">
+        <button class="disc-tab active" data-tab="profiles">
+            <i class="ph ph-users"></i>
+            Profiles
+        </button>
+        <button class="disc-tab" data-tab="templates">
+            <i class="ph ph-layout"></i>
+            Templates
+        </button>
+    </div>
+
+    <div class="disc-stats-row" id="stats-profiles">
+        <div class="disc-stat">
+            <span class="disc-stat-num" id="total-count">0</span>
+            <span class="disc-stat-label">Profiles</span>
+        </div>
+        <div class="disc-stat" style="border-left:1px solid var(--glass-border);padding-left:40px;">
+            <span class="disc-stat-num" id="badge-count">0</span>
+            <span class="disc-stat-label">Badges Equipped</span>
+        </div>
+        <div class="disc-stat" style="border-left:1px solid var(--glass-border);padding-left:40px;">
+            <span class="disc-stat-num" id="link-count">0</span>
+            <span class="disc-stat-label">Links Shared</span>
+        </div>
+    </div>
+
+    <div class="disc-stats-row" id="stats-templates" style="display:none;">
+        <div class="disc-stat">
+            <span class="disc-stat-num">12</span>
+            <span class="disc-stat-label">Ready Templates</span>
+        </div>
+        <div class="disc-stat" style="border-left:1px solid var(--glass-border);padding-left:40px;">
+            <span class="disc-stat-num">Premium</span>
+            <span class="disc-stat-label">Design Quality</span>
+        </div>
+    </div>
+
+    <div class="disc-page-grid" id="disc-page-grid">
+        <div class="disc-page-empty" id="disc-page-empty">
+            <i class="ph ph-users-three"></i>
+            <h3>No profiles yet</h3>
+            <p>Be the first to create your profile on j2st.lol and appear here for everyone to discover.</p>
+            <a href="register.html">Get started free →</a>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="ft-wrap">
+        <div class="ft-brand">
+            <img src="assest/j2st.logo.png" class="ft-logo" alt="j2st">
+        </div>
+        <div class="ft-links">
+            <a href="index.html">Home</a>
+            <a href="#">Terms</a>
+            <a href="login.html">Login</a>
+        </div>
+        <div class="ft-rights">© 2026 j2st.lol</div>
+    </div>
+</footer>
+
+<script src="home.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Badge registry (same as home.js)
+    const pIcons = "activity,address-book,airplane,airplay,alarm,alien,anchor,android-logo,angular-logo,aperture,app-store-logo,app-window,apple-logo,archive,armchair,article,asterisk,at,atom,baby,backpack,bag,balloon,bank,barbell,barcode,baseball,basket,basketball,bathtub,battery-full,bed,beer-bottle,bell,bicycle,binoculars,bird,bluetooth,boat,bone,book,bookmark,boot,bowl-food,brain,brandy,bridge,briefcase,broadcast,broom,browser,bug,buildings,bus,butterfly,cactus,cake,calculator,calendar,camera,campfire,car,cardholder,cards,carrot,cat,certificate,chair,champagne,chart-bar,chat,check,church,circle,clipboard,clock,cloud,club,coat-hanger,code,coffee,coin,coins,columns,command,compass,computer-tower,confetti,cookie,copy,copyright,couch,cpu,credit-card,crop,cross,crosshair,crown,cube,currency-dollar,cursor,cylinder,database,desktop,device-mobile,device-tablet,diamond,dice-five,disc,discord-logo,dna,dog,door,download,drop,ear,egg,eject,elevator,engine,envelope,eraser,exam,eye,eyedropper,eyeglasses,factory,fan,feather,figma-logo,file,film-script,film-strip,fire,fire-extinguisher,first-aid,fish,fish-simple,flag,flag-banner,flag-checker,flag-pennant,flame,flashlight,flask,floppy-disk,flower,flower-lotus,flower-tulip,folder,folder-lock,folder-open,folder-star,folder-user,folders,football,footprints,fork-knife,frame-corners,framer-logo,function,funnel,funnel-simple,game-controller,garage,gas-pump,gauge,gear,gear-fine,gender-female,gender-intersex,gender-male,gender-neuter,gender-nonbinary,gender-transgender,ghost,gif,gift,git-branch,git-commit,git-diff,git-fork,git-merge,git-pull-request,github-logo,gitlab-logo,gitlab-logo-simple,globe,globe-hemisphere-east,globe-hemisphere-west,globe-stand,google-cardboard-logo,google-chrome-logo,google-drive-logo,google-logo,google-play-logo,google-podcasts-logo,gradient,graduation-cap,grains,grains-slash,graph,grid-four,grid-nine,guitar,hamburger,hammer,hand,hand-bag,hand-coins,hand-eye,hand-fist,hand-grabbing,hand-heart,hand-palm,hand-pointing,hand-soap,hand-swipe-left,hand-swipe-right,hand-tap,hand-waving,handbag,handbag-simple,headlights,headphones,headset,heart,heart-break,heart-straight,heart-straight-break,heartbeat,hexagon,highlighter-circle,hoodie,horse,hourglass,hourglass-high,hourglass-low,hourglass-medium,hourglass-simple,hourglass-simple-high,hourglass-simple-low,hourglass-simple-medium,house,house-line,house-simple,ice-cream,identification-badge,identification-card,image,image-square,infinity,info,instagram-logo,intersect,jeep,kanban,key,keyhole,keynote,knife,lamp,laptop,layout,leaf,lifebuoy,lightbulb,lightbulb-filament,lightning,lightning-a,line-segment,line-segments,link,link-break,link-simple,link-simple-break,linkedin-logo,linux-logo,list,list-bullets,list-checks,list-dashes,list-magnifying-glass,list-numbers,list-plus,lock,lock-key,lock-key-open,lock-laminated,lock-laminated-open,lock-open,lock-simple,lock-simple-open,lockers,magic-wand,magnet,magnet-straight,magnifying-glass,magnifying-glass-minus,magnifying-glass-plus,map-pin,map-pin-line,map-trifold,marker-circle,martini,mask-happy,mask-sad,math-operations,medal,medal-military,megaphone,megaphone-simple,messenger-logo,meta-logo,meteor,microphone,microphone-stage,microscope,minus,minus-circle,minus-square,money,monitor,monitor-play,moon,moon-stars,moped,moped-front,motorcycle,mountains,mouse,mouse-simple,music-note,music-note-simple,music-notes,music-notes-simple,navigation-arrow,needle,newspaper,newspaper-clipping,notches,note,note-blank,note-pencil,notebook,notepad,notification,nozzle,number-circle-eight,number-circle-five,number-circle-four,number-circle-nine,number-circle-one,number-circle-seven,number-circle-six,number-circle-three,number-circle-two,number-circle-zero,number-eight,number-five,number-four,number-nine,number-one,number-seven,number-six,number-square-eight,number-square-five,number-square-four,number-square-nine,number-square-one,number-square-seven,number-square-six,number-square-three,number-square-two,number-square-zero,number-three,number-two,number-zero,nut,ny-times-logo,octagon,office-chair,option,orange-slice,oven,package,paint-brush,paint-brush-broad,paint-bucket,paint-roller,palette,pants,paper-plane,paper-plane-right,paper-plane-tilt,paperclip,paperclip-horizontal,parachute,paragraph,parallelogram,park,password,path,patreon-logo,pause,pause-circle,paw-print,peace,pen,pen-nib,pen-nib-straight,pencil,pencil-circle,pencil-line,pencil-simple".split(",");
+    const BP = ['Void','Ether','Abyss','Nova','Aura','Soul','Frost','Zenith','Phantom','Storm','Light','Shadow','Neon','Eclipse','Prime','Titan','Star','Crest','Essence','Mythos'];
+    const BC = ['Walker','Guardian','Oracle','Seeker','Lord','Phantom','Knight','Slayer','Ghost','Wraith','Spirit','Entity','Dragon','Master','Hunter','Protector','Warden','Saint'];
+    const REGISTRY = [
+        { name:'Premium', icon:'ph-crown' }, { name:'Verified', icon:'ph-shield-check' },
+        { name:'OG', icon:'ph-diamond' },    { name:'Booster', icon:'ph-rocket-launch' },
+        { name:'Developer', icon:'ph-code' },{ name:'Staff', icon:'ph-identification-badge' }
+    ];
+    for (let i = 1; i <= 294; i++) REGISTRY.push({ name:`${BP[i%20]} ${BC[i%18]} #${i}`, icon:`ph-${pIcons[i]||'star'}` });
+    const getIcon = name => { const b = REGISTRY.find(r => r.name === name); return b ? b.icon : 'ph-star'; };
+
+    const TEMPLATES = [
+        { name: "Aurora Night", author: "j2st Team", desc: "Dark mode with cosmic violet gradients and sleek glass effects.", type: "Premium", banner: "linear-gradient(135deg, #2b0054, #001a4d)", color: "#a855f7" },
+        { name: "Tokyo Neon", author: "VaporWave", desc: "High contrast magenta and cyan accents for a futuristic vibe.", type: "Vibrant", banner: "linear-gradient(135deg, #ff00ff, #00ffff)", color: "#00ffff" },
+        { name: "Minimalist Cream", author: "StudioZen", desc: "Soft, clean aesthetic for professional or personal portfolios.", type: "Clean", banner: "#fdf8f4", color: "#c0a080" },
+        { name: "Cyberpunk Red", author: "NightCity", desc: "Aggressive red glows and tech-inspired details.", type: "Gamer", banner: "linear-gradient(90deg, #900, #000)", color: "#ff0033" },
+        { name: "Spring Bloom", author: "PastelLover", desc: "A gentle pastel mix with floral motifs and airy white space.", type: "Soft", banner: "linear-gradient(to right, #ffdde1, #ee9ca7)", color: "#ee9ca7" },
+        { name: "Onyx Gold", author: "LuxeDesign", desc: "The ultimate premium look with deep black and gold leaf accents.", type: "Executive", banner: "linear-gradient(to bottom, #111, #444)", color: "#fbbf24" }
+    ];
+
+    let activeTab = 'profiles';
+
+    // Load directory
+    let dir = [];
+    try { dir = JSON.parse(localStorage.getItem('j2st_directory') || '[]'); } catch {}
+
+    // Include current user
+    const currentRaw = localStorage.getItem('j2st_settings');
+    if (currentRaw) {
+        try {
+            const c = JSON.parse(currentRaw);
+            if (c.displayName && !dir.find(u => u.displayName === c.displayName)) {
+                dir.unshift({ displayName: c.displayName, bio: c.bio||'', avatar: c.avatar||'', banner: c.banner||'', badges:(c.badges||[]).slice(0,5), badgeColor:c.badgeColor||'#fff', links:(c.links||[]).slice(0,3) });
+            }
+        } catch {}
+    }
+
+    const grid    = document.getElementById('disc-page-grid');
+    const empty   = document.getElementById('disc-page-empty');
+    const tabs    = document.querySelectorAll('.disc-tab');
+    const sProf   = document.getElementById('stats-profiles');
+    const sTempl  = document.getElementById('stats-templates');
+
+    function buildProfileCard(user) {
+        const card = document.createElement('div');
+        card.className = 'disc-card';
+        card.onclick = () => window.location.href = `profile.html?u=${encodeURIComponent(user.displayName)}`;
+
+        const bannerStyle = user.banner ? `background-image:url(${user.banner});background-size:cover;background-position:center;` : '';
+        const avHtml = user.avatar ? `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">` : `<img src="assest/j2st.logo.png" style="width:100%;height:100%;object-fit:contain;transform:scale(4.5);">`;
+        const badgesHtml = (user.badges||[]).slice(0,4).map(bn => `<i class="ph ${getIcon(bn)}" style="color:${user.badgeColor||'#fff'}"></i>`).join('');
+
+        card.innerHTML = `
+            <div class="disc-banner" style="${bannerStyle}"></div>
+            <div class="disc-body">
+                <div class="disc-av-wrap">${avHtml}</div>
+                <div class="disc-name">${user.displayName || 'Unknown'}</div>
+                <div class="disc-bio">${user.bio || 'No bio yet.'}</div>
+                ${badgesHtml ? `<div class="disc-badges">${badgesHtml}</div>` : ''}
+                <a href="profile.html?u=${encodeURIComponent(user.displayName)}" class="disc-view-btn" onclick="event.stopPropagation()">
+                    <i class="ph ph-arrow-square-out"></i> View Profile
+                </a>
+            </div>`;
+        return card;
+    }
+
+    function applyTemplate(tplName) {
+        const tpl = TEMPLATES.find(t => t.name === tplName);
+        if (!tpl) return;
+        localStorage.setItem('j2st_pending_template', JSON.stringify(tpl));
+        window.location.href = "dashboard.html";
+    }
+
+    function buildTemplateCard(tpl) {
+        const card = document.createElement('div');
+        card.className = 'disc-card';
+        const isUrl = (tpl.banner.includes('url') || tpl.banner.startsWith('http') || tpl.banner.startsWith('data'));
+        const bannerStyle = isUrl ? `background-image:url(${tpl.banner});background-size:cover;` : `background:${tpl.banner};`;
+
+        card.innerHTML = `
+            <div class="disc-banner" style="${bannerStyle}"></div>
+            <div class="disc-body">
+                <div style="font-size:10px; font-weight:900; color:${tpl.color}; margin-top:20px; letter-spacing:1px; text-transform:uppercase;">${tpl.type}</div>
+                <div class="disc-name" style="margin-top:4px;">${tpl.name}</div>
+                <div class="disc-bio" style="white-space:normal; line-height:1.4; height:34px; margin-bottom:15px;">${tpl.desc}</div>
+                <div style="font-size:11px; color:var(--dim); margin-bottom:15px;">By <b>${tpl.author}</b></div>
+                <button onclick="event.stopPropagation(); localStorage.setItem('j2st_pending_template', JSON.stringify(TEMPLATES.find(t=>t.name==='${tpl.name}'))); location.href='dashboard.html'" class="disc-view-btn" style="background:${tpl.color}22; border-color:${tpl.color}44; color:${tpl.color}; cursor:pointer;">
+                    <i class="ph ph-magic-wand"></i> Use Template
+                </button>
+            </div>`;
+        return card;
+    }
+
+    function render() {
+        grid.querySelectorAll('.disc-card').forEach(c => c.remove());
+        const q = document.getElementById('disc-search').value.toLowerCase().trim();
+
+        if (activeTab === 'profiles') {
+            sProf.style.display = 'flex'; sTempl.style.display = 'none';
+            const list = q ? dir.filter(u => u.displayName.toLowerCase().includes(q) || u.bio.toLowerCase().includes(q)) : dir;
+            if (!list.length) { empty.style.display = 'flex'; return; }
+            empty.style.display = 'none';
+            list.forEach(u => grid.appendChild(buildProfileCard(u)));
+        } else {
+            sProf.style.display = 'none'; sTempl.style.display = 'flex';
+            const list = q ? TEMPLATES.filter(t => t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q)) : TEMPLATES;
+            empty.style.display = 'none';
+            list.forEach(t => grid.appendChild(buildTemplateCard(t)));
+        }
+    }
+
+    // Tabs
+    tabs.forEach(t => t.onclick = () => {
+        tabs.forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        activeTab = t.dataset.tab;
+        render();
+    });
+
+    // Stats
+    document.getElementById('total-count').textContent = dir.length;
+    document.getElementById('badge-count').textContent = dir.reduce((a, u) => a + (u.badges||[]).length, 0);
+    document.getElementById('link-count').textContent  = dir.reduce((a, u) => a + (u.links||[]).length, 0);
+
+    // Initial render
+    render();
+
+    // Search
+    document.getElementById('disc-search').oninput = render;
+});
+</script>
+</body>
+</html>

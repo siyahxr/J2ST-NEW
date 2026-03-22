@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>j2st.lol — Restricted Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --accent: #fff;
+            --bg: #000;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body {
+            background: var(--bg);
+            color: var(--accent);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .gate-wrap {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            width: 100px;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            filter: brightness(0) invert(1);
+            animation: pulse 4s infinite ease-in-out;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 13px;
+            opacity: 0.4;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        .input-box {
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 5px;
+            display: flex;
+            transition: 0.3s;
+        }
+
+        .input-box:focus-within {
+            border-color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 15px 20px;
+            flex: 1;
+            outline: none;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        button {
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 0 20px;
+            font-weight: 800;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: #eee;
+        }
+
+        .error-msg {
+            color: #ff5f56;
+            font-size: 11px;
+            margin-top: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: none;
+        }
+
+        /* Ambient effects */
+        .ambient {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .loading-ring {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<div class="gate-wrap">
+    <img src="assest/j2st.logo.png" class="logo">
+    <h1>IDENTITY GATE</h1>
+    <p>SUBMIT ACCESS SIGNATURE TO BREACH THE VOID</p>
+    
+    <div class="loading-ring" id="loader"></div>
+
+    <div class="input-box">
+        <input type="text" id="access-key" placeholder="••••-••••-••••" onkeydown="if(event.key==='Enter') submitKey()">
+        <button onclick="submitKey()">BREACH</button>
+    </div>
+
+    <div class="error-msg" id="error">INVALID SIGNATURE. ACCESS DENIED.</div>
+</div>
+
+<script>
+    async function submitKey() {
+        const key = document.getElementById('access-key').value.trim();
+        const error = document.getElementById('error');
+        const loader = document.getElementById('loader');
+        
+        if(!key) return;
+
+        error.style.display = 'none';
+        loader.style.display = 'block';
+
+        try {
+            const res = await fetch('/api/verify-invite', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key })
+            });
+
+            const data = await res.json();
+
+            if(data.success) {
+                localStorage.setItem('j2st_vault_access', 'true');
+                localStorage.setItem('j2st_used_key', key);
+                window.location.href = 'index.html';
+            } else {
+                error.style.display = 'block';
+                loader.style.display = 'none';
+            }
+        } catch(e) {
+            error.innerText = "VOID TRANSMISSION ERROR.";
+            error.style.display = 'block';
+            loader.style.display = 'none';
+        }
+    }
+
+    // If already authorized, go home
+    if(localStorage.getItem('j2st_vault_access') === 'true') {
+        window.location.href = 'index.html';
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>j2st.lol | Register</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        if(localStorage.getItem('j2st_vault_access') !== 'true') {
+            window.location.href = 'invite.html';
+        }
+    </script>
+</head>
+<body>
+    <div class="animated-bg"><div class="blob"></div><div class="blob-2"></div><div class="blob-3"></div></div>
+    <div class="grid-overlay"></div>
+    <div class="auth-container">
+        <div class="auth-brand">
+            <img src="assest/j2st.logo.png" alt="j2st" class="auth-logo">
+        </div>
+        <form class="auth-form glass-card" id="form-register" onsubmit="handleRegister(event)">
+            <h2 class="form-title">Create Account</h2>
+            <p class="form-sub">Join the j2st.lol community</p>
+            <div class="field-group">
+                <label class="field-label">Email Address</label>
+                <input id="reg-email" class="field-input" type="email" placeholder="Email" required>
+            </div>
+            <div class="field-group">
+                <label class="field-label">Username</label>
+                <input id="reg-user" class="field-input" type="text" placeholder="Username" required maxlength="16">
+            </div>
+            <div class="field-group">
+                <label class="field-label">Password</label>
+                <div class="field-pw-wrap">
+                    <input id="reg-pass" class="field-input" type="password" placeholder="Password" required>
+                    <button type="button" class="pw-toggle" onclick="togglePw('reg-pass',this)">👁</button>
+                </div>
+            </div>
+            <div id="register-error" class="form-error"></div>
+            <button type="submit" class="auth-submit" id="btn-register">Get Started →</button>
+            <p class="form-hint">Already have an account? <a href="login.html">Login</a></p>
+        </form>
+        <p class="auth-back"><a href="index.html">← Back to home</a></p>
+    </div>
+    <script src="system/i18n.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
