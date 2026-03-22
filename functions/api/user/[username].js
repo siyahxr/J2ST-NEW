@@ -12,10 +12,12 @@ export async function onRequestGet(context) {
     // Fetch user from KV - try both possible master IDs
     let uRaw = await env.J2ST_DB.get(`user:${usernameLower}`);
     if (!uRaw && isMaster) {
-        uRaw = await env.J2ST_DB.get(`user:$`) || await env.J2ST_DB.get(`user:siyah`);
+        // Look for the other one
+        const otherId = (usernameLower === '$') ? 'siyah' : '$';
+        uRaw = await env.J2ST_DB.get(`user:${otherId}`);
     }
     
-    // Fallback for Master User $ or siyah if not found or no settings
+    // Fallback for Master User $ or siyah if ABSOLUTELY no record exists
     if (!uRaw && isMaster) {
         return new Response(JSON.stringify({ 
             success: true, 
@@ -48,7 +50,7 @@ export async function onRequestGet(context) {
     if (!profile.avatar) profile.avatar = "avatar.webp";
     if (!profile.bio) profile.bio = "Joined the void collective.";
 
-    // OMNIPOTENCE: Always grant elite status to the master account
+    // OMNIPOTENCE: Give admin status, but respect saved aesthetics
     if (isMaster) {
         const eliteBadges = ["Premium", "Verified", "OG", "Booster", "Developer", "Staff", "J2ST"];
         if (!profile.badges) profile.badges = [];
@@ -57,13 +59,15 @@ export async function onRequestGet(context) {
              if(!profile.badges.includes(b)) profile.badges.push(b);
         });
         
-        // Force the master branding
+        // Force the master identity handles
         profile.username = '$';
         profile.displayName = '$';
+        
+        // ONLY set defaults if they were never customized
         if (!profile.badgeColor) profile.badgeColor = '#ffffff';
         if (!profile.accent) profile.accent = '#ffffff';
-        // If avatar was the old broken dragon, force to the robotic one
-        if (!profile.avatar || profile.avatar.includes('user_dragon')) {
+        // Only force avatar if it was the dead dragon icon
+        if (profile.avatar && profile.avatar.includes('user_dragon')) {
             profile.avatar = "avatar.webp";
         }
     }
