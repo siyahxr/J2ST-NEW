@@ -536,6 +536,7 @@
             window.location.hash = tabId;
 
             if(tabId === 'templates') renderTemplates();
+            if(tabId === 'admin') fetchAdminUsers();
         }
 
         let activeNode = null;
@@ -1073,7 +1074,9 @@
             preview.innerHTML = '';
 
             (userData.links || []).forEach(link => {
-                const model = socialModels[link.platform] || { icon: 'ph-link', url: '' };
+                const platformKey = link.platform || '';
+                const platformName = Object.keys(socialModels).find(k => k.toLowerCase() === platformKey.toLowerCase()) || platformKey;
+                const model = socialModels[platformName] || { icon: 'ph-link', url: '' };
                 const row = document.createElement('div');
                 row.className = 'glass-card';
                 row.style.padding = '12px 20px';
@@ -1133,13 +1136,22 @@
         }
 
         function confirmPlatformLink() {
-            const username = document.getElementById('modal-username-input').value.trim();
+            let username = document.getElementById('modal-username-input').value.trim();
             if(!username) return alert("Please enter a valid signature.");
             
             const model = socialModels[selectedPlatform] || { url: '#' };
+            
+            // Cleanup username: remove leading @ if platform already provides one or if it's generally not needed
+            if (username.startsWith('@')) {
+                // If the model URL ends with @, strip it from username to avoid @@
+                if (model.url.endsWith('@')) {
+                    username = username.substring(1);
+                }
+            }
+
             let finalUrl = model.url + username;
             
-            // Special cases for URL cleanup
+            // Special cases for full URL entry
             if (username.startsWith('https://') || username.startsWith('http://')) {
                 finalUrl = username;
             }
@@ -1216,21 +1228,25 @@
 
         // Legacy load removed, superseded by Unified Load Orchestrator
 
-        // ADMIN GOVERNANCE MOCK DATA
-        const mockAdminUsers = [
-            { id: 1, name: 'siyah', email: 'admin@void.lol', status: 'AUTHORIZED', role: 'admin' },
-            { id: 2, name: 'neon', email: 'neon@void.lol', status: 'AUTHORIZED', role: 'user' },
-            { id: 3, name: 'abyss', email: 'abyss@void.lol', status: 'BANNED', role: 'user' },
-            { id: 4, name: 'phantom', email: 'ghost@void.lol', status: 'AUTHORIZED', role: 'user' },
-            { id: 5, name: 'echo', email: 'echo@void.lol', status: 'AUTHORIZED', role: 'user' }
-        ];
+        // ADMIN GOVERNANCE ENGINE
+        async function fetchAdminUsers() {
+            try {
+                const res = await fetch('/api/admin/users');
+                const data = await res.json();
+                if(data.success) {
+                   renderAdminUsers(data.users);
+                }
+            } catch(e) { console.error("Admin Fetch Fail:", e); }
+        }
 
-        function renderAdminUsers() {
+        function renderAdminUsers(users = []) {
             const list = document.getElementById('admin-user-list');
             if(!list) return;
             list.innerHTML = '';
-            mockAdminUsers.forEach(u => {
-                const color = u.status === 'BANNED' ? '#ff4d4d' : '#2ecc71';
+            
+            users.forEach(u => {
+                const status = u.is_verified ? 'AUTHORIZED' : 'PENDING';
+                const color = status === 'PENDING' ? '#faa61a' : '#2ecc71';
                 const div = document.createElement('div');
                 div.style.display = 'grid';
                 div.style.gridTemplateColumns = '2fr 2fr 1fr 1fr';
@@ -1238,15 +1254,19 @@
                 div.style.borderBottom = '1px solid var(--accent-border)';
                 div.style.alignItems = 'center';
                 div.style.fontSize = '13px';
+                
+                const nameStr = u.username || 'Unknown';
+                const initial = nameStr[0].toUpperCase();
+
                 div.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; display:flex; align-items:center; justify-content:center; border: 1px solid var(--accent-border); font-weight: 800;">${u.name[0].toUpperCase()}</div>
-                        <span style="font-weight: 700;">${u.name} ${u.role==='admin' ? '<i class="ph-fill ph-shield-star" style="color:var(--accent-primary); margin-left:5px;"></i>' : ''}</span>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; display:flex; align-items:center; justify-content:center; border: 1px solid var(--accent-border); font-weight: 800;">${initial}</div>
+                        <span style="font-weight: 700;">${nameStr} ${u.role==='admin' ? '<i class="ph-fill ph-shield-star" style="color:var(--accent-primary); margin-left:5px;"></i>' : ''}</span>
                     </div>
                     <span style="opacity: 0.6;">${u.email}</span>
-                    <span style="color: ${color}; font-weight: 800; font-size: 10px;">${u.status}</span>
+                    <span style="color: ${color}; font-weight: 800; font-size: 10px;">${status}</span>
                     <div style="display: flex; gap: 8px;">
-                        ${u.role !== 'admin' ? `<button class="save-btn mini" style="padding: 5px 10px; font-size: 10px; background: rgba(255,77,77,0.1); color: #ff4d4d;" onclick="alert('Subject Voided: ${u.name}')">BAN</button>` : `<span style="opacity:0.3; font-size:10px; font-weight: 800;">IMMUNE</span>`}
+                        ${u.role !== 'admin' ? `<button class="save-btn mini" style="padding: 5px 10px; font-size: 10px; background: rgba(255,77,77,0.1); color: #ff4d4d;" onclick="alert('Subject Voided: ${nameStr}')">BAN</button>` : `<span style="opacity:0.3; font-size:10px; font-weight: 800;">IMMUNE</span>`}
                     </div>
                 `;
                 list.appendChild(div);
@@ -1605,7 +1625,8 @@
             // Initial UI Pass
             syncDataToUI();
             updateColors(); renderBadges(); renderLinks(); updatePreview(); updateCanvas(); updateBadgeTimer();
-            renderFriends(); renderDMContacts(); renderAdminUsers();
+            renderFriends(); renderDMContacts(); 
+            if (userData.role === 'admin') fetchAdminUsers();
             syncDashboardAesthetics();
 
             // Auto-load template if requested from main site

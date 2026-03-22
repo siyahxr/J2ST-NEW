@@ -311,7 +311,9 @@
             const nexus = document.getElementById('p-nexus');
             nexus.innerHTML = "";
             (data.links || data.socials || []).forEach(s => {
-                const platformName = s.platform || s.name;
+                const platformKey = s.platform || s.name || '';
+                // Case-insensitive lookup
+                const platformName = Object.keys(socialModels).find(k => k.toLowerCase() === platformKey.toLowerCase()) || platformKey;
                 const model = socialModels[platformName] || { icon: 'ph-link', url: '' };
                 const btn = document.createElement('a');
                 btn.className = 'social-link-btn';

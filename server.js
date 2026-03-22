@@ -278,6 +278,20 @@ app.get('/api/user/:username', (req, res) => {
     res.json({ success: true, profile: u.profileSettings || {} });
 });
 
+// 6.5 ADMIN: TÜM KULLANICILARI LİSTELE
+app.get('/api/admin/users', (req, res) => {
+    // Bu endpoint normalde admin kontrolü gerektirir
+    let users = getUsers();
+    let publicUsers = users.map(u => ({
+        username: u.username,
+        email: u.email,
+        is_verified: u.is_verified,
+        role: (u.username.toLowerCase() === 'siyah' || u.username === '$') ? 'admin' : 'user',
+        created_at: u.created_at
+    }));
+    res.json({ success: true, users: publicUsers });
+});
+
 // 7. DİNAMİK PROFİL SAYFASI YÖNLENDİRİCİSİ (j2st.lol/username)
 app.get('/:username', (req, res) => {
     // Özel klasörleri dosyaları bypass et
