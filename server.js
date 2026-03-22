@@ -113,29 +113,21 @@ app.post('/api/auth/register', async (req, res) => {
         to: email, 
         subject: 'Verify your j2st.lol account',
         html: `
-            <div style="background-color: #050505; padding: 40px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-                <div style="background-color: #0a0a0a; width: 100%; max-width: 500px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 40px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-                    <!-- Title & Header -->
-                    <h2 style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0 0 10px 0; letter-spacing: -0.5px;">Welcome to j2st.lol, ${username}</h2>
-                    <p style="color: #bbbbbb; font-size: 16px; margin: 0 0 15px 0;">Confirm your email to activate your account.</p>
-                    <p style="color: #777777; font-size: 14px; margin: 0 0 35px 0;">This link expires in 30 minutes.</p>
+            <div style="background-color: #000; padding: 60px 20px; font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; text-align: center;">
+                <div style="background-color: #0d0d0d; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; max-width: 480px; margin: 0 auto; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
+                    <img src="https://j2st.lol/assest/j2st.logo.png" alt="j2st.lol" style="width: 80px; height: auto; margin-bottom: 30px;">
+                    <h1 style="color: #fff; font-size: 28px; font-weight: 800; letter-spacing: -1px; margin: 0 0 10px 0; text-transform: uppercase;">IDENTITY GATEWAY</h1>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 16px; line-height: 1.6; margin-bottom: 35px;">Welcome to the collective, <b>${username}</b>. Confirm your access signature to breach the void.</p>
                     
-                    <!-- Verify Button -->
-                    <div style="text-align: center; margin-bottom: 35px;">
-                        <a href="${verifyLink}" style="background-color: #ffffff; color: #000000; padding: 12px 30px; text-decoration: none; font-size: 15px; font-weight: 800; border-radius: 9999px; display: inline-block; box-shadow: 0 0 15px rgba(255,255,255,0.2);">Verify account</a>
+                    <a href="${verifyLink}" 
+                       style="background-color: #fff; color: #000; padding: 16px 36px; text-decoration: none; display: inline-block; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1px; transition: transform 0.3s; box-shadow: 0 0 20px rgba(255,255,255,0.15);">
+                       BREACH ACCESS →
+                    </a>
+
+                    <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
+                        <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin: 0;">This transmission was sent to verify your digital identity. If you did not initiate this breach, please ignore.</p>
+                        <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 10px; text-decoration: underline;">j2st.lol © 2026</p>
                     </div>
-                    
-                    <!-- Fallback Link -->
-                    <p style="color: #777777; font-size: 13px; margin: 0 0 5px 0;">Or copy and paste this link:</p>
-                    <p style="margin: 0 0 40px 0; word-break: break-all;">
-                        <a href="${verifyLink}" style="color: #60a5fa; font-size: 13px; text-decoration: none;">${verifyLink}</a>
-                    </p>
-                    
-                    <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.05); margin: 0 0 20px 0;" />
-                    
-                    <!-- Footer Info -->
-                    <p style="color: #555555; font-size: 12px; margin: 0 0 5px 0;">If you didn't create this account, you can ignore this email.</p>
-                    <p style="color: #555555; font-size: 12px; margin: 0;">Need help? <a href="mailto:support@j2st.lol" style="color: #555555; text-decoration: underline;">support@j2st.lol</a></p>
                 </div>
             </div>
         `

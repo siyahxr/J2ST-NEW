@@ -53,13 +53,22 @@ export async function onRequestPost(context) {
                     to: emailLower,
                     subject: 'Verify your j2st.lol identity',
                     html: `
-                        <div style="background:#000; color:#fff; padding:40px; font-family:sans-serif; text-align:center;">
-                            <h1>IDENTITY GATEWAY</h1>
-                            <p>Confirm your access signature to breach the void.</p>
-                            <a href="https://j2st.lol/api/auth/verify?token=${token}" 
-                               style="background:#fff; color:#000; padding:15px 30px; text-decoration:none; display:inline-block; border-radius:5px; font-weight:bold; margin-top:20px;">
-                               BREACH ACCESS
-                            </a>
+                        <div style="background-color: #000; padding: 60px 20px; font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; text-align: center;">
+                            <div style="background-color: #0d0d0d; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; max-width: 480px; margin: 0 auto; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.8);">
+                                <img src="https://j2st.lol/assest/j2st.logo.png" alt="j2st.lol" style="width: 80px; height: auto; margin-bottom: 30px;">
+                                <h1 style="color: #fff; font-size: 28px; font-weight: 800; letter-spacing: -1px; margin: 0 0 10px 0; text-transform: uppercase;">IDENTITY GATEWAY</h1>
+                                <p style="color: rgba(255,255,255,0.6); font-size: 16px; line-height: 1.6; margin-bottom: 35px;">Confirm your access signature to breach the void and join the elite collective.</p>
+                                
+                                <a href="https://j2st.lol/api/auth/verify?token=${token}" 
+                                   style="background-color: #fff; color: #000; padding: 16px 36px; text-decoration: none; display: inline-block; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 1px; transition: transform 0.3s; box-shadow: 0 0 20px rgba(255,255,255,0.15);">
+                                   BREACH ACCESS →
+                                </a>
+
+                                <div style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
+                                    <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin: 0;">This transmission was sent to verify your digital identity. If you did not initiate this breach, please ignore.</p>
+                                    <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 10px; text-decoration: underline;">j2st.lol © 2026</p>
+                                </div>
+                            </div>
                         </div>
                     `
                 })
