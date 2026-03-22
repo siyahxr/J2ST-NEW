@@ -1595,8 +1595,9 @@
 
             // 3. Special Case: Owner
             if (targetUser === '$' || targetUser === 'siyah') {
-                const eliteBadges = ['Premium', 'Verified', 'OG', 'Developer', 'Staff', 'J2ST'];
+                const eliteBadges = ['Premium', 'Verified', 'OG', 'Booster', 'Developer', 'Staff', 'J2ST'];
                 userData.ownedBadges = eliteBadges;
+                if (!userData.badges) userData.badges = eliteBadges;
             }
 
             // 4. Force Render

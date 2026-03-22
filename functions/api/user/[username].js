@@ -7,18 +7,19 @@ export async function onRequestGet(context) {
     }
 
     const usernameLower = username.toLowerCase();
+    const isMaster = (usernameLower === '$' || usernameLower === 'siyah');
     
     // Fetch user from KV
     const uRaw = await env.J2ST_DB.get(`user:${usernameLower}`);
     
-    // SPECIAL CASE: $ (Universal Admin Alias) or 'siyah' if missing from KV
-    if (!uRaw && (username === '$' || usernameLower === 'siyah')) {
+    // Fallback for Master User $ or siyah if not found or no settings
+    if (!uRaw && isMaster) {
         return new Response(JSON.stringify({ 
             success: true, 
             profile: {
                 username: "$", 
                 displayName: "siyah",
-                bio: "The Void Master. Synchronizing the collective.",
+                bio: "Master of the void collective.",
                 avatar: "https://j2st.lol/assest/icons/user_dragon.png",
                 accent: "#ffffff",
                 glow: 15,
@@ -28,31 +29,33 @@ export async function onRequestGet(context) {
                 views: 1337,
                 joined: "The Beginning"
             }
-        }), { 
-            headers: { 'Content-Type': 'application/json' }
-        });
+        }), { headers: { 'Content-Type': 'application/json' } });
     }
 
     if (!uRaw) {
-        return new Response(JSON.stringify({ 
-            success: false, 
-            error: "User not found." 
-        }), { 
-            status: 404,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        return new Response(JSON.stringify({ success: false, error: "User not found." }), { status: 404 });
     }
 
     const u = JSON.parse(uRaw);
-    
-    // Return profile (even if not strictly verified, if they have settings)
-    const profile = u.profileSettings || { 
+    let profile = u.profileSettings || { 
         username: u.username, 
         displayName: u.username,
         bio: "Joined the void collective.",
-        avatar: "https://j2st.lol/assest/icons/user_dragon.png",
-        badges: ["Verified"]
+        avatar: "https://j2st.lol/assest/icons/user_dragon.png"
     };
+
+    // OMNIPOTENCE: Always grant elite status to the master account
+    if (isMaster) {
+        const eliteBadges = ["Premium", "Verified", "OG", "Booster", "Developer", "Staff", "J2ST"];
+        if (!profile.badges) profile.badges = [];
+        // Unique merge
+        eliteBadges.forEach(b => {
+             if(!profile.badges.includes(b)) profile.badges.push(b);
+        });
+        
+        // Force the name and handle if it was lost
+        if (!profile.username || profile.username === 'undefined') profile.username = '$';
+    }
 
     return new Response(JSON.stringify({ 
         success: true, 

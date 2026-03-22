@@ -65,7 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'OG', icon: 'ph-diamond' },
         { name: 'Booster', icon: 'ph-rocket-launch' },
         { name: 'Developer', icon: 'ph-code' },
-        { name: 'Staff', icon: 'ph-identification-badge' }
+        { name: 'Staff', icon: 'ph-identification-badge' },
+        { name: 'J2ST', image: 'assest/j2st.logo.png' }
     ];
     for (let i = 1; i <= 294; i++) {
         REGISTRY.push({ name: `${BP[i % 20]} ${BC[i % 18]} #${i}`, icon: `ph-${pIcons[i] || 'star'}` });
@@ -127,9 +128,15 @@ document.addEventListener('DOMContentLoaded', () => {
         /* Badges */
         if (d.badges && d.badges.length && badgesEl) {
             badgesEl.innerHTML = '';
-            d.badges.forEach(bn => {
+            d.badges.slice(0, 8).forEach(bn => {
                 const b = REGISTRY.find(r => r.name === bn);
-                if (b) badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${d.badgeColor||'#fff'}"></i>`;
+                if (b) {
+                    if (b.image) {
+                        badgesEl.innerHTML += `<img src="${b.image}" style="height:22px; width:22px; margin:0 2px;">`;
+                    } else {
+                        badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${d.badgeColor||'#fff'}; font-size:22px;"></i>`;
+                    }
+                }
             });
         }
 
@@ -270,9 +277,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (badgesEl && user.badges) {
                 badgesEl.innerHTML = '';
-                user.badges.slice(0, 6).forEach(bn => {
+                user.badges.slice(0, 8).forEach(bn => {
                     const b = REGISTRY.find(r => r.name === bn);
-                    if (b) badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${user.badgeColor||user.accent||'#fff'}"></i>`;
+                    if (b) {
+                        if (b.image) {
+                            badgesEl.innerHTML += `<img src="${b.image}" style="height:22px; width:22px; margin:0 2px;">`;
+                        } else {
+                            badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${user.badgeColor||user.accent||'#fff'}; font-size:22px;"></i>`;
+                        }
+                    }
                 });
             }
             if (nameEl && user.accent) {
