@@ -43,7 +43,7 @@ const transporter = nodemailer.createTransport({
     secure: true,
     auth: {
         user: process.env.SMTP_USER || 'resend',
-        pass: process.env.SMTP_PASS || 'SUREKLI_DEGISTIRILMESI_GEREKEN_API_KEY'
+        pass: process.env.SMTP_PASS || process.env.RESEND_API_KEY || 're_MnEPtdJ3_MHy7Wx3L36vnC8p4GCqfGnqK'
     }
 });
 

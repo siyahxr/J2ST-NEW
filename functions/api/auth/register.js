@@ -50,7 +50,7 @@ export async function onRequestPost(context) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    from: 'j2st.lol <onboarding@resend.dev>',
+                    from: 'onboarding@resend.dev',
                     to: emailLower,
                     subject: 'Verify your j2st.lol identity',
                     html: `
