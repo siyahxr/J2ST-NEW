@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!raw) return;
         let d;
         try { d = JSON.parse(raw); } catch { return; }
+        const masterStatus = (d.username === '$' || d.username === 'siyah' || d.displayName === 'siyah');
 
         const av       = document.getElementById('card-av');
         const avWrap   = av ? av.parentElement : null;
@@ -96,8 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const samplePp = document.getElementById('sample-pp');
 
         /* URL */
-        if (d.displayName && urlEl)
-            urlEl.textContent = `j2st.lol/${d.displayName.toLowerCase().replace(/\s+/g,'')}`;
+        if (urlEl) urlEl.textContent = `j2st.lol/${masterStatus ? '$' : (d.username || 'you')}`;
 
         /* Banner */
         if (bannerEl) {
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /* Name */
-        if (d.displayName && nameEl) nameEl.textContent = d.displayName;
+        if (nameEl) nameEl.textContent = masterStatus ? '$' : (d.displayName || d.name || '$');
 
         /* Bio */
         if (d.bio && bioEl) bioEl.textContent = d.bio;
@@ -143,6 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="ph ${icon}"></i><span>${link.username || link.platform}</span>
                 </div>`;
             });
+        }
+
+        /* Floating Pills Sync */
+        const musicPill = document.querySelector('.fp-b');
+        const viewsPill = document.querySelector('.fp-c');
+        if (musicPill) musicPill.style.display = (d.muTitle || d.muArtist) ? 'flex' : 'none';
+        if (viewsPill && d.views !== undefined) {
+             viewsPill.childNodes[2].textContent = ` ${d.views} views today`;
         }
     }
 
@@ -232,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             if (!data.success || !data.profile) return;
             const user = data.profile;
+            const cardMaster = (user.username === '$' || user.username === 'siyah' || username === '$');
 
             const nameEl   = document.getElementById('card-name');
             const bioEl    = document.getElementById('card-bio');
@@ -239,8 +248,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const badgesEl = document.getElementById('card-badges');
             const bannerEl = document.getElementById('card-banner');
 
-            if (nameEl) nameEl.textContent = user.username === '$' ? '$siyah' : user.username;
+            if (nameEl) {
+                nameEl.textContent = cardMaster ? '$' : (user.displayName || user.username || '$');
+            }
             if (bioEl) bioEl.textContent = user.bio || 'Your bio here';
+
+            const barUrl = document.getElementById('bar-url');
+            if (barUrl) {
+                barUrl.textContent = `j2st.lol/${cardMaster ? '$' : (user.username || 'you')}`;
+            }
             if (av && user.avatar) {
                 av.src = user.avatar;
                 av.style.width = '100%';
@@ -254,10 +270,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (badgesEl && user.badges) {
                 badgesEl.innerHTML = '';
-                user.badges.forEach(bn => {
+                user.badges.slice(0, 6).forEach(bn => {
                     const b = REGISTRY.find(r => r.name === bn);
-                    if (b) badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${user.badgeColor||'#fff'}"></i>`;
+                    if (b) badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${user.badgeColor||user.accent||'#fff'}"></i>`;
                 });
+            }
+            if (nameEl && user.accent) {
+                nameEl.style.color = user.accent;
+                nameEl.style.textShadow = `0 0 15px ${user.accent}44`;
+            }
+
+            const linksEl = document.getElementById('card-links');
+            if (linksEl && (user.links || user.socials)) {
+                linksEl.innerHTML = '';
+                (user.links || user.socials).slice(0, 3).forEach(link => {
+                    const lc = (link.platform || '').toLowerCase();
+                    const icon = SOCIAL_ICONS[lc] || 'ph-link';
+                    linksEl.innerHTML += `<div class="cl-item" style="color:${user.linkColor||user.accent||'#fff'}">
+                        <i class="ph ${icon}"></i><span>${link.username || link.platform}</span>
+                    </div>`;
+                });
+            }
+
+            // Sync Floating Pills
+            const musicPill = document.querySelector('.fp-b');
+            const viewsPill = document.querySelector('.fp-c');
+            if (musicPill) musicPill.style.display = (user.muTitle || user.muArtist) ? 'flex' : 'none';
+            if (viewsPill && user.views !== undefined) {
+                const viewsText = viewsPill.querySelector('span') || viewsPill;
+                viewsPill.childNodes[2].textContent = ` ${user.views} views today`;
             }
         } catch (e) {
             console.error("Home card fetch failed.");
