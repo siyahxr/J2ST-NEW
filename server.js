@@ -243,8 +243,33 @@ app.post('/api/user/upload', upload.single('file'), (req, res) => {
 
 // 6. PROFİL BİLGİLERİNİ ÇEKME (API)
 app.get('/api/user/:username', (req, res) => {
+    const requestedUser = req.params.username.toLowerCase();
     let users = getUsers();
-    let u = users.find(x => x.username.toLowerCase() === req.params.username.toLowerCase());
+    
+    // Fallback for Master User $ or siyah if not found
+    if (requestedUser === '$' || requestedUser === 'siyah') {
+        const adminFound = users.find(x => x.username.toLowerCase() === requestedUser);
+        if (!adminFound || !adminFound.profileSettings) {
+            return res.json({ 
+                success: true, 
+                profile: {
+                    username: "$", 
+                    displayName: "siyah",
+                    bio: "The Void Master. Synchronizing the collective.",
+                    avatar: "/assest/icons/user_dragon.png",
+                    accent: "#ffffff",
+                    glow: 15,
+                    opacity: 70,
+                    badges: ["Premium", "Verified", "OG", "Booster", "Developer", "Staff", "J2ST"],
+                    badgeColor: "#ffffff",
+                    views: 1337,
+                    joined: "The Beginning"
+                }
+            });
+        }
+    }
+
+    let u = users.find(x => x.username.toLowerCase() === requestedUser);
     
     if (!u || !u.is_verified) return res.status(404).json({ error: "Böyle bir profil bulunamadı veya henüz onaylanmadı." });
     

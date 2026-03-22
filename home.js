@@ -228,9 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchHomeCardProfile(username) {
         try {
-            const res = await fetch(`/api/auth/profile?u=${encodeURIComponent(username)}`);
-            const user = await res.json();
-            if (!user.username) return;
+            const res = await fetch(`/api/user/${encodeURIComponent(username)}`);
+            const data = await res.json();
+            if (!data.success || !data.profile) return;
+            const user = data.profile;
 
             const nameEl   = document.getElementById('card-name');
             const bioEl    = document.getElementById('card-bio');
