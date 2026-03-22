@@ -274,8 +274,25 @@ app.get('/api/user/:username', (req, res) => {
     
     if (!u || !u.is_verified) return res.status(404).json({ error: "Böyle bir profil bulunamadı veya henüz onaylanmadı." });
     
+    // Check for ban
+    if (u.is_banned) {
+        return res.json({ 
+            success: true, 
+            profile: {
+                username: requestedUser,
+                displayName: "ACCESS DENIED",
+                is_suspended: true,
+                accent: "#ff0000"
+            }
+        });
+    }
+
+    let profile = { ...(u.profileSettings || {}) };
+    delete profile.is_suspended;
+    delete profile.suspended;
+
     // Yalnızca public profili gönder, şifreleri filan gizle
-    res.json({ success: true, profile: u.profileSettings || {} });
+    res.json({ success: true, profile: profile });
 });
 
 // 6.5 ADMIN: TÜM KULLANICILARI LİSTELE

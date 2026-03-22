@@ -24,6 +24,10 @@ export async function onRequestPost(context) {
         }
     } else if (action === 'unban') {
         user.is_banned = false;
+        if (user.profileSettings) {
+            delete user.profileSettings.is_suspended;
+            delete user.profileSettings.suspended;
+        }
         if (user.email) {
             await env.J2ST_DB.delete(`blacklist:${user.email.toLowerCase()}`);
         }

@@ -68,6 +68,9 @@ export async function onRequestGet(context) {
     }
     
     let profile = { ...(u.profileSettings || {}) };
+    // Explicitly clear suspension flags if not banned to avoid cached/stale data
+    delete profile.is_suspended;
+    delete profile.suspended;
     
     // Ensure base properties exist if settings were partial
     
