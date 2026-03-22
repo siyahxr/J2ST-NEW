@@ -1239,6 +1239,25 @@
             } catch(e) { console.error("Admin Fetch Fail:", e); }
         }
 
+        async function renameUser(oldName) {
+            const secret = prompt("Enter Admin Secret for Authorization:");
+            if(!secret) return;
+            const newName = prompt(`Enter NEW USERNAME for ${oldName}:`);
+            if(!newName) return;
+            
+            try {
+                const res = await fetch('/api/admin/system', {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'rename', secret, target: oldName, newName })
+                });
+                const d = await res.json();
+                if(d.success) {
+                    alert(`Success: ${oldName} is now ${newName}.`);
+                    fetchAdminUsers();
+                } else alert(d.error);
+            } catch(e) { alert("Execution Fail."); }
+        }
+
         async function banUser(username, currentStatus) {
             const secret = prompt("Enter Admin Secret for Authorization:");
             if(!secret) return;
@@ -1309,6 +1328,7 @@
                     <span style="color: ${color}; font-weight: 800; font-size: 10px; letter-spacing: 0.5px;">${status}</span>
                     <div style="display: flex; gap: 8px;">
                         ${u.role !== 'admin' ? `
+                            <button class="save-btn mini" style="padding: 5px 8px; font-size: 9px; background: rgba(0,255,255,0.05); color: #00ffff;" onclick="renameUser('${nameStr}')">NICK</button>
                             <button class="save-btn mini" style="padding: 5px 8px; font-size: 9px; background: rgba(255,166,26,0.1); color: #faa61a;" onclick="awardBadges('${nameStr}')">BADGE</button>
                             <button class="save-btn mini" style="padding: 5px 8px; font-size: 9px; background: rgba(255,77,77,0.1); color: #ff4d4d;" onclick="banUser('${nameStr}', '${status}')">${isBanned ? 'UNBAN' : 'BAN'}</button>
                         ` : `<span style="opacity:0.3; font-size:10px; font-weight: 800;">IMMUNE</span>`}

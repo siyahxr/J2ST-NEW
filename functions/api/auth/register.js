@@ -11,6 +11,11 @@ export async function onRequestPost(context) {
     const emailLower = email.toLowerCase();
     const token = crypto.randomUUID();
 
+    // Length check
+    if (usernameLower.length < 3) {
+        return new Response(JSON.stringify({ error: "Username must be at least 3 characters." }), { status: 400 });
+    }
+
     // Blacklist check
     const isBanned = await env.J2ST_DB.get(`blacklist:${emailLower}`);
     if (isBanned) {

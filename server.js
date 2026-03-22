@@ -87,6 +87,11 @@ app.post('/api/auth/register', async (req, res) => {
     const { email, username, password } = req.body;
     let users = getUsers();
     
+    // Denetimler
+    if (username.length < 3) {
+        return res.status(400).json({ error: "Kullanıcı adı en az 3 karakter olmalıdır." });
+    }
+
     // Kullanıcı adı veya e-posta zaten var mı kontrol et
     if (users.find(u => u.username.toLowerCase() === username.toLowerCase() || u.email.toLowerCase() === email.toLowerCase())) {
         return res.status(400).json({ error: "Bu kullanıcı adı veya e-posta zaten kullanımda." });
