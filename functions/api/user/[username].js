@@ -1,16 +1,19 @@
 export async function onRequestGet(context) {
     const { env, params } = context;
-    const username = params.username;
+    const username = params.username || "";
 
     if (!env.J2ST_DB) {
         return new Response(JSON.stringify({ error: "KV DB not configured." }), { status: 500 });
     }
 
-    const usernameLower = username.toLowerCase();
-    const isMaster = (usernameLower === '$' || usernameLower === 'siyah');
+    const usernameLower = decodeURIComponent(username).toLowerCase();
+    const isMaster = (usernameLower === '$' || usernameLower === 'siyah' || usernameLower === 'admin');
     
-    // Fetch user from KV
-    const uRaw = await env.J2ST_DB.get(`user:${usernameLower}`);
+    // Fetch user from KV - try both possible master IDs
+    let uRaw = await env.J2ST_DB.get(`user:${usernameLower}`);
+    if (!uRaw && isMaster) {
+        uRaw = await env.J2ST_DB.get(`user:$`) || await env.J2ST_DB.get(`user:siyah`);
+    }
     
     // Fallback for Master User $ or siyah if not found or no settings
     if (!uRaw && isMaster) {
@@ -18,7 +21,7 @@ export async function onRequestGet(context) {
             success: true, 
             profile: {
                 username: "$", 
-                displayName: "siyah",
+                displayName: "$",
                 bio: "Master of the void collective.",
                 avatar: "https://j2st.lol/assest/icons/user_dragon.png",
                 accent: "#ffffff",
@@ -38,8 +41,8 @@ export async function onRequestGet(context) {
 
     const u = JSON.parse(uRaw);
     let profile = u.profileSettings || { 
-        username: u.username, 
-        displayName: u.username,
+        username: u.username || usernameLower, 
+        displayName: u.username || usernameLower,
         bio: "Joined the void collective.",
         avatar: "https://j2st.lol/assest/icons/user_dragon.png"
     };
@@ -53,8 +56,9 @@ export async function onRequestGet(context) {
              if(!profile.badges.includes(b)) profile.badges.push(b);
         });
         
-        // Force the name and handle if it was lost
-        if (!profile.username || profile.username === 'undefined') profile.username = '$';
+        // Force the name and handle
+        profile.username = '$';
+        profile.displayName = '$';
     }
 
     return new Response(JSON.stringify({ 

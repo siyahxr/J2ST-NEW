@@ -237,11 +237,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchHomeCardProfile(username) {
         try {
-            const res = await fetch(`/api/user/${encodeURIComponent(username)}`);
+            const res = await fetch(`/api/user/${encodeURIComponent(username)}?t=${Date.now()}`);
             const data = await res.json();
             if (!data.success || !data.profile) return;
             const user = data.profile;
-            const cardMaster = (user.username === '$' || user.username === 'siyah' || username === '$');
+            const cardMaster = (user.username === '$' || user.username === 'siyah' || username === '$' || username === 'siyah');
 
             const nameEl   = document.getElementById('card-name');
             const bioEl    = document.getElementById('card-bio');
