@@ -193,7 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const slug = (user.displayName || 'user').toLowerCase().replace(/\s+/g, '');
             const card = document.createElement('div');
             card.className = 'disc-card';
-            card.onclick = () => window.location.href = `/${encodeURIComponent(user.displayName)}`;
+            card.onclick = () => {
+                const u = user.displayName;
+                window.location.href = '/' + (u === '$' ? '$' : encodeURIComponent(u));
+            };
 
             // Banner
             let bannerStyle = '';
@@ -222,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="disc-name">${user.displayName || 'Unknown'}</div>
                     <div class="disc-bio">${user.bio || 'No bio yet.'}</div>
                     ${badgesHtml ? `<div class="disc-badges">${badgesHtml}</div>` : ''}
-                    <a href="/${encodeURIComponent(user.displayName)}" class="disc-view-btn" onclick="event.stopPropagation()">
+                    <a href="/${user.displayName === '$' ? '$' : encodeURIComponent(user.displayName)}" class="disc-view-btn" onclick="event.stopPropagation()">
                         <i class="ph ph-arrow-square-out"></i>
                         View Profile
                     </a>
