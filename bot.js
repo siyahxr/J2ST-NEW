@@ -22,7 +22,7 @@ const TOKEN = process.env.DISCORD_TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const GUILD_ID = process.env.GUILD_ID;
 const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || 'J2ST-VOID-SECRET-99';
-const API_BASE = process.env.BACKEND_BASE_URL || 'http://localhost:5500';
+const API_BASE = process.env.BACKEND_BASE_URL || 'https://j2stbaba.pages.dev';
 
 if(!TOKEN || !CLIENT_ID) {
     console.error("❌ DISCORD_TOKEN or CLIENT_ID is missing in .env");
@@ -64,7 +64,7 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
     }
 })();
 
-client.once('clientReady', (c) => {
+client.once('ready', (c) => {
     console.log(`🤖 Logged in as ${c.user.tag}`);
     console.log(`🚀 Sentinel Linked to: ${API_BASE}`);
 });
@@ -81,6 +81,7 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.isModalSubmit()) {
         if (interaction.customId === 'gen_modal') {
+            await interaction.deferReply({ ephemeral: true });
             const memo = interaction.fields.getTextInputValue('memo_input');
             const keyVal = `J2ST-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
@@ -94,12 +95,12 @@ client.on('interactionCreate', async interaction => {
 
                 if (data.success) {
                     const embed = new EmbedBuilder().setTitle('🗝 SIGNATURE FORGED').addFields({ name: 'SIGNATURE:', value: `\`${keyVal}\`` }, { name: 'TARGET:', value: `\`${memo}\`` }).setColor(0xFFFFFF);
-                    await interaction.reply({ embeds: [embed], ephemeral: true });
+                    await interaction.editReply({ embeds: [embed] });
                 } else {
-                    await interaction.reply({ content: `❌ API Error: ${data.error}`, ephemeral: true });
+                    await interaction.editReply({ content: `❌ API Error: ${data.error}` });
                 }
             } catch (e) {
-                await interaction.reply({ content: `❌ Failed to connect to Backend: ${API_BASE}`, ephemeral: true });
+                await interaction.editReply({ content: `❌ Failed to connect to Backend: ${API_BASE}` });
             }
         }
     }
@@ -116,6 +117,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     if (interaction.commandName === 'genkey') {
+        await interaction.deferReply();
         const memo = interaction.options.getString('memo') || 'No memo';
         const keyVal = `J2ST-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
@@ -129,15 +131,14 @@ client.on('interactionCreate', async interaction => {
 
             if (data.success) {
                 const embed = new EmbedBuilder().setTitle('🗝 SIGNATURE FORGED').addFields({ name: 'SIGNATURE:', value: `\`${keyVal}\`` }, { name: 'TARGET:', value: `\`${memo}\`` }).setColor(0xFFFFFF);
-                await interaction.reply({ embeds: [embed] });
+                await interaction.editReply({ embeds: [embed] });
             } else {
-                await interaction.reply({ content: `❌ API Error: ${data.error}`, ephemeral: true });
+                await interaction.editReply({ content: `❌ API Error: ${data.error}` });
             }
         } catch (e) {
-            await interaction.reply({ content: `❌ Failed to connect to Backend: ${API_BASE}`, ephemeral: true });
+            await interaction.editReply({ content: `❌ Failed to connect to Backend: ${API_BASE}` });
         }
     }
 });
 
 client.login(TOKEN);
-
