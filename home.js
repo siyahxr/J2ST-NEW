@@ -226,6 +226,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    syncProfile();
+    async function fetchHomeCardProfile(username) {
+        try {
+            const res = await fetch(`/api/auth/profile?u=${encodeURIComponent(username)}`);
+            const user = await res.json();
+            if (!user.username) return;
+
+            const nameEl   = document.getElementById('card-name');
+            const bioEl    = document.getElementById('card-bio');
+            const av       = document.getElementById('card-av');
+            const badgesEl = document.getElementById('card-badges');
+            const bannerEl = document.getElementById('card-banner');
+
+            if (nameEl) nameEl.textContent = user.username === '$' ? '$siyah' : user.username;
+            if (bioEl) bioEl.textContent = user.bio || 'Your bio here';
+            if (av && user.avatar) {
+                av.src = user.avatar;
+                av.style.width = '100%';
+                av.style.height = '100%';
+                av.style.objectFit = 'cover';
+                av.style.borderRadius = '20%';
+            }
+            if (bannerEl && user.banner) {
+                bannerEl.style.backgroundImage = `url(${user.banner})`;
+                bannerEl.style.backgroundSize = 'cover';
+            }
+            if (badgesEl && user.badges) {
+                badgesEl.innerHTML = '';
+                user.badges.forEach(bn => {
+                    const b = REGISTRY.find(r => r.name === bn);
+                    if (b) badgesEl.innerHTML += `<i class="ph ${b.icon}" style="color:${user.badgeColor||'#fff'}"></i>`;
+                });
+            }
+        } catch (e) {
+            console.error("Home card fetch failed.");
+        }
+    }
+
+    if (localStorage.getItem('j2st_session_v2')) {
+        syncProfile();
+    } else {
+        fetchHomeCardProfile('$');
+    }
+
     renderDiscover();
 });
