@@ -430,6 +430,21 @@
     </div>
 
     <script>
+        const socialModels = {
+            Instagram: { icon: 'ph-fill ph-instagram-logo' },
+            TikTok: { icon: 'ph-fill ph-tiktok-logo' },
+            Twitter: { icon: 'ph-fill ph-twitter-logo' },
+            X: { icon: 'ph-fill ph-twitter-logo' },
+            YouTube: { icon: 'ph-fill ph-youtube-logo' },
+            Twitch: { icon: 'ph-fill ph-twitch-logo' },
+            Discord: { icon: 'ph-fill ph-discord-logo' },
+            Github: { icon: 'ph-fill ph-github-logo' },
+            Steam: { icon: 'ph-fill ph-steam-logo' },
+            Spotify: { icon: 'ph-fill ph-spotify-logo' },
+            Roblox: { icon: 'ph-fill ph-game-controller' },
+            Telegram: { icon: 'ph-fill ph-telegram-logo' }
+        };
+
         const session = JSON.parse(localStorage.getItem('j2st_session_v2') || '{}');
         const defaultData = {
             displayName: session.username || 'Void Wanderer',
@@ -1078,7 +1093,62 @@
             });
         }
 
+
+        function addLink() {
+            const modal = document.getElementById('platform-modal');
+            const grid = document.getElementById('modal-platform-grid');
+            const inputStep = document.getElementById('modal-input-step');
+            
+            grid.style.display = 'grid';
+            inputStep.classList.remove('active');
+            modal.classList.add('active');
+            
+            grid.innerHTML = '';
+            Object.keys(socialModels).forEach(p => {
+                const btn = document.createElement('div');
+                btn.className = 'platform-btn';
+                btn.innerHTML = `<i class="${socialModels[p].icon}"></i><span>${p}</span>`;
+                btn.onclick = () => selectPlatform(p);
+                grid.appendChild(btn);
+            });
+        }
+
+        let selectedPlatform = '';
+        function selectPlatform(p) {
+            selectedPlatform = p;
+            document.getElementById('modal-platform-grid').style.display = 'none';
+            const step = document.getElementById('modal-input-step');
+            step.classList.add('active');
+            document.getElementById('modal-platform-name').innerText = p;
+            document.getElementById('modal-username-input').value = '';
+            document.getElementById('modal-username-input').focus();
+        }
+
+        function confirmPlatformLink() {
+            const username = document.getElementById('modal-username-input').value.trim();
+            if(!username) return alert("Please enter a valid signature.");
+            
+            const id = Date.now();
+            if(!userData.links) userData.links = [];
+            userData.links.push({ id, platform: selectedPlatform, username });
+            
+            renderLinks();
+            saveEverything();
+            closePlatformModal();
+        }
+
+        function closePlatformModal() {
+            document.getElementById('platform-modal').classList.remove('active');
+        }
+
+        function removeLink(id) {
+            userData.links = userData.links.filter(l => l.id !== id);
+            renderLinks();
+            saveEverything();
+        }
+
         function saveEverything() {
+
             // Priority Feedback
             const saveBtn = document.querySelector('.top-actions .save-btn');
             if(saveBtn) {
@@ -1548,5 +1618,29 @@
             }
         }
     </script>
+
+    <!-- PLATFORM SELECTION MODAL -->
+    <div class="modal-overlay" id="platform-modal">
+        <div class="elite-modal">
+            <div class="modal-header">
+                <h3>Select Essence Source</h3>
+                <button class="modal-close" onclick="closePlatformModal()"><i class="ph-bold ph-x"></i></button>
+            </div>
+            
+            <div id="modal-platform-grid" class="platform-grid">
+                <!-- Platforms dynamic -->
+            </div>
+
+            <div id="modal-input-step" class="platform-input-step">
+                <p style="font-size: 11px; opacity: 0.5; margin-bottom: 20px;">Connect your <span id="modal-platform-name" style="color: var(--accent-primary);"></span> essence.</p>
+                <div class="field-group">
+                    <label class="field-label">Username / ID</label>
+                    <input type="text" id="modal-username-input" class="field-input" placeholder="Enter handle...">
+                </div>
+                <button class="save-btn" style="width: 100%; margin-top: 10px;" onclick="confirmPlatformLink()">ESTABLISH CONNECTION</button>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
