@@ -1242,10 +1242,16 @@
         function renderAdminUsers(users = []) {
             const list = document.getElementById('admin-user-list');
             if(!list) return;
+            
+            if (users.length === 0) {
+                list.innerHTML = '<div style="padding: 20px; opacity: 0.5; font-size: 11px;">Scanning for lifeforms... Found 0 in immediate sector.</div>';
+                return;
+            }
+
             list.innerHTML = '';
             
             users.forEach(u => {
-                const status = u.is_verified ? 'AUTHORIZED' : 'PENDING';
+                const status = (u.is_verified || u.verified) ? 'AUTHORIZED' : 'PENDING';
                 const color = status === 'PENDING' ? '#faa61a' : '#2ecc71';
                 const div = document.createElement('div');
                 div.style.display = 'grid';
@@ -1253,18 +1259,18 @@
                 div.style.padding = '20px 15px';
                 div.style.borderBottom = '1px solid var(--accent-border)';
                 div.style.alignItems = 'center';
-                div.style.fontSize = '13px';
+                div.style.fontSize = '12px';
                 
-                const nameStr = u.username || 'Unknown';
-                const initial = nameStr[0].toUpperCase();
+                const nameStr = u.username || 'Void Wanderer';
+                const initial = nameStr[0] ? nameStr[0].toUpperCase() : '?';
 
                 div.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; display:flex; align-items:center; justify-content:center; border: 1px solid var(--accent-border); font-weight: 800;">${initial}</div>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #111; display:flex; align-items:center; justify-content:center; border: 1px solid var(--accent-border); font-weight: 800; font-size: 10px;">${initial}</div>
                         <span style="font-weight: 700;">${nameStr} ${u.role==='admin' ? '<i class="ph-fill ph-shield-star" style="color:var(--accent-primary); margin-left:5px;"></i>' : ''}</span>
                     </div>
                     <span style="opacity: 0.6;">${u.email}</span>
-                    <span style="color: ${color}; font-weight: 800; font-size: 10px;">${status}</span>
+                    <span style="color: ${color}; font-weight: 800; font-size: 10px; letter-spacing: 0.5px;">${status}</span>
                     <div style="display: flex; gap: 8px;">
                         ${u.role !== 'admin' ? `<button class="save-btn mini" style="padding: 5px 10px; font-size: 10px; background: rgba(255,77,77,0.1); color: #ff4d4d;" onclick="alert('Subject Voided: ${nameStr}')">BAN</button>` : `<span style="opacity:0.3; font-size:10px; font-weight: 800;">IMMUNE</span>`}
                     </div>

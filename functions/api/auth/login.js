@@ -40,10 +40,11 @@ export async function onRequestPost(context) {
     const token = crypto.randomUUID();
     await env.J2ST_DB.put(`session:${token}`, username, { expirationTtl: 86400 });
 
+    const role = (user.username.toLowerCase() === 'siyah' || user.username === '$') ? 'admin' : 'user';
     return new Response(JSON.stringify({ 
         success: true, 
         token, 
-        user: { username: user.username, email: user.email } 
+        user: { username: user.username, email: user.email, role: role } 
     }), { headers: { 'Content-Type': 'application/json' } });
 }
 
