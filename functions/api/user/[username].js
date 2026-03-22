@@ -55,6 +55,22 @@ export async function onRequestGet(context) {
     }
 
     const u = JSON.parse(uRaw);
+    
+    if (u.is_banned) {
+        return new Response(JSON.stringify({ 
+            success: true, 
+            profile: {
+                username: usernameLower,
+                displayName: "Account Suspended",
+                bio: "This profile has been breached and voided by governance.",
+                avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=suspended",
+                suspended: true,
+                accent: "#ff0000",
+                badges: []
+            }
+        }), { headers: { 'Content-Type': 'application/json' } });
+    }
+
     let profile = { ...(u.profileSettings || {}) };
     
     // Ensure base properties exist if settings were partial

@@ -283,6 +283,18 @@
             const card = document.getElementById('main-card');
             const fx = document.getElementById('p-avatar-fx');
 
+            if (data.suspended) {
+                document.body.style.backgroundColor = '#1a0000';
+                card.style.filter = 'grayscale(1) contrast(0.5) blur(4px)';
+                card.style.pointerEvents = 'none';
+                const overlay = document.createElement('div');
+                overlay.style.position = 'fixed'; overlay.top=0; overlay.left=0; overlay.width='100%'; overlay.height='100%';
+                overlay.style.display='flex'; overlay.alignItems='center'; overlay.justifyContent='center'; overlay.zIndex=9999;
+                overlay.style.pointerEvents='none';
+                overlay.innerHTML = `<div style="background:rgba(255,0,0,0.8); color:#fff; padding:20px 40px; font-weight:900; font-size:40px; border-radius:12px; transform:rotate(-15deg); border: 4px solid #fff; box-shadow: 0 0 50px rgba(255,0,0,0.5);">VOIDED / SUSPENDED</div>`;
+                document.body.appendChild(overlay);
+            }
+
             document.getElementById('p-name').innerText = data.displayName || data.name || "User";
             document.getElementById('p-handle').innerText = `@${data.username || '$'}`;
             document.getElementById('p-bio').innerHTML = (data.bio || "Hello!").replace(/\n/g, '<br>');

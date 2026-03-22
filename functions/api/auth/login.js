@@ -22,6 +22,10 @@ export async function onRequestPost(context) {
 
     const user = JSON.parse(rawUser);
 
+    if (user.is_banned) {
+        return new Response(JSON.stringify({ error: "Your access is suspended. Breach sequence denied." }), { status: 403 });
+    }
+
     if (user.verified === false) {
         return new Response(JSON.stringify({ error: "Lütfen e-posta adresinizi onaylayın." }), { status: 403 });
     }

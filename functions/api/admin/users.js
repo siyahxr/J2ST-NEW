@@ -19,6 +19,7 @@ export async function onRequestGet(context) {
                     username: username,
                     email: u.email || "N/A",
                     is_verified: u.is_verified || u.verified || false,
+                    is_banned: u.is_banned || false,
                     role: (username.toLowerCase() === 'siyah' || username === '$' || username === 'admin') ? 'admin' : 'user',
                     created_at: u.created_at || Date.now()
                 });

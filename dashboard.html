@@ -1239,6 +1239,41 @@
             } catch(e) { console.error("Admin Fetch Fail:", e); }
         }
 
+        async function banUser(username, currentStatus) {
+            const secret = prompt("Enter Admin Secret for Authorization:");
+            if(!secret) return;
+            const action = currentStatus === 'BANNED' ? 'unban' : 'ban';
+            try {
+                const res = await fetch('/api/admin/ban', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, secret, action })
+                });
+                const d = await res.json();
+                if(d.success) {
+                    alert(`Success: User ${username} is now ${action}ned.`);
+                    fetchAdminUsers();
+                } else alert(d.error);
+            } catch(e) { alert("Execution Fail."); }
+        }
+
+        async function awardBadges(username) {
+            const secret = prompt("Enter Admin Secret for Authorization:");
+            if(!secret) return;
+            const badgesInput = prompt("Enter Badges (comma separated, e.g: Premium, Verified, Staff):");
+            if(!badgesInput) return;
+            const badges = badgesInput.split(',').map(b => b.trim());
+            
+            try {
+                const res = await fetch('/api/admin/badges', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, secret, badges })
+                });
+                const d = await res.json();
+                if(d.success) alert("Badges Awarded.");
+                else alert(d.error);
+            } catch(e) { alert("Execution Fail."); }
+        }
+
         function renderAdminUsers(users = []) {
             const list = document.getElementById('admin-user-list');
             if(!list) return;
@@ -1251,8 +1286,9 @@
             list.innerHTML = '';
             
             users.forEach(u => {
-                const status = (u.is_verified || u.verified) ? 'AUTHORIZED' : 'PENDING';
-                const color = status === 'PENDING' ? '#faa61a' : '#2ecc71';
+                const isBanned = u.is_banned === true;
+                const status = isBanned ? 'BANNED' : ((u.is_verified || u.verified) ? 'AUTHORIZED' : 'PENDING');
+                const color = status === 'BANNED' ? '#ff4d4d' : (status === 'PENDING' ? '#faa61a' : '#2ecc71');
                 const div = document.createElement('div');
                 div.style.display = 'grid';
                 div.style.gridTemplateColumns = '2fr 2fr 1fr 1fr';
@@ -1272,7 +1308,10 @@
                     <span style="opacity: 0.6;">${u.email}</span>
                     <span style="color: ${color}; font-weight: 800; font-size: 10px; letter-spacing: 0.5px;">${status}</span>
                     <div style="display: flex; gap: 8px;">
-                        ${u.role !== 'admin' ? `<button class="save-btn mini" style="padding: 5px 10px; font-size: 10px; background: rgba(255,77,77,0.1); color: #ff4d4d;" onclick="alert('Subject Voided: ${nameStr}')">BAN</button>` : `<span style="opacity:0.3; font-size:10px; font-weight: 800;">IMMUNE</span>`}
+                        ${u.role !== 'admin' ? `
+                            <button class="save-btn mini" style="padding: 5px 8px; font-size: 9px; background: rgba(255,166,26,0.1); color: #faa61a;" onclick="awardBadges('${nameStr}')">BADGE</button>
+                            <button class="save-btn mini" style="padding: 5px 8px; font-size: 9px; background: rgba(255,77,77,0.1); color: #ff4d4d;" onclick="banUser('${nameStr}', '${status}')">${isBanned ? 'UNBAN' : 'BAN'}</button>
+                        ` : `<span style="opacity:0.3; font-size:10px; font-weight: 800;">IMMUNE</span>`}
                     </div>
                 `;
                 list.appendChild(div);

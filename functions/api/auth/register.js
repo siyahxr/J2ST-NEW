@@ -11,6 +11,12 @@ export async function onRequestPost(context) {
     const emailLower = email.toLowerCase();
     const token = crypto.randomUUID();
 
+    // Blacklist check
+    const isBanned = await env.J2ST_DB.get(`blacklist:${emailLower}`);
+    if (isBanned) {
+        return new Response(JSON.stringify({ error: "Your access trace is blacklisted. Breach sequence denied." }), { status: 403 });
+    }
+
     // Check if user exists
     const existing = await env.J2ST_DB.get(`user:${usernameLower}`);
     if (existing) return new Response(JSON.stringify({ error: "Username already exists." }), { status: 400 });
