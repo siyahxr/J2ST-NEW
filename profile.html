@@ -156,11 +156,13 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        @keyframes f-wing-l { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(-25deg) scale(1.15); filter: brightness(1.4); } }
-        @keyframes f-wing-r { 0%,100% { transform: scaleX(-1) rotate(-8deg); } 50% { transform: scaleX(-1) rotate(-25deg) scale(1.15); filter: brightness(1.4); } }
-        .fx-wings-l, .fx-wings-r { position: absolute; width: 160px; height: 120px; top: -10px; pointer-events: none; opacity: 0.8; z-index: -1; transition: 0.5s; }
-        .fx-wings-l { left: -90px; animation: f-wing-l 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-        .fx-wings-r { right: -90px; animation: f-wing-r 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        @keyframes f-wing-pro-l { 0%,100% { transform: rotate(-5deg); filter: brightness(1) drop-shadow(0 0 10px currentColor); } 50% { transform: rotate(-35deg) scale(1.1); filter: brightness(1.5) drop-shadow(0 0 25px currentColor); } }
+        @keyframes f-wing-pro-r { 0%,100% { transform: scaleX(-1) rotate(-5deg); filter: brightness(1); } 50% { transform: scaleX(-1) rotate(-35deg) scale(1.1); filter: brightness(1.5) drop-shadow(0 0 25px currentColor); } }
+        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 180px; top: -50px; pointer-events: none; z-index: -1; transition: 0.5s; }
+        .fx-wings-l { left: -100px; animation: f-wing-pro-l 3s cubic-bezier(0.5, 0, 0.2, 1) infinite; }
+        .fx-wings-r { right: -100px; animation: f-wing-pro-r 3s cubic-bezier(0.5, 0, 0.2, 1) infinite; }
+        .feather { height: 35%; width: 100%; margin-bottom: -15%; background: linear-gradient(to right, transparent, currentColor 20%, #fff 50%, currentColor 80%, transparent); border-radius: 50% 10% 80% 10%; filter: blur(1px); transform-origin: left center; }
+        .f1 { transform: rotate(-10deg); opacity: 0.9; } .f2 { transform: rotate(15deg) scale(0.9); opacity: 0.7; } .f3 { transform: rotate(45deg) scale(0.8); opacity: 0.5; }
 
         .fx-aura { position: absolute; inset: -20px; border-radius: 50%; border: 2px solid currentColor; box-shadow: 0 0 40px currentColor, inset 0 0 20px currentColor; opacity: 0; animation: f-aura-expand 2s infinite; }
         @keyframes f-aura-expand { 0% { transform: scale(0.85); opacity: 0.6; } 100% { transform: scale(1.3); opacity: 0; } }
@@ -511,7 +513,13 @@
             pName.style.color = accent;
 
             if(data.avatarEffect === 'wings') {
-                pAvatarFx.innerHTML = `<div class="fx-wings-l" style="color:${fxCol}"></div><div class="fx-wings-r" style="color:${fxCol}"></div>`;
+                pAvatarFx.innerHTML = `
+                    <div class="fx-wings-l" style="color:${fxCol}">
+                        <div class="feather f1"></div><div class="feather f2"></div><div class="feather f3"></div>
+                    </div>
+                    <div class="fx-wings-r" style="color:${fxCol}">
+                        <div class="feather f1"></div><div class="feather f2"></div><div class="feather f3"></div>
+                    </div>`;
             } else if(data.avatarEffect === 'aura') {
                 pAvatarFx.innerHTML = `<div class="fx-aura" style="color:${fxCol}"></div>`;
             } else if(data.avatarEffect === 'halo') {
