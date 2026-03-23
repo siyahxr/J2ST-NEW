@@ -20,6 +20,60 @@
         .badge-item { cursor: help; transition: 0.3s; position: relative; display: flex; align-items: center; justify-content: center; color: inherit; }
         .badge-item::after { content: attr(data-title); position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); padding: 6px 10px; background: rgba(0,0,0,0.9); color: #fff; font-size: 11px; border-radius: 6px; white-space: nowrap; opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none; border: 1px solid rgba(255,255,255,0.1); z-index: 10; }
         .badge-item:hover::after { opacity: 1; visibility: visible; }
+        @keyframes f-wing-l { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(-15deg) scale(1.1); } }
+        @keyframes f-wing-r { 0%,100% { transform: scaleX(-1) rotate(-5deg); } 50% { transform: scaleX(-1) rotate(-15deg) scale(1.1); } }
+        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 100px; top: 0; pointer-events: none; opacity: 0.6; z-index: -1; }
+        .fx-wings-l { left: -70px; animation: f-wing-l 3s ease-in-out infinite; }
+        .fx-wings-r { right: -70px; animation: f-wing-r 3s ease-in-out infinite; }
+
+        .fx-aura { position: absolute; inset: -15px; border-radius: 50%; box-shadow: 0 0 30px currentColor; opacity: 0.4; animation: f-pulse 2s infinite; }
+        .fx-halo { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 80px; height: 15px; border-radius: 50%; border: 3px solid currentColor; filter: drop-shadow(0 0 10px currentColor); animation: f-float 4s infinite; }
+        
+        .fx-vortex { position: absolute; inset: -40px; border-radius: 50%; background: conic-gradient(from 0deg, transparent, currentColor, transparent); animation: f-spin 2s linear infinite; mask: radial-gradient(transparent 50%, black 70%); }
+
+        @keyframes f-pulse { 0%,100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.1); opacity: 0.6; } }
+        @keyframes f-float { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
+        @keyframes f-spin { to { transform: rotate(360deg); } }
+
+        /* NAME EFFECTS */
+        .effect-rainbow { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 200%; animation: f-rainbow 3s linear infinite; }
+        @keyframes f-rainbow { to { background-position: 200% center; } }
+        
+        .effect-glow { animation: f-glow-pulse 2s infinite; }
+        @keyframes f-glow-pulse { 0%,100% { text-shadow: 0 0 5px currentColor; } 50% { text-shadow: 0 0 25px currentColor, 0 0 45px currentColor; } }
+
+        .effect-glitch { animation: f-glitch 0.5s infinite; position: relative; }
+        @keyframes f-glitch { 
+            0% { transform: translate(0); text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-1px, -1px); }
+            80% { transform: translate(1px, 1px); }
+            100% { transform: translate(0); }
+        }
+
+        .effect-float { animation: f-float-name 3s ease-in-out infinite; }
+        @keyframes f-float-name { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .effect-shiny { position: relative; overflow: hidden; }
+        .effect-shiny::after { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: f-shine 2s infinite; }
+        @keyframes f-shine { to { left: 200%; } }
+
+        .effect-neon { animation: f-neon 1.5s infinite; }
+        @keyframes f-neon { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; text-shadow: 0 0 10px currentColor; } 20%, 24%, 55% { opacity: 0.5; text-shadow: none; } }
+
+        .effect-vanish { animation: f-vanish 4s infinite; }
+        @keyframes f-vanish { 0%, 100% { opacity: 1; filter: blur(0); } 50% { opacity: 0; filter: blur(10px); } }
+
+        .effect-icy { text-shadow: 0 0 5px #fff, 0 0 10px #00ffff, 0 0 20px #00ffff; color: #e0ffff !important; }
+        .effect-burning { text-shadow: 0 0 5px #ff0, 0 0 10px #f90, 0 0 20px #f00; color: #ffeb3b !important; animation: f-flicker 0.1s infinite; }
+        @keyframes f-flicker { 0% { opacity: 1; } 50% { opacity: 0.95; } 100% { opacity: 1; } }
+
+        .effect-gold { background: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+
+        .avatar-glow { filter: drop-shadow(0 0 20px currentColor); }
+        .avatar-spin { animation: f-spin 10s linear infinite; }
+        .avatar-pulse { animation: f-pulse 2s ease-in-out infinite; }
     </style>
 </head>
 <body>
@@ -155,7 +209,7 @@
                                     <div class="field-group">
                                         <label class="field-label">Avatar</label>
                                         <div style="display: flex; gap: 12px; align-items: center;">
-                                            <img src="assest/icons/user_dragon.png" id="editor-avatar-preview" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--accent-border);">
+                                            <img src="j2st.webp" id="editor-avatar-preview" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--accent-border);">
                                             <button class="btn-ghost" style="flex: 1; height: 44px;" onclick="document.getElementById('input-avatar').click()"><i class="ph-bold ph-upload-simple"></i></button>
                                         </div>
                                     </div>
@@ -201,20 +255,45 @@
                                         <input type="color" id="input-accent" onchange="updateColors()" style="width: 100%; height: 42px;">
                                     </div>
                                     <div class="field-group">
-                                        <label class="field-label">Name Bloom</label>
+                                        <label class="field-label">Name Bloom (Type)</label>
                                         <select id="input-effect" class="field-input" onchange="updateAesthetics()">
-                                            <option value="">None</option>
-                                            <option value="typewriter">Type</option>
-                                            <option value="rainbow">Rain</option>
-                                            <option value="glitch">Glit</option>
+                                            <option value="">Standard</option>
+                                            <option value="typewriter">Typewriter</option>
+                                            <option value="rainbow">Chromatic</option>
+                                            <option value="glitch">Glitch Loop</option>
+                                            <option value="glow">Pulse Glow</option>
+                                            <option value="float">Float Bob</option>
+                                            <option value="shiny">Metallic Sweep</option>
+                                            <option value="shake">Hyper Jitter</option>
+                                            <option value="neon">Neon Flicker</option>
+                                            <option value="vanish">Phantom Fade</option>
+                                            <option value="wave">Sinusoidal</option>
+                                            <option value="burning">Hellfire</option>
+                                            <option value="icy">Frostbite</option>
+                                            <option value="gold">Golden Leaf</option>
+                                            <option value="blur">Focus Cycle</option>
+                                            <option value="matrix">The One</option>
                                         </select>
                                     </div>
                                     <div class="field-group">
-                                        <label class="field-label">Avatar Presence</label>
+                                        <label class="field-label">Avatar Presence (FX)</label>
                                         <select id="input-avatar-effect" class="field-input" onchange="updateAesthetics()">
-                                            <option value="">Off</option>
+                                            <option value="">None</option>
                                             <option value="wings">Wings</option>
                                             <option value="aura">Aura</option>
+                                            <option value="spin">Slow Spin</option>
+                                            <option value="pulse">Heartbeat</option>
+                                            <option value="halo">Celestial Halo</option>
+                                            <option value="glitch">Digital Glitch</option>
+                                            <option value="particles">Ethereal Sparks</option>
+                                            <option value="vortex">Void Vortex</option>
+                                            <option value="fire">Eternal Flame</option>
+                                            <option value="snow">Winter Bliss</option>
+                                            <option value="matrix">Matrix Code</option>
+                                            <option value="hearts">Lovely Hearts</option>
+                                            <option value="lightning">Electric Arcs</option>
+                                            <option value="cyber">Cyber Frame</option>
+                                            <option value="shadow">Shadow Clone</option>
                                         </select>
                                     </div>
                                 </div>
@@ -224,11 +303,15 @@
                                         <input type="color" id="input-avatar-effect-color" onchange="updateAesthetics()" style="height: 42px; width: 100%;">
                                     </div>
                                     <div class="field-group">
-                                        <label class="field-label">Core Density</label>
-                                        <input type="range" id="input-opacity" min="0" max="100" oninput="updateAesthetics()" style="width: 100%; margin-top: 15px;">
+                                        <label class="field-label">Core Density (Opacity)</label>
+                                        <input type="range" id="input-opacity" min="0" max="100" oninput="updateAesthetics()" style="width: 100%; margin-top: 5px;">
                                     </div>
                                     <div class="field-group">
-                                        <label class="field-label">Card Void Base</label>
+                                        <label class="field-label">Atmosphere Blur</label>
+                                        <input type="range" id="input-card-blur" min="0" max="100" oninput="updateAesthetics()" style="width: 100%; margin-top: 5px;">
+                                    </div>
+                                    <div class="field-group">
+                                        <label class="field-label">Card Void Base (Color)</label>
                                         <input type="color" id="input-card-color" onchange="updateAesthetics()" style="width: 100%; height: 42px;">
                                     </div>
                                 </div>
@@ -287,7 +370,7 @@
                                 <div style="padding: 24px; margin-top: -60px;">
                                     <div style="position: relative; width: 120px; height: 120px; margin: 0 auto;">
                                         <div id="p-avatar-effect" style="position: absolute; inset: 0; z-index: 1;"></div>
-                                        <img id="p-avatar" src="assest/icons/user_dragon.png" style="width: 100%; height: 100%; border-radius: 50%; border: 6px solid #000; position: relative; z-index: 2; object-fit: cover;">
+                                        <img id="p-avatar" src="j2st.webp" style="width: 100%; height: 100%; border-radius: 50%; border: 6px solid #000; position: relative; z-index: 2; object-fit: cover;">
                                     </div>
                                     <div style="text-align: center; margin-top: 20px;">
                                         <div style="display: flex; align-items: center; gap: 10px; justify-content: center;">
@@ -490,8 +573,9 @@
             badgePos: {},
             nameEffect: '',
             opacity: 70,
+            cardBlur: 20,
             glow: 15,
-            avatar: "avatar.webp", 
+            avatar: "j2st.webp", 
             banner: '',
             badges: ['Beta Tester'],
             ownedBadges: ['Beta Tester'],
@@ -845,25 +929,7 @@
             userData.muArtist = document.getElementById('input-mu-artist').value;
 
             document.getElementById('p-name').innerText = userData.displayName;
-            document.getElementById('p-name').setAttribute('data-text', userData.displayName);
             document.getElementById('p-bio').innerText = userData.bio;
-            document.getElementById('chip-username').innerText = userData.displayName;
-            
-            // Presence Mocks
-            const mDs = document.getElementById('mock-discord');
-            const mMu = document.getElementById('mock-music');
-            if(mDs) mDs.style.display = userData.discordId ? 'flex' : 'none';
-            if(mMu) {
-                mMu.style.display = userData.muTitle ? 'flex' : 'none';
-                document.getElementById('mock-mu-song').innerText = userData.muTitle;
-                document.getElementById('mock-mu-artist').innerText = userData.muArtist || 'Unknown Artist';
-                document.getElementById('mock-mu-cover').src = userData.muCover || '';
-            }
-
-            const pName = document.getElementById('p-name');
-            pName.classList.remove('effect-typewriter');
-            void pName.offsetWidth; 
-            if(userData.nameEffect === 'typewriter') pName.classList.add('effect-typewriter');
             
             updateAesthetics();
         }
@@ -880,23 +946,14 @@
             document.getElementById('input-accent').value = userData.accent;
             document.getElementById('input-card-color').value = userData.cardColor;
             document.getElementById('input-opacity').value = userData.opacity;
+            document.getElementById('input-card-blur').value = userData.cardBlur || 20;
             document.getElementById('input-effect').value = userData.nameEffect;
             document.getElementById('input-layout-mode').value = userData.layoutMode;
             document.getElementById('input-card-shape').value = userData.cardShape;
             document.getElementById('input-card-size').value = userData.cardSize;
             
-            // Reset new overrides
-            document.getElementById('check-force-nitro').checked = false;
-            document.getElementById('check-force-boost').checked = false;
-
-            updateColors();
-            updatePreview();
-            updateCanvas();
-            saveEverything();
-            alert("Essence Restored. Returning to profile...");
-            setTimeout(() => {
-                window.location.href = '/' + encodeURIComponent(userData.username || userData.displayName);
-            }, 800);
+            updateAesthetics();
+            alert("Essence Restored.");
         }
 
         function setPresetColor(hex) {
@@ -928,33 +985,12 @@
             const sizeMap = { compact: '300px', standard: '500px', ultra: '700px' };
             preview.style.height = sizeMap[userData.cardSize] || '500px';
 
-            const layout = userData.layoutMode || 'standard';
-            const nodes = userData.layoutPositions || defaultData.layoutPositions;
-            
-            Object.keys(nodes).forEach(key => {
-                const el = document.getElementById(`p-${key}`);
-                if(el && layout === 'standard') {
-                    el.style.left = nodes[key].x + '%';
-                    el.style.top = nodes[key].y + '%';
-                    el.style.transform = 'translate(-50%, -50%)';
-                    el.style.position = 'absolute';
-                } else if(el) {
-                    el.style.position = 'static';
-                    el.style.transform = 'none';
-                }
-            });
-
-            // Sync Overrides
-            const nitro = document.getElementById('p-nitro');
-            if(nitro) nitro.style.display = userData.forceNitro ? 'block' : 'none';
-            
-            const boost = document.getElementById('p-boost');
-            if(boost) boost.style.display = userData.forceBoost ? 'block' : 'none';
-
-            const r = parseInt(userData.cardColor.slice(1, 3), 16);
-            const g = parseInt(userData.cardColor.slice(3, 5), 16);
-            const b = parseInt(userData.cardColor.slice(5, 7), 16);
-            preview.style.background = `rgba(${r}, ${g}, ${b}, ${userData.opacity / 100})`;
+            const r = parseInt(userData.cardColor.slice(1, 3), 16) || 10;
+            const g = parseInt(userData.cardColor.slice(3, 5), 16) || 10;
+            const b = parseInt(userData.cardColor.slice(5, 7), 16) || 10;
+            preview.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${userData.opacity / 100})`;
+            preview.style.backdropFilter = `blur(${userData.cardBlur || 0}px) saturate(180%)`;
+            preview.style.webkitBackdropFilter = `blur(${userData.cardBlur || 0}px) saturate(180%)`;
             
             const radiusMap = { rect: '20px', round: '50px', skew: '10px', capsule: '999px' };
             preview.style.borderRadius = radiusMap[userData.cardShape] || '20px';
@@ -962,29 +998,38 @@
 
         function updateAesthetics() {
             userData.cardColor = document.getElementById('input-card-color').value;
+            userData.cardBlur = document.getElementById('input-card-blur').value;
             userData.badgeColor = document.getElementById('input-badge-color').value;
-            userData.linkItemColor = document.getElementById('input-link-color').value;
             userData.avatarEffect = document.getElementById('input-avatar-effect').value;
             userData.avatarEffectColor = document.getElementById('input-avatar-effect-color').value;
-            userData.avatarEffectOpacity = document.getElementById('input-avatar-effect-opacity').value;
-            userData.cardEffect = document.getElementById('input-card-effect').value;
-            userData.cardShape = document.getElementById('input-card-shape').value;
-            userData.cardSize = document.getElementById('input-card-size').value;
             userData.nameEffect = document.getElementById('input-effect').value;
             userData.opacity = document.getElementById('input-opacity').value;
             userData.glow = document.getElementById('input-glow').value;
-            userData.cursor = document.getElementById('input-cursor').value;
-            userData.badgeSize = document.getElementById('input-badge-size').value;
-            userData.socialSize = document.getElementById('input-social-size').value;
+            userData.cardSize = document.getElementById('input-card-size').value;
             
-            userData.forceNitro = document.getElementById('check-force-nitro')?.checked || false;
-            userData.forceBoost = document.getElementById('check-force-boost')?.checked || false;
-
-            updateColors();
-            updatePreview();
             updateCanvas();
-            syncDashboardAesthetics();
+            syncPreviewDetails();
             saveEverything();
+        }
+
+        function syncPreviewDetails() {
+            const pName = document.getElementById('p-name');
+            const pBio = document.getElementById('p-bio');
+            const accent = document.getElementById('input-accent').value;
+            userData.accent = accent;
+            
+            pName.style.color = accent;
+            pName.className = '';
+            if(userData.nameEffect) pName.classList.add(`effect-${userData.nameEffect}`);
+            
+            const pAvatarEffect = document.getElementById('p-avatar-effect');
+            pAvatarEffect.innerHTML = '';
+            const glow = `drop-shadow(0 0 15px ${userData.avatarEffectColor})`;
+            if(userData.avatarEffect === 'wings') {
+                pAvatarEffect.innerHTML = `<div class="wing-effect-preview wing-preview-left" style="filter:${glow}; color:${userData.avatarEffectColor};"></div><div class="wing-effect-preview wing-preview-right" style="filter:${glow}; color:${userData.avatarEffectColor};"></div>`;
+            } else if(userData.avatarEffect === 'aura') {
+                pAvatarEffect.innerHTML = `<div class="aura-effect-preview" style="color:${userData.avatarEffectColor};"></div>`;
+            }
         }
 
 
@@ -1005,25 +1050,47 @@
             pName.innerText = document.getElementById('input-display-name').value || 'siyah';
             pBio.innerText = document.getElementById('input-bio').value || 'VOID IDENTITY';
             
-            // Sync Preview Aesthetic
-            pScreen.style.borderRadius = userData.cardShape === 'round' ? '40px' : (userData.cardShape === 'skew' ? '10px' : '0px');
-            pScreen.style.transform = userData.cardShape === 'skew' ? 'skewX(-2deg)' : 'none';
-            pScreen.style.backgroundColor = `rgba(10,10,10, ${userData.opacity/100})`;
-            
-            pName.className = '';
-            if(userData.nameEffect) pName.classList.add(`effect-${userData.nameEffect}`);
-            pName.style.color = userData.accent;
-            pName.style.textShadow = `0 0 15px ${userData.accent}`;
-
             pAvatarEffect.innerHTML = '';
-            const glow = `drop-shadow(0 0 15px ${userData.avatarEffectColor})`;
+            pScreen.querySelector('.card-av-wrap').className = 'card-av-wrap'; // Reset
+            
+            const col = userData.avatarEffectColor || userData.accent;
+            const glow = `drop-shadow(0 0 15px ${col})`;
+            
             if(userData.avatarEffect === 'wings') {
-                pAvatarEffect.innerHTML = `<div class="wing-effect-preview wing-preview-left" style="filter:${glow}; color:${userData.avatarEffectColor};"></div><div class="wing-effect-preview wing-preview-right" style="filter:${glow}; color:${userData.avatarEffectColor};"></div>`;
-            } else if(userData.avatarEffect === 'heart') {
-                pAvatarEffect.innerHTML = `<div class="heart-effect-preview" style="filter:${glow}; color:${userData.avatarEffectColor};"></div>`;
+                pAvatarEffect.innerHTML = `<div class="fx-wings-l" style="color:${col}"></div><div class="fx-wings-r" style="color:${col}"></div>`;
             } else if(userData.avatarEffect === 'aura') {
-                pAvatarEffect.innerHTML = `<div class="aura-effect-preview" style="color:${userData.avatarEffectColor};"></div>`;
+                pAvatarEffect.innerHTML = `<div class="fx-aura" style="color:${col}"></div>`;
+            } else if(userData.avatarEffect === 'halo') {
+                pAvatarEffect.innerHTML = `<div class="fx-halo" style="color:${col}"></div>`;
+            } else if(userData.avatarEffect === 'vortex') {
+                pAvatarEffect.innerHTML = `<div class="fx-vortex" style="color:${col}"></div>`;
+            } else if(userData.avatarEffect === 'spin') {
+                pScreen.querySelector('.card-av-wrap').classList.add('avatar-spin');
+            } else if(userData.avatarEffect === 'pulse') {
+                pScreen.querySelector('.card-av-wrap').classList.add('avatar-pulse');
+            } else if(userData.avatarEffect === 'fire') {
+                pAvatarEffect.innerHTML = `<div class="fx-aura" style="color:#ff5500; box-shadow: 0 -20px 40px #ffcc00;"></div>`;
+            } else if(userData.avatarEffect === 'lightning') {
+                pAvatarEffect.innerHTML = `<div class="fx-aura" style="color:#00ffff; transition: 0.1s; animation: f-flicker 0.2s infinite;"></div>`;
+            } else if(userData.avatarEffect === 'matrix') {
+                pAvatarEffect.innerHTML = `<div class="fx-matrix" style="color:${fxCol}"></div>`;
+            } else if(userData.avatarEffect === 'snow') {
+                pAvatarEffect.innerHTML = `<div class="fx-snow"></div>`;
+            } else if(userData.avatarEffect === 'hearts') {
+                pAvatarEffect.innerHTML = `<div class="fx-hearts"></div>`;
+            } else if(userData.avatarEffect === 'glitch') {
+                pScreen.querySelector('.card-av-wrap').classList.add('effect-glitch');
+            } else if(userData.avatarEffect === 'particles') {
+                pAvatarEffect.innerHTML = `<div class="fx-aura" style="color:${fxCol}; filter: blur(10px); opacity: 0.3;"></div><div class="fx-halo" style="color:${fxCol}; width: 120px; border-width: 1px;"></div>`;
+            } else if(userData.avatarEffect === 'cyber') {
+                pAvatarEffect.innerHTML = `<div style="position:absolute; inset: -5px; border: 2px dashed ${fxCol}; border-radius: 40px; animation: f-spin 10s linear infinite;"></div>`;
+            } else if(userData.avatarEffect === 'shadow') {
+                pAvatarEffect.innerHTML = `<div style="position:absolute; inset: 10px; border-radius: 50%; background: ${fxCol}; filter: blur(20px); opacity: 0.5;"></div>`;
             }
+            
+            // Apply Glow if any effect is active
+            if(userData.avatarEffect) pScreen.querySelector('.card-av-wrap').classList.add('avatar-glow');
+            pScreen.querySelector('.card-av-wrap').style.color = col;
 
             // Sync Auditory
             const muDisplay = document.getElementById('mock-music');
@@ -1635,8 +1702,9 @@
             if(document.getElementById('input-mu-title')) document.getElementById('input-mu-title').value = userData.muTitle || '';
             if(document.getElementById('input-mu-artist')) document.getElementById('input-mu-artist').value = userData.muArtist || '';
             if(document.getElementById('input-accent')) document.getElementById('input-accent').value = userData.accent || '#ffffff';
-            if(document.getElementById('input-card-color')) document.getElementById('input-card-color').value = userData.cardColor || '#000000';
-            if(document.getElementById('input-opacity')) document.getElementById('input-opacity').value = userData.opacity || 20;
+            if(document.getElementById('input-card-color')) document.getElementById('input-card-color').value = userData.cardColor || '#0a0a0a';
+            if(document.getElementById('input-opacity')) document.getElementById('input-opacity').value = userData.opacity || 70;
+            if(document.getElementById('input-card-blur')) document.getElementById('input-card-blur').value = userData.cardBlur || 20;
             if(document.getElementById('input-media-url')) document.getElementById('input-media-url').value = userData.mediaSource || '';
             if(document.getElementById('input-avatar-effect')) document.getElementById('input-avatar-effect').value = userData.avatarEffect || '';
             if(document.getElementById('input-avatar-effect-color')) document.getElementById('input-avatar-effect-color').value = userData.avatarEffectColor || '#ffffff';
@@ -1649,7 +1717,7 @@
             if(document.getElementById('p-bio')) document.getElementById('p-bio').innerText = userData.bio || '';
             
             // Sync Avatars (EVERYWHERE)
-            const av = userData.avatar || userData.avatarSource || 'avatar.webp';
+            const av = userData.avatar || userData.avatarSource || 'j2st.webp';
             const avIDs = ['editor-avatar-preview', 'p-avatar', 'chip-avatar', 'hero-avatar', 'sample-pp', 'preview-avatar'];
             avIDs.forEach(id => {
                 const el = document.getElementById(id);

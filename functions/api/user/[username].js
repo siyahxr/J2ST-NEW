@@ -38,7 +38,7 @@ export async function onRequestGet(context) {
                 username: "$", 
                 displayName: "$",
                 bio: "Master of the void collective.",
-                avatar: "avatar.webp",
+                avatar: "j2st.webp",
                 accent: "#ffffff",
                 glow: 15,
                 opacity: 70,
@@ -77,7 +77,7 @@ export async function onRequestGet(context) {
     // Ensure base properties exist if settings were partial
     if (!profile.username) profile.username = u.username || usernameLower;
     if (!profile.displayName) profile.displayName = u.username || usernameLower;
-    if (!profile.avatar) profile.avatar = "avatar.webp";
+    if (!profile.avatar) profile.avatar = "j2st.webp";
     if (!profile.bio) profile.bio = "Joined the void collective.";
 
     // OMNIPOTENCE: Give admin status, but respect saved aesthetics
@@ -98,7 +98,7 @@ export async function onRequestGet(context) {
         if (!profile.accent) profile.accent = '#ffffff';
         // Only force avatar if it was the dead dragon icon
         if (profile.avatar && profile.avatar.includes('user_dragon')) {
-            profile.avatar = "avatar.webp";
+            profile.avatar = "j2st.webp";
         }
     }
 

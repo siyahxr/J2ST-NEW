@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (user.avatar) {
                 avHtml = `<img src="${user.avatar}" class="disc-av" style="width:100%;height:100%;object-fit:cover;">`;
             } else {
-                avHtml = `<img src="assest/j2st.logo.png" class="disc-av logo" style="transform:scale(5);width:100%;height:100%;object-fit:contain;">`;
+                avHtml = `<img src="j2st.webp" class="disc-av" style="width:100%;height:100%;object-fit:cover;">`;
             }
 
             // Badges

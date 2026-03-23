@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const bannerStyle = user.banner ? `background-image:url(${user.banner});background-size:cover;background-position:center;` : '';
-        const avHtml = user.avatar ? `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">` : `<img src="assest/j2st.logo.png" style="width:100%;height:100%;object-fit:contain;transform:scale(4.5);">`;
+        const avHtml = user.avatar ? `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">` : `<img src="j2st.webp" style="width:100%;height:100%;object-fit:cover;">`;
         const badgesHtml = (user.badges||[]).slice(0,4).map(bn => {
             const b = REGISTRY.find(r => r.name === bn);
             if (!b) return `<i class="ph ph-star" style="color:${user.badgeColor||'#fff'}"></i>`;

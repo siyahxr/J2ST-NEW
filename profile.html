@@ -157,11 +157,71 @@
         }
 
         .avatar-fx-wrap { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .wing-effect { position: absolute; width: 160px; height: 110px; z-index: -1; opacity: 0.5; filter: drop-shadow(0 0 8px currentColor); }
-        .wing-left { left:-65px; top:0; animation: flap 4s ease-in-out infinite; }
-        .wing-right { right:-65px; top:0; transform: scaleX(-1); animation: flap-r 4s ease-in-out infinite; }
-        @keyframes flap { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(-10deg) scale(1.05); } }
-        @keyframes flap-r { 0%, 100% { transform: scaleX(-1) rotate(-5deg); } 50% { transform: scaleX(-1) rotate(-10deg) scale(1.05); } }
+        
+        @keyframes f-wing-l { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(-15deg) scale(1.1); } }
+        @keyframes f-wing-r { 0%,100% { transform: scaleX(-1) rotate(-5deg); } 50% { transform: scaleX(-1) rotate(-15deg) scale(1.1); } }
+        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 100px; top: 0; pointer-events: none; opacity: 0.6; z-index: -1; }
+        .fx-wings-l { left: -70px; animation: f-wing-l 3s ease-in-out infinite; }
+        .fx-wings-r { right: -70px; animation: f-wing-r 3s ease-in-out infinite; }
+
+        .fx-aura { position: absolute; inset: -15px; border-radius: 50%; box-shadow: 0 0 30px currentColor; opacity: 0.4; animation: f-pulse 2s infinite; }
+        .fx-halo { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 80px; height: 15px; border-radius: 50%; border: 3px solid currentColor; filter: drop-shadow(0 0 10px currentColor); animation: f-float 4s infinite; }
+        .fx-vortex { position: absolute; inset: -40px; border-radius: 50%; background: conic-gradient(from 0deg, transparent, currentColor, transparent); animation: f-spin 2s linear infinite; mask: radial-gradient(transparent 50%, black 70%); -webkit-mask: radial-gradient(transparent 50%, black 70%); }
+
+        @keyframes f-pulse { 0%,100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.1); opacity: 0.6; } }
+        @keyframes f-float { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
+        @keyframes f-spin { to { transform: rotate(360deg); } }
+
+        /* NAME EFFECTS */
+        .effect-rainbow { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 200%; animation: f-rainbow 3s linear infinite; }
+        @keyframes f-rainbow { to { background-position: 200% center; } }
+        
+        .effect-glow { animation: f-glow-pulse 2s infinite; }
+        @keyframes f-glow-pulse { 0%,100% { text-shadow: 0 0 5px currentColor; } 50% { text-shadow: 0 0 25px currentColor, 0 0 45px currentColor; } }
+
+        .effect-glitch { animation: f-glitch 0.5s infinite; position: relative; }
+        @keyframes f-glitch { 
+            0% { transform: translate(0); text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-1px, -1px); }
+            80% { transform: translate(1px, 1px); }
+            100% { transform: translate(0); }
+        }
+
+        .effect-float { animation: f-float-name 3s ease-in-out infinite; }
+        @keyframes f-float-name { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .effect-shiny { position: relative; overflow: hidden; }
+        .effect-shiny::after { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: f-shiny 2s infinite; }
+        @keyframes f-shine { to { left: 200%; } }
+
+        .effect-neon { animation: f-neon 1.5s infinite; }
+        @keyframes f-neon { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; text-shadow: 0 0 10px currentColor; } 20%, 24%, 55% { opacity: 0.5; text-shadow: none; } }
+
+        .effect-vanish { animation: f-vanish 4s infinite; }
+        @keyframes f-vanish { 0%, 100% { opacity: 1; filter: blur(0); } 50% { opacity: 0; filter: blur(10px); } }
+
+        .effect-icy { text-shadow: 0 0 5px #fff, 0 0 10px #00ffff, 0 0 20px #00ffff; color: #e0ffff !important; }
+        .effect-burning { text-shadow: 0 0 5px #ff0, 0 0 10px #f90, 0 0 20px #f00; color: #ffeb3b !important; animation: f-flicker 0.1s infinite; }
+        @keyframes f-flicker { 0% { opacity: 1; } 50% { opacity: 0.95; } 100% { opacity: 1; } }
+
+        .effect-gold { background: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+
+        .avatar-glow { filter: drop-shadow(0 0 20px currentColor); }
+        .avatar-spin { animation: f-spin 10s linear infinite; }
+        .avatar-pulse { animation: f-pulse 2s ease-in-out infinite; }
+
+        .fx-matrix { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0%, currentColor 50%, transparent 100%); background-size: 100% 20px; animation: f-matrix 2s linear infinite; opacity: 0.3; pointer-events: none; }
+        @keyframes f-matrix { to { background-position: 0 400px; } }
+
+        .fx-snow { position: absolute; inset: -10px; background: radial-gradient(circle, #fff 10%, transparent 20%); background-size: 15px 15px; animation: f-snow 5s linear infinite; opacity: 0.5; }
+        @keyframes f-snow { to { transform: translateY(40px); } }
+
+        .fx-hearts { position: absolute; inset: -20px; pointer-events: none; }
+        .fx-hearts::before { content: "❤"; position: absolute; font-size: 12px; animation: f-rise 3s infinite; left: 10%; color: #ff0055; }
+        .fx-hearts::after { content: "❤"; position: absolute; font-size: 14px; animation: f-rise 2.5s infinite; left: 80%; animation-delay: 1s; color: #ff0055; }
+        @keyframes f-rise { 0% { transform: translateY(100%); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100%); opacity: 0; } }
     </style>
 </head>
 
@@ -299,7 +359,7 @@
             document.getElementById('p-name').innerText = data.displayName || data.name || "User";
             document.getElementById('p-handle').innerText = `@${data.username || '$'}`;
             document.getElementById('p-bio').innerHTML = (data.bio || "Hello!").replace(/\n/g, '<br>');
-            document.getElementById('p-avatar').src = data.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=J2ST";
+            document.getElementById('p-avatar').src = data.avatar || "j2st.webp";
             document.getElementById('p-views').innerText = `${(data.views || 0).toLocaleString()} views`;
             document.getElementById('p-joined').innerHTML = `<span style="color:var(--accent-primary); opacity:1;">J2ST . LOL</span> ( ELİTE DIGITAL COLLECTIVE )`;
 
@@ -436,8 +496,56 @@
             const r = parseInt(cardCol.slice(1, 3), 16) || 10;
             const g = parseInt(cardCol.slice(3, 5), 16) || 10;
             const b = parseInt(cardCol.slice(5, 7), 16) || 10;
-            card.style.background = `rgba(${r},${g},${b}, ${(data.opacity || 40) / 100})`;
-            if (data.cardBlur) card.style.backdropFilter = `blur(${data.cardBlur}px) saturate(180%)`;
+            card.style.background = `rgba(${r},${g},${b}, ${(data.opacity || 70) / 100})`;
+            if (data.cardBlur !== undefined) card.style.backdropFilter = `blur(${data.cardBlur}px) saturate(180%)`;
+            if (data.cardBlur !== undefined) card.style.webkitBackdropFilter = `blur(${data.cardBlur}px) saturate(180%)`;
+
+            // Effects Dispatcher
+            const pName = document.getElementById('p-name');
+            const pAvatarFx = document.getElementById('p-avatar-fx');
+            const avWrap = document.querySelector('.profile-avatar').parentElement;
+            const accent = data.accent || '#ffffff';
+            const fxCol = data.avatarEffectColor || accent;
+
+            if(data.nameEffect) pName.classList.add(`effect-${data.nameEffect}`);
+            pName.style.color = accent;
+
+            if(data.avatarEffect === 'wings') {
+                pAvatarFx.innerHTML = `<div class="fx-wings-l" style="color:${fxCol}"></div><div class="fx-wings-r" style="color:${fxCol}"></div>`;
+            } else if(data.avatarEffect === 'aura') {
+                pAvatarFx.innerHTML = `<div class="fx-aura" style="color:${fxCol}"></div>`;
+            } else if(data.avatarEffect === 'halo') {
+                pAvatarFx.innerHTML = `<div class="fx-halo" style="color:${fxCol}"></div>`;
+            } else if(data.avatarEffect === 'vortex') {
+                pAvatarFx.innerHTML = `<div class="fx-vortex" style="color:${fxCol}"></div>`;
+            } else if(data.avatarEffect === 'spin') {
+                avWrap.classList.add('avatar-spin');
+            } else if(data.avatarEffect === 'pulse') {
+                avWrap.classList.add('avatar-pulse');
+            } else if(data.avatarEffect === 'fire') {
+                pAvatarFx.innerHTML = `<div class="fx-aura" style="color:#ff5500; box-shadow: 0 -20px 40px #ffcc00;"></div>`;
+            } else if(data.avatarEffect === 'lightning') {
+                pAvatarFx.innerHTML = `<div class="fx-aura" style="color:#00ffff; transition: 0.1s; animation: f-flicker 0.2s infinite;"></div>`;
+            } else if(data.avatarEffect === 'matrix') {
+                pAvatarFx.innerHTML = `<div class="fx-matrix" style="color:${fxCol}"></div>`;
+            } else if(data.avatarEffect === 'snow') {
+                pAvatarFx.innerHTML = `<div class="fx-snow"></div>`;
+            } else if(data.avatarEffect === 'hearts') {
+                pAvatarFx.innerHTML = `<div class="fx-hearts"></div>`;
+            } else if(data.avatarEffect === 'glitch') {
+                avWrap.classList.add('effect-glitch');
+            } else if(data.avatarEffect === 'particles') {
+                pAvatarFx.innerHTML = `<div class="fx-aura" style="color:${fxCol}; filter: blur(10px); opacity: 0.3;"></div><div class="fx-halo" style="color:${fxCol}; width: 120px; border-width: 1px;"></div>`;
+            } else if(data.avatarEffect === 'cyber') {
+                pAvatarFx.innerHTML = `<div style="position:absolute; inset: -5px; border: 2px dashed ${fxCol}; border-radius: 40px; animation: f-spin 10s linear infinite;"></div>`;
+            } else if(data.avatarEffect === 'shadow') {
+                pAvatarFx.innerHTML = `<div style="position:absolute; inset: 10px; border-radius: 50%; background: ${fxCol}; filter: blur(20px); opacity: 0.5;"></div>`;
+            }
+            
+            if(data.avatarEffect) {
+                avWrap.classList.add('avatar-glow');
+                avWrap.style.color = fxCol;
+            }
         });
     </script>
 </body>
