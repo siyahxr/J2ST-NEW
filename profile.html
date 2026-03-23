@@ -156,72 +156,72 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .avatar-fx-wrap { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        @keyframes f-wing-l { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(-25deg) scale(1.15); filter: brightness(1.4); } }
+        @keyframes f-wing-r { 0%,100% { transform: scaleX(-1) rotate(-8deg); } 50% { transform: scaleX(-1) rotate(-25deg) scale(1.15); filter: brightness(1.4); } }
+        .fx-wings-l, .fx-wings-r { position: absolute; width: 160px; height: 120px; top: -10px; pointer-events: none; opacity: 0.8; z-index: -1; transition: 0.5s; }
+        .fx-wings-l { left: -90px; animation: f-wing-l 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        .fx-wings-r { right: -90px; animation: f-wing-r 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+
+        .fx-aura { position: absolute; inset: -20px; border-radius: 50%; border: 2px solid currentColor; box-shadow: 0 0 40px currentColor, inset 0 0 20px currentColor; opacity: 0; animation: f-aura-expand 2s infinite; }
+        @keyframes f-aura-expand { 0% { transform: scale(0.85); opacity: 0.6; } 100% { transform: scale(1.3); opacity: 0; } }
         
-        @keyframes f-wing-l { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(-15deg) scale(1.1); } }
-        @keyframes f-wing-r { 0%,100% { transform: scaleX(-1) rotate(-5deg); } 50% { transform: scaleX(-1) rotate(-15deg) scale(1.1); } }
-        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 100px; top: 0; pointer-events: none; opacity: 0.6; z-index: -1; }
-        .fx-wings-l { left: -70px; animation: f-wing-l 3s ease-in-out infinite; }
-        .fx-wings-r { right: -70px; animation: f-wing-r 3s ease-in-out infinite; }
+        .fx-halo { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 100px; height: 18px; border-radius: 50%; border: 4px solid currentColor; filter: drop-shadow(0 0 15px currentColor); animation: f-halo-float 3s ease-in-out infinite; }
+        .fx-halo::before { content: ""; position: absolute; width: 8px; height: 8px; background: #fff; border-radius: 50%; box-shadow: 0 0 15px #fff; animation: f-halo-orbit 2s linear infinite; }
+        @keyframes f-halo-float { 0%,100% { transform: translateX(-50%) translateY(0) rotate(2deg); } 50% { transform: translateX(-50%) translateY(-12px) rotate(-2deg); } }
+        @keyframes f-halo-orbit { from { left: 0%; top: 50%; } to { left: 100%; top: 50%; } }
+        
+        .fx-vortex { position: absolute; inset: -60px; border-radius: 50%; background: conic-gradient(from 0deg, transparent, currentColor, #fff, currentColor, transparent); animation: f-spin 1.2s linear infinite; mask: radial-gradient(transparent 55%, black 75%); -webkit-mask: radial-gradient(transparent 55%, black 75%); filter: contrast(1.5); }
 
-        .fx-aura { position: absolute; inset: -15px; border-radius: 50%; box-shadow: 0 0 30px currentColor; opacity: 0.4; animation: f-pulse 2s infinite; }
-        .fx-halo { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 80px; height: 15px; border-radius: 50%; border: 3px solid currentColor; filter: drop-shadow(0 0 10px currentColor); animation: f-float 4s infinite; }
-        .fx-vortex { position: absolute; inset: -40px; border-radius: 50%; background: conic-gradient(from 0deg, transparent, currentColor, transparent); animation: f-spin 2s linear infinite; mask: radial-gradient(transparent 50%, black 70%); -webkit-mask: radial-gradient(transparent 50%, black 70%); }
-
-        @keyframes f-pulse { 0%,100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.1); opacity: 0.6; } }
-        @keyframes f-float { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
+        @keyframes f-pulse-pro { 0%,100% { transform: scale(1); filter: brightness(1); } 20% { transform: scale(1.08); filter: brightness(1.3); } 40% { transform: scale(1.02); } 60% { transform: scale(1.1); } }
         @keyframes f-spin { to { transform: rotate(360deg); } }
 
         /* NAME EFFECTS */
-        .effect-rainbow { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 200%; animation: f-rainbow 3s linear infinite; }
-        @keyframes f-rainbow { to { background-position: 200% center; } }
+        .effect-rainbow { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff, #ff0000); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 300%; animation: f-rainbow 4s linear infinite; filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
         
-        .effect-glow { animation: f-glow-pulse 2s infinite; }
-        @keyframes f-glow-pulse { 0%,100% { text-shadow: 0 0 5px currentColor; } 50% { text-shadow: 0 0 25px currentColor, 0 0 45px currentColor; } }
+        .effect-glow { animation: f-glow-ultra 2.5s ease-in-out infinite; }
+        @keyframes f-glow-ultra { 0%,100% { text-shadow: 0 0 10px currentColor; filter: brightness(1); } 50% { text-shadow: 0 0 30px currentColor, 0 0 60px currentColor; filter: brightness(1.5) scale(1.02); } }
 
-        .effect-glitch { animation: f-glitch 0.5s infinite; position: relative; }
-        @keyframes f-glitch { 
-            0% { transform: translate(0); text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(2px, -2px); }
-            60% { transform: translate(-1px, -1px); }
-            80% { transform: translate(1px, 1px); }
-            100% { transform: translate(0); }
+        .effect-glitch { animation: f-glitch-pro 0.3s infinite; position: relative; }
+        @keyframes f-glitch-pro { 
+            0% { transform: translate(0) skew(0); text-shadow: 3px 0 #ff00ff, -3px 0 #00ffff; }
+            25% { transform: translate(-3px, 2px) skew(2deg); }
+            50% { transform: translate(3px, -1px) skew(-1deg); text-shadow: -3px 0 #ff00ff, 3px 0 #00ffff; }
+            75% { transform: translate(-1px, 3px) skew(1deg); }
         }
 
-        .effect-float { animation: f-float-name 3s ease-in-out infinite; }
-        @keyframes f-float-name { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .effect-float { animation: f-float-pro 4s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+        @keyframes f-float-pro { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-15px) rotate(1deg); } }
 
-        .effect-shiny { position: relative; overflow: hidden; }
-        .effect-shiny::after { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: f-shiny 2s infinite; }
-        @keyframes f-shine { to { left: 200%; } }
+        .effect-shiny { position: relative; overflow: hidden; background: linear-gradient(110deg, currentColor 45%, #fff 50%, currentColor 55%); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 200% 100%; animation: f-sweep 3s ease-in-out infinite; }
+        @keyframes f-sweep { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 
-        .effect-neon { animation: f-neon 1.5s infinite; }
-        @keyframes f-neon { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; text-shadow: 0 0 10px currentColor; } 20%, 24%, 55% { opacity: 0.5; text-shadow: none; } }
+        .effect-neon { animation: f-neon-pro 2s infinite; text-shadow: 0 0 15px currentColor; }
+        @keyframes f-neon-pro { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; filter: brightness(1.2) drop-shadow(0 0 20px currentColor); } 20%, 24%, 55% { opacity: 0.6; filter: brightness(0.8); text-shadow: none; } }
 
-        .effect-vanish { animation: f-vanish 4s infinite; }
-        @keyframes f-vanish { 0%, 100% { opacity: 1; filter: blur(0); } 50% { opacity: 0; filter: blur(10px); } }
+        .effect-vanish { animation: f-vanish 5s ease-in-out infinite; }
+        
+        .effect-icy { color: #fff !important; text-shadow: 0 0 10px #70dbff, 0 0 25px #00aaff, 0 0 45px rgba(0, 170, 255, 0.5); animation: f-ice-jitter 3s infinite; }
+        @keyframes f-ice-jitter { 0%,100% { transform: scale(1); } 50% { transform: scale(1.01); filter: hue-rotate(10deg); } }
 
-        .effect-icy { text-shadow: 0 0 5px #fff, 0 0 10px #00ffff, 0 0 20px #00ffff; color: #e0ffff !important; }
-        .effect-burning { text-shadow: 0 0 5px #ff0, 0 0 10px #f90, 0 0 20px #f00; color: #ffeb3b !important; animation: f-flicker 0.1s infinite; }
-        @keyframes f-flicker { 0% { opacity: 1; } 50% { opacity: 0.95; } 100% { opacity: 1; } }
+        .effect-burning { color: #ffeb3b !important; text-shadow: 0 0 8px #ff4500, 0 -10px 20px #ff0000; animation: f-hellfire 0.2s infinite alternate; }
+        @keyframes f-hellfire { from { text-shadow: 0 0 8px #ff4500, 0 -10px 20px #ff0000; } to { text-shadow: 0 0 12px #ff6a00, 0 -15px 30px #ff4000; transform: skewX(1deg); } }
 
-        .effect-gold { background: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+        .effect-gold { background: linear-gradient(135deg, #d4af37 0%, #fff 40%, #d4af37 50%, #8a6d3b 100%); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 200%; animation: f-rainbow 6s linear infinite; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.4)); }
 
-        .avatar-glow { filter: drop-shadow(0 0 20px currentColor); }
-        .avatar-spin { animation: f-spin 10s linear infinite; }
-        .avatar-pulse { animation: f-pulse 2s ease-in-out infinite; }
+        .avatar-glow { filter: drop-shadow(0 0 30px currentColor); }
+        .avatar-spin { animation: f-spin 6s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        .avatar-pulse { animation: f-pulse-pro 2s ease-in-out infinite; }
 
-        .fx-matrix { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0%, currentColor 50%, transparent 100%); background-size: 100% 20px; animation: f-matrix 2s linear infinite; opacity: 0.3; pointer-events: none; }
-        @keyframes f-matrix { to { background-position: 0 400px; } }
+        .fx-matrix { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0%, currentColor 50%, transparent 100%); background-size: 100% 30px; animation: f-matrix-pro 1.5s linear infinite; opacity: 0.4; pointer-events: none; }
+        @keyframes f-matrix-pro { from { background-position: 0 0; } to { background-position: 0 600px; } }
 
-        .fx-snow { position: absolute; inset: -10px; background: radial-gradient(circle, #fff 10%, transparent 20%); background-size: 15px 15px; animation: f-snow 5s linear infinite; opacity: 0.5; }
-        @keyframes f-snow { to { transform: translateY(40px); } }
+        .fx-snow { position: absolute; inset: -20px; background: radial-gradient(circle, #fff 10%, transparent 20%); background-size: 25px 25px; animation: f-snow-pro 4s linear infinite; opacity: 0.6; }
+        @keyframes f-snow-pro { from { transform: translateY(-50px) rotate(0); } to { transform: translateY(150px) rotate(360deg); } }
 
-        .fx-hearts { position: absolute; inset: -20px; pointer-events: none; }
-        .fx-hearts::before { content: "❤"; position: absolute; font-size: 12px; animation: f-rise 3s infinite; left: 10%; color: #ff0055; }
-        .fx-hearts::after { content: "❤"; position: absolute; font-size: 14px; animation: f-rise 2.5s infinite; left: 80%; animation-delay: 1s; color: #ff0055; }
-        @keyframes f-rise { 0% { transform: translateY(100%); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100%); opacity: 0; } }
+        .fx-hearts { position: absolute; inset: -30px; }
+        .fx-hearts::before { content: "✨"; position: absolute; font-size: 16px; animation: f-rise-pro 3s infinite; left: 15%; color: #ff0; }
+        .fx-hearts::after { content: "♥"; position: absolute; font-size: 20px; animation: f-rise-pro 2.5s infinite; left: 75%; animation-delay: 0.8s; color: #ff0055; filter: drop-shadow(0 0 8px #ff0055); }
+        @keyframes f-rise-pro { 0% { transform: translateY(50px) scale(0); opacity: 0; } 50% { opacity: 1; transform: translateY(-20px) scale(1.2) rotate(10deg); } 100% { transform: translateY(-100px) scale(0.5); opacity: 0; } }
     </style>
 </head>
 
