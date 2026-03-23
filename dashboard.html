@@ -20,82 +20,6 @@
         .badge-item { cursor: help; transition: 0.3s; position: relative; display: flex; align-items: center; justify-content: center; color: inherit; }
         .badge-item::after { content: attr(data-title); position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); padding: 6px 10px; background: rgba(0,0,0,0.9); color: #fff; font-size: 11px; border-radius: 6px; white-space: nowrap; opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none; border: 1px solid rgba(255,255,255,0.1); z-index: 10; }
         .badge-item:hover::after { opacity: 1; visibility: visible; }
-        @keyframes f-wing-lucifer-l { 0%,100% { transform: rotate(-5deg) scale(0.95); filter: brightness(1) drop-shadow(0 0 10px rgba(255,255,255,0.2)); } 50% { transform: rotate(-25deg) scale(1.05); filter: brightness(1.2) drop-shadow(0 0 40px rgba(255,255,255,0.4)); } }
-        @keyframes f-wing-lucifer-r { 0%,100% { transform: scaleX(-1) rotate(-5deg) scale(0.95); filter: brightness(1); } 50% { transform: scaleX(-1) rotate(-25deg) scale(1.05); filter: brightness(1.2) drop-shadow(0 0 40px rgba(255,255,255,0.4)); } }
-        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 220px; top: -15px; pointer-events: none; z-index: -1; transition: 0.5s; }
-        .fx-wings-l { left: -15px; animation: f-wing-lucifer-l 6s cubic-bezier(0.4, 0, 0.2, 1) infinite; transform-origin: top right; }
-        .fx-wings-r { right: -15px; animation: f-wing-lucifer-r 6s cubic-bezier(0.4, 0, 0.2, 1) infinite; transform-origin: top left; }
-        .feather { position: absolute; top: 0; background: linear-gradient(135deg, #fff 0%, #eee 40%, #ccc 100%); border-radius: 0 100% 40% 100%; filter: drop-shadow(-2px 4px 6px rgba(0,0,0,0.15)); transform-origin: center top; transition: 0.3s; opacity: 0.95; border-left: 1px solid rgba(255,255,255,0.8); }
-        .row-outer { width: 34px; height: 180px; z-index: 1; filter: brightness(0.85); }
-        .row-mid { width: 28px; height: 130px; z-index: 2; filter: brightness(0.95); }
-        .row-inner { width: 22px; height: 80px; z-index: 3; filter: brightness(1.05); }
-        .wing-bone { position: absolute; top: 0; right: 0; width: 40px; height: 40px; background: rgba(0,0,0,0.3); border-radius: 50%; filter: blur(15px); z-index: 5; }
-
-        .fx-aura { position: absolute; inset: -20px; border-radius: 50%; border: 2px solid currentColor; box-shadow: 0 0 40px currentColor, inset 0 0 20px currentColor; opacity: 0; animation: f-aura-expand 2s infinite; }
-        @keyframes f-aura-expand { 0% { transform: scale(0.85); opacity: 0.6; } 100% { transform: scale(1.3); opacity: 0; } }
-        
-        .fx-halo { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); width: 100px; height: 18px; border-radius: 50%; border: 4px solid currentColor; filter: drop-shadow(0 0 15px currentColor); animation: f-halo-float 3s ease-in-out infinite; }
-        .fx-halo::before { content: ""; position: absolute; width: 8px; height: 8px; background: #fff; border-radius: 50%; box-shadow: 0 0 15px #fff; animation: f-halo-orbit 2s linear infinite; }
-        @keyframes f-halo-float { 0%,100% { transform: translateX(-50%) translateY(0) rotate(2deg); } 50% { transform: translateX(-50%) translateY(-12px) rotate(-2deg); } }
-        @keyframes f-halo-orbit { from { left: 0%; top: 50%; } to { left: 100%; top: 50%; } }
-        
-        .fx-vortex { position: absolute; inset: -60px; border-radius: 50%; background: conic-gradient(from 0deg, transparent, currentColor, #fff, currentColor, transparent); animation: f-spin 1.2s linear infinite; mask: radial-gradient(transparent 55%, black 75%); -webkit-mask: radial-gradient(transparent 55%, black 75%); filter: contrast(1.5); }
-
-        @keyframes f-pulse-pro { 0%,100% { transform: scale(1); filter: brightness(1); } 20% { transform: scale(1.08); filter: brightness(1.3); } 40% { transform: scale(1.02); } 60% { transform: scale(1.1); } }
-        @keyframes f-spin { to { transform: rotate(360deg); } }
-
-        /* NAME EFFECTS */
-        .effect-rainbow { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff, #ff0000); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 300%; animation: f-rainbow 4s linear infinite; filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
-        
-        .effect-glow { animation: f-glow-ultra 2.5s ease-in-out infinite; }
-        @keyframes f-glow-ultra { 0%,100% { text-shadow: 0 0 10px currentColor; filter: brightness(1); } 50% { text-shadow: 0 0 30px currentColor, 0 0 60px currentColor; filter: brightness(1.5) scale(1.02); } }
-
-        .effect-glitch { animation: f-glitch-pro 0.3s infinite; position: relative; }
-        @keyframes f-glitch-pro { 
-            0% { transform: translate(0) skew(0); text-shadow: 3px 0 #ff00ff, -3px 0 #00ffff; }
-            25% { transform: translate(-3px, 2px) skew(2deg); }
-            50% { transform: translate(3px, -1px) skew(-1deg); text-shadow: -3px 0 #ff00ff, 3px 0 #00ffff; }
-            75% { transform: translate(-1px, 3px) skew(1deg); }
-        }
-
-        .effect-float { animation: f-float-pro 4s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
-        @keyframes f-float-pro { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-15px) rotate(1deg); } }
-
-        .effect-shiny { position: relative; overflow: hidden; background: linear-gradient(110deg, currentColor 45%, #fff 50%, currentColor 55%); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 200% 100%; animation: f-sweep 3s ease-in-out infinite; }
-        @keyframes f-sweep { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-
-        .effect-neon { animation: f-neon-pro 2s infinite; text-shadow: 0 0 15px currentColor; }
-        @keyframes f-neon-pro { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; filter: brightness(1.2) drop-shadow(0 0 20px currentColor); } 20%, 24%, 55% { opacity: 0.6; filter: brightness(0.8); text-shadow: none; } }
-
-        .effect-vanish { animation: f-vanish 5s ease-in-out infinite; }
-        
-        .effect-icy { color: #fff !important; text-shadow: 0 0 10px #70dbff, 0 0 25px #00aaff, 0 0 45px rgba(0, 170, 255, 0.5); animation: f-ice-jitter 3s infinite; }
-        @keyframes f-ice-jitter { 0%,100% { transform: scale(1); } 50% { transform: scale(1.01); filter: hue-rotate(10deg); } }
-
-        .effect-burning { color: #ffeb3b !important; text-shadow: 0 0 8px #ff4500, 0 -10px 20px #ff0000; animation: f-hellfire 0.2s infinite alternate; }
-        @keyframes f-hellfire { from { text-shadow: 0 0 8px #ff4500, 0 -10px 20px #ff0000; } to { text-shadow: 0 0 12px #ff6a00, 0 -15px 30px #ff4000; transform: skewX(1deg); } }
-
-        .effect-gold { background: linear-gradient(135deg, #d4af37 0%, #fff 40%, #d4af37 50%, #8a6d3b 100%); -webkit-background-clip: text; background-clip: text; color: transparent !important; background-size: 200%; animation: f-rainbow 6s linear infinite; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.4)); }
-
-        .avatar-glow { filter: drop-shadow(0 0 30px currentColor); }
-        .avatar-spin { animation: f-spin 6s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-        .avatar-pulse { animation: f-pulse-pro 2s ease-in-out infinite; }
-
-        .fx-matrix { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0%, currentColor 50%, transparent 100%); background-size: 100% 30px; animation: f-matrix-pro 1.5s linear infinite; opacity: 0.4; }
-        @keyframes f-matrix-pro { from { background-position: 0 0; } to { background-position: 0 600px; } }
-
-        .fx-snow { position: absolute; inset: -20px; background: radial-gradient(circle, #fff 10%, transparent 20%); background-size: 25px 25px; animation: f-snow-pro 4s linear infinite; opacity: 0.6; }
-        @keyframes f-snow-pro { from { transform: translateY(-50px) rotate(0); } to { transform: translateY(150px) rotate(360deg); } }
-
-        .fx-hearts { position: absolute; inset: -30px; }
-        .fx-hearts::before { content: "✨"; position: absolute; font-size: 16px; animation: f-rise-pro 3s infinite; left: 15%; color: #ff0; }
-        .fx-hearts::after { content: "♥"; position: absolute; font-size: 20px; animation: f-rise-pro 2.5s infinite; left: 75%; animation-delay: 0.8s; color: #ff0055; filter: drop-shadow(0 0 8px #ff0055); }
-        @keyframes f-rise-pro { 0% { transform: translateY(50px) scale(0); opacity: 0; } 50% { opacity: 1; transform: translateY(-20px) scale(1.2) rotate(10deg); } 100% { transform: translateY(-100px) scale(0.5); opacity: 0; } }
-
-        .fx-petal { position: absolute; width: 8px; height: 10px; background: #ffb7c5; border-radius: 50% 0 50% 0; animation: f-petal-fall 4s linear infinite; pointer-events: none; }
-        @keyframes f-petal-fall { 0% { transform: translate(0, 0) rotate(0); opacity: 1; } 100% { transform: translate(20px, 100px) rotate(360deg); opacity: 0; } }
-        .fx-orb { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle, #ff4400, transparent); box-shadow: 0 0 15px #ff4400; animation: f-orb-float 3s infinite; }
-        @keyframes f-orb-float { 0%,100% { transform: translate(0,0); opacity: 0.8; } 50% { transform: translate(-10px, -20px); opacity: 0.4; } }
     </style>
 </head>
 <body>
@@ -1067,94 +991,21 @@
         function updatePreview() {
             const pName = document.getElementById('p-name');
             const pBio = document.getElementById('p-bio');
-            const pAvatarFx = document.getElementById('p-avatar-fx');
             const pScreen = document.getElementById('preview-screen');
+            const pAvatarFx = document.getElementById('p-avatar-fx');
             const avatarImg = pScreen.querySelector('#p-avatar');
-            const col = userData.avatarEffectColor || userData.accent;
-            const fxCol = col; // Backward compatibility for some effects
-            const glow = `drop-shadow(0 0 15px ${col})`;
-
+            
+            pName.innerText = document.getElementById('input-display-name').value || 'siyah';
+            pBio.innerText = document.getElementById('input-bio').value || 'VOID IDENTITY';
+            
             pAvatarFx.innerHTML = '';
+            avatarImg.style.borderRadius = '24px';
             pScreen.querySelector('.card-av-wrap').className = 'card-av-wrap';
-
-            // Reset Avatar Shape
-            avatarImg.style.borderRadius = '24px'; 
-            
-            if(userData.avatarEffect === 'wings' || userData.avatarEffect === 'samurai') {
-                let fHtml = '<div class="wing-bone"></div>';
-                // Row 1 (Outer - Long)
-                for(let i=0; i<12; i++) {
-                    const rot = (i * 10) - 15;
-                    fHtml += `<div class="feather row-outer" style="transform: rotate(${rot}deg); left: ${i*5}px;"></div>`;
-                }
-                // Row 2 (Mid)
-                for(let i=0; i<10; i++) {
-                    const rot = (i * 12) - 10;
-                    fHtml += `<div class="feather row-mid" style="transform: rotate(${rot}deg); left: ${i*8}px; top: 15px;"></div>`;
-                }
-                // Row 3 (Inner - Short)
-                for(let i=0; i<8; i++) {
-                    const rot = (i * 15);
-                    fHtml += `<div class="feather row-inner" style="transform: rotate(${rot}deg); left: ${i*10}px; top: 30px;"></div>`;
-                }
-
-                if(userData.avatarEffect === 'samurai') {
-                    // Force Circular
-                    avatarImg.style.borderRadius = '50%';
-                    // Add Samurai Components (Excluding Katanas)
-                    fHtml += `
-                        <div class="fx-orb" style="top: 10%; right: 10%;"></div>
-                        <div class="fx-orb" style="top: 40%; left: -20%;"></div>
-                        <div class="fx-orb" style="bottom: 10%; right: -10%;"></div>
-                    `;
-                    // Falling Petals
-                    for(let k=0; k<12; k++) {
-                        fHtml += `<div class="fx-petal" style="left: ${Math.random()*100}%; top: ${Math.random()*100}%; animation-delay: ${Math.random()*3}s;"></div>`;
-                    }
-                }
-
-                pAvatarFx.innerHTML = `
-                    <div class="fx-wings-l">${fHtml}</div>
-                    <div class="fx-wings-r">${fHtml}</div>`;
-            } else if(userData.avatarEffect === 'aura') {
-                pAvatarFx.innerHTML = `<div class="fx-aura" style="color:${col}"></div>`;
-            } else if(userData.avatarEffect === 'halo') {
-                pAvatarFx.innerHTML = `<div class="fx-halo" style="color:${col}"></div>`;
-            } else if(userData.avatarEffect === 'vortex') {
-                pAvatarFx.innerHTML = `<div class="fx-vortex" style="color:${col}"></div>`;
-            } else if(userData.avatarEffect === 'spin') {
-                pScreen.querySelector('.card-av-wrap').classList.add('avatar-spin');
-            } else if(userData.avatarEffect === 'pulse') {
-                pScreen.querySelector('.card-av-wrap').classList.add('avatar-pulse');
-            } else if(userData.avatarEffect === 'fire') {
-                pAvatarFx.innerHTML = `<div class="fx-aura" style="color:#ff5500; box-shadow: 0 -20px 40px #ffcc00;"></div>`;
-            } else if(userData.avatarEffect === 'lightning') {
-                pAvatarFx.innerHTML = `<div class="fx-aura" style="color:#00ffff; transition: 0.1s; animation: f-flicker 0.2s infinite;"></div>`;
-            } else if(userData.avatarEffect === 'matrix') {
-                pAvatarFx.innerHTML = `<div class="fx-matrix" style="color:${fxCol}"></div>`;
-            } else if(userData.avatarEffect === 'snow') {
-                pAvatarFx.innerHTML = `<div class="fx-snow"></div>`;
-            } else if(userData.avatarEffect === 'hearts') {
-                pAvatarFx.innerHTML = `<div class="fx-hearts"></div>`;
-            } else if(userData.avatarEffect === 'glitch') {
-                pScreen.querySelector('.card-av-wrap').classList.add('effect-glitch');
-            } else if(userData.avatarEffect === 'particles') {
-                pAvatarFx.innerHTML = `<div class="fx-aura" style="color:${fxCol}; filter: blur(10px); opacity: 0.3;"></div><div class="fx-halo" style="color:${fxCol}; width: 120px; border-width: 1px;"></div>`;
-            } else if(userData.avatarEffect === 'cyber') {
-                pAvatarFx.innerHTML = `<div style="position:absolute; inset: -5px; border: 2px dashed ${fxCol}; border-radius: 40px; animation: f-spin 10s linear infinite;"></div>`;
-            } else if(userData.avatarEffect === 'shadow') {
-                pAvatarFx.innerHTML = `<div style="position:absolute; inset: 10px; border-radius: 50%; background: ${fxCol}; filter: blur(20px); opacity: 0.5;"></div>`;
-            }
-            
-            // Apply Glow if any effect is active
-            if(userData.avatarEffect) pScreen.querySelector('.card-av-wrap').classList.add('avatar-glow');
-            pScreen.querySelector('.card-av-wrap').style.color = col;
+            pName.className = '';
 
             // Sync Auditory
             const muDisplay = document.getElementById('mock-music');
             muDisplay.style.display = (document.getElementById('input-mu-title').value || document.getElementById('input-mu-artist').value) ? 'flex' : 'none';
-            document.getElementById('mock-mu-song').innerText = document.getElementById('input-mu-title').value || 'Void Resonance';
-            document.getElementById('mock-mu-artist').innerText = document.getElementById('input-mu-artist').value || 'Aether';
         }
 
         function renderBadges() {
