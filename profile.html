@@ -226,6 +226,15 @@
         .fx-hearts::before { content: "✨"; position: absolute; font-size: 16px; animation: f-rise-pro 3s infinite; left: 15%; color: #ff0; }
         .fx-hearts::after { content: "♥"; position: absolute; font-size: 20px; animation: f-rise-pro 2.5s infinite; left: 75%; animation-delay: 0.8s; color: #ff0055; filter: drop-shadow(0 0 8px #ff0055); }
         @keyframes f-rise-pro { 0% { transform: translateY(50px) scale(0); opacity: 0; } 50% { opacity: 1; transform: translateY(-20px) scale(1.2) rotate(10deg); } 100% { transform: translateY(-100px) scale(0.5); opacity: 0; } }
+
+        /* SAMURAI ELEMENTS */
+        .fx-katana { position: absolute; z-index: 10; width: 120%; height: 6px; background: linear-gradient(90deg, #111, #ccc 20%, #fff 50%, #ccc 80%, #111); border-radius: 4px; box-shadow: 0 0 10px rgba(255,255,255,0.5); transform-origin: center; }
+        .fx-katana-1 { transform: rotate(45deg); top: 50%; left: -10%; }
+        .fx-katana-2 { transform: rotate(-45deg); top: 50%; left: -10%; }
+        .fx-petal { position: absolute; width: 8px; height: 10px; background: #ffb7c5; border-radius: 50% 0 50% 0; animation: f-petal-fall 4s linear infinite; pointer-events: none; }
+        @keyframes f-petal-fall { 0% { transform: translate(0, 0) rotate(0); opacity: 1; } 100% { transform: translate(20px, 100px) rotate(360deg); opacity: 0; } }
+        .fx-orb { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle, #ff4400, transparent); box-shadow: 0 0 15px #ff4400; animation: f-orb-float 3s infinite; }
+        @keyframes f-orb-float { 0%,100% { transform: translate(0,0); opacity: 0.8; } 50% { transform: translate(-10px, -20px); opacity: 0.4; } }
     </style>
 </head>
 
@@ -514,7 +523,11 @@
             if(data.nameEffect) pName.classList.add(`effect-${data.nameEffect}`);
             pName.style.color = accent;
 
-            if(data.avatarEffect === 'wings') {
+            const avatarImg = document.getElementById('p-avatar');
+            // Reset Shape
+            avatarImg.style.borderRadius = '24px'; // default
+            
+            if(data.avatarEffect === 'wings' || data.avatarEffect === 'samurai') {
                 let fHtml = '';
                 // Row 1 (Outer - Long)
                 for(let i=0; i<12; i++) {
@@ -531,6 +544,24 @@
                     const rot = (i * 12);
                     fHtml += `<div class="feather row-inner" style="transform: rotate(${rot}deg); margin-top: 30px;"></div>`;
                 }
+
+                if(data.avatarEffect === 'samurai') {
+                    // Force Circular
+                    avatarImg.style.borderRadius = '50%';
+                    // Add Samurai Components
+                    fHtml += `
+                        <div class="fx-katana fx-katana-1"></div>
+                        <div class="fx-katana fx-katana-2"></div>
+                        <div class="fx-orb" style="top: 10%; right: 10%;"></div>
+                        <div class="fx-orb" style="top: 40%; left: -20%;"></div>
+                        <div class="fx-orb" style="bottom: 10%; right: -10%;"></div>
+                    `;
+                    // Falling Petals
+                    for(let k=0; k<12; k++) {
+                        fHtml += `<div class="fx-petal" style="left: ${Math.random()*100}%; top: ${Math.random()*100}%; animation-delay: ${Math.random()*3}s;"></div>`;
+                    }
+                }
+
                 pAvatarFx.innerHTML = `
                     <div class="fx-wings-l">${fHtml}</div>
                     <div class="fx-wings-r">${fHtml}</div>`;
