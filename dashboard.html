@@ -22,9 +22,9 @@
         .badge-item:hover::after { opacity: 1; visibility: visible; }
         @keyframes f-wing-lucifer-l { 0%,100% { transform: rotate(-8deg) scale(1); filter: brightness(1) drop-shadow(0 0 10px rgba(255,255,255,0.2)); } 50% { transform: rotate(-35deg) scale(1.1); filter: brightness(1.2) drop-shadow(0 0 30px rgba(255,255,255,0.4)); } }
         @keyframes f-wing-lucifer-r { 0%,100% { transform: scaleX(-1) rotate(-8deg) scale(1); filter: brightness(1); } 50% { transform: scaleX(-1) rotate(-35deg) scale(1.1); filter: brightness(1.2) drop-shadow(0 0 30px rgba(255,255,255,0.4)); } }
-        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 220px; top: -40px; pointer-events: none; z-index: -1; transition: 0.5s; }
-        .fx-wings-l { left: -50px; animation: f-wing-lucifer-l 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; transform-origin: top right; }
-        .fx-wings-r { right: -50px; animation: f-wing-lucifer-r 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; transform-origin: top left; }
+        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 220px; top: -20px; pointer-events: none; z-index: -1; transition: 0.5s; opacity: 1; }
+        .fx-wings-l { left: -45px; animation: f-wing-lucifer-l 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; transform-origin: top right; }
+        .fx-wings-r { right: -45px; animation: f-wing-lucifer-r 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; transform-origin: top left; }
         .feather { position: absolute; top: 0; background: linear-gradient(135deg, #fff 0%, #ddd 100%); border-radius: 0 100% 20% 100%; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); transform-origin: center top; transition: 0.3s; opacity: 0.9; border-left: 1px solid rgba(255,255,255,0.8); }
         .row-outer { width: 35px; height: 160px; z-index: 1; opacity: 0.8; }
         .row-mid { width: 30px; height: 110px; z-index: 2; opacity: 0.9; }
@@ -92,10 +92,6 @@
         .fx-hearts::after { content: "♥"; position: absolute; font-size: 20px; animation: f-rise-pro 2.5s infinite; left: 75%; animation-delay: 0.8s; color: #ff0055; filter: drop-shadow(0 0 8px #ff0055); }
         @keyframes f-rise-pro { 0% { transform: translateY(50px) scale(0); opacity: 0; } 50% { opacity: 1; transform: translateY(-20px) scale(1.2) rotate(10deg); } 100% { transform: translateY(-100px) scale(0.5); opacity: 0; } }
 
-        /* SAMURAI ELEMENTS */
-        .fx-katana { position: absolute; z-index: 10; width: 120%; height: 6px; background: linear-gradient(90deg, #111, #ccc 20%, #fff 50%, #ccc 80%, #111); border-radius: 4px; box-shadow: 0 0 10px rgba(255,255,255,0.5); transform-origin: center; }
-        .fx-katana-1 { transform: rotate(45deg); top: 50%; left: -10%; }
-        .fx-katana-2 { transform: rotate(-45deg); top: 50%; left: -10%; }
         .fx-petal { position: absolute; width: 8px; height: 10px; background: #ffb7c5; border-radius: 50% 0 50% 0; animation: f-petal-fall 4s linear infinite; pointer-events: none; }
         @keyframes f-petal-fall { 0% { transform: translate(0, 0) rotate(0); opacity: 1; } 100% { transform: translate(20px, 100px) rotate(360deg); opacity: 0; } }
         .fx-orb { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle, #ff4400, transparent); box-shadow: 0 0 15px #ff4400; animation: f-orb-float 3s infinite; }
@@ -1105,10 +1101,8 @@
                 if(userData.avatarEffect === 'samurai') {
                     // Force Circular
                     avatarImg.style.borderRadius = '50%';
-                    // Add Samurai Components
+                    // Add Samurai Components (Excluding Katanas)
                     fHtml += `
-                        <div class="fx-katana fx-katana-1"></div>
-                        <div class="fx-katana fx-katana-2"></div>
                         <div class="fx-orb" style="top: 10%; right: 10%;"></div>
                         <div class="fx-orb" style="top: 40%; left: -20%;"></div>
                         <div class="fx-orb" style="bottom: 10%; right: -10%;"></div>
