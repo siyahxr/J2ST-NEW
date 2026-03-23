@@ -20,15 +20,16 @@
         .badge-item { cursor: help; transition: 0.3s; position: relative; display: flex; align-items: center; justify-content: center; color: inherit; }
         .badge-item::after { content: attr(data-title); position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); padding: 6px 10px; background: rgba(0,0,0,0.9); color: #fff; font-size: 11px; border-radius: 6px; white-space: nowrap; opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none; border: 1px solid rgba(255,255,255,0.1); z-index: 10; }
         .badge-item:hover::after { opacity: 1; visibility: visible; }
-        @keyframes f-wing-lucifer-l { 0%,100% { transform: rotate(-10deg) translateY(0) scale(1); filter: brightness(1) drop-shadow(0 0 10px rgba(255,255,255,0.2)); } 50% { transform: rotate(-30deg) translateY(-8px) scale(1.05); filter: brightness(1.2) drop-shadow(0 0 25px rgba(255,255,255,0.4)); } }
-        @keyframes f-wing-lucifer-r { 0%,100% { transform: scaleX(-1) rotate(-10deg) translateY(0) scale(1); filter: brightness(1); } 50% { transform: scaleX(-1) rotate(-30deg) translateY(-8px) scale(1.05); filter: brightness(1.2) drop-shadow(0 0 25px rgba(255,255,255,0.4)); } }
-        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 220px; top: -50px; pointer-events: none; z-index: -1; transition: 0.5s; display: flex; align-items: flex-start; }
-        .fx-wings-l { left: -60px; animation: f-wing-lucifer-l 5s cubic-bezier(0.45, 0, 0.55, 1) infinite; justify-content: flex-end; }
-        .fx-wings-r { right: -60px; animation: f-wing-lucifer-r 5s cubic-bezier(0.45, 0, 0.55, 1) infinite; justify-content: flex-start; }
-        .feather { position: absolute; top: 10%; background: linear-gradient(180deg, #fff 0%, #eee 40%, #ccc 100%); clip-path: polygon(0% 0%, 100% 0%, 50% 100%, 0% 0%); border-radius: 0 0 100% 100%; filter: drop-shadow(0 4px 2px rgba(0,0,0,0.1)); transform-origin: top center; opacity: 0.95; border: 1px solid rgba(0,0,0,0.05); }
-        .row-outer { width: 30px; height: 140px; z-index: 1; }
-        .row-mid { width: 25px; height: 100px; z-index: 2; filter: brightness(1.05); }
-        .row-inner { width: 20px; height: 60px; z-index: 3; filter: brightness(1.1); }
+        @keyframes f-wing-lucifer-l { 0%,100% { transform: rotate(-8deg) scale(1); filter: brightness(1) drop-shadow(0 0 10px rgba(255,255,255,0.2)); } 50% { transform: rotate(-35deg) scale(1.1); filter: brightness(1.2) drop-shadow(0 0 30px rgba(255,255,255,0.4)); } }
+        @keyframes f-wing-lucifer-r { 0%,100% { transform: scaleX(-1) rotate(-8deg) scale(1); filter: brightness(1); } 50% { transform: scaleX(-1) rotate(-35deg) scale(1.1); filter: brightness(1.2) drop-shadow(0 0 30px rgba(255,255,255,0.4)); } }
+        .fx-wings-l, .fx-wings-r { position: absolute; width: 140px; height: 220px; top: -40px; pointer-events: none; z-index: -1; transition: 0.5s; }
+        .fx-wings-l { left: -50px; animation: f-wing-lucifer-l 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; transform-origin: top right; }
+        .fx-wings-r { right: -50px; animation: f-wing-lucifer-r 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; transform-origin: top left; }
+        .feather { position: absolute; top: 0; background: linear-gradient(135deg, #fff 0%, #ddd 100%); border-radius: 0 100% 20% 100%; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); transform-origin: center top; transition: 0.3s; opacity: 0.9; border-left: 1px solid rgba(255,255,255,0.8); }
+        .row-outer { width: 35px; height: 160px; z-index: 1; opacity: 0.8; }
+        .row-mid { width: 30px; height: 110px; z-index: 2; opacity: 0.9; }
+        .row-inner { width: 25px; height: 70px; z-index: 3; opacity: 1; }
+        .wing-bone { position: absolute; top: 0; width: 120px; height: 15px; background: rgba(255,255,255,0.2); border-radius: 20px; filter: blur(5px); z-index: 4; }
 
         .fx-aura { position: absolute; inset: -20px; border-radius: 50%; border: 2px solid currentColor; box-shadow: 0 0 40px currentColor, inset 0 0 20px currentColor; opacity: 0; animation: f-aura-expand 2s infinite; }
         @keyframes f-aura-expand { 0% { transform: scale(0.85); opacity: 0.6; } 100% { transform: scale(1.3); opacity: 0; } }
@@ -1084,21 +1085,21 @@
             avatarImg.style.borderRadius = '24px'; 
             
             if(userData.avatarEffect === 'wings' || userData.avatarEffect === 'samurai') {
-                let fHtml = '';
+                let fHtml = '<div class="wing-bone"></div>';
                 // Row 1 (Outer - Long)
                 for(let i=0; i<12; i++) {
-                    const rot = (i * 8) - 15;
-                    fHtml += `<div class="feather row-outer" style="transform: rotate(${rot}deg)"></div>`;
+                    const rot = (i * 10) - 15;
+                    fHtml += `<div class="feather row-outer" style="transform: rotate(${rot}deg); left: ${i*5}px;"></div>`;
                 }
                 // Row 2 (Mid)
                 for(let i=0; i<10; i++) {
-                    const rot = (i * 10) - 10;
-                    fHtml += `<div class="feather row-mid" style="transform: rotate(${rot}deg); margin-top: 15px;"></div>`;
+                    const rot = (i * 12) - 10;
+                    fHtml += `<div class="feather row-mid" style="transform: rotate(${rot}deg); left: ${i*8}px; top: 15px;"></div>`;
                 }
                 // Row 3 (Inner - Short)
                 for(let i=0; i<8; i++) {
-                    const rot = (i * 12);
-                    fHtml += `<div class="feather row-inner" style="transform: rotate(${rot}deg); margin-top: 30px;"></div>`;
+                    const rot = (i * 15);
+                    fHtml += `<div class="feather row-inner" style="transform: rotate(${rot}deg); left: ${i*10}px; top: 30px;"></div>`;
                 }
 
                 if(userData.avatarEffect === 'samurai') {
