@@ -1,17 +1,36 @@
 export async function onRequestPost(context) {
     const { request, env } = context;
     const body = await request.json();
-    const { email, username, password } = body;
+    const { email, username, password, fingerprint, key, 'cf-turnstile-response': turnstileToken } = body;
 
     if (!env.J2ST_DB) {
         return new Response(JSON.stringify({ error: "KV DB not configured." }), { status: 500 });
     }
 
+    // --- CAPTCHA VALIDATION ---
+    if (env.TURNSTILE_SECRET_KEY) {
+        if (!turnstileToken) {
+            return new Response(JSON.stringify({ error: "Security check failed. Please complete the captcha." }), { status: 400 });
+        }
+
+        const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `secret=${encodeURIComponent(env.TURNSTILE_SECRET_KEY)}&response=${encodeURIComponent(turnstileToken)}&remoteip=${encodeURIComponent(request.headers.get("CF-Connecting-IP") || "0.0.0.0")}`
+        });
+
+        const verifyData = await verifyRes.json();
+        if (!verifyData.success) {
+            return new Response(JSON.stringify({ error: "Security verification failed. Try again." }), { status: 400 });
+        }
+    }
+
+    const inviteKey = (key || "WEB-DIRECT").toUpperCase();
+
     const usernameLower = username.toLowerCase();
     const emailLower = email.toLowerCase();
     const token = crypto.randomUUID();
     const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
-    const fingerprint = body.fingerprint || "unknown";
 
     // Length check
     if (usernameLower.length < 3 && usernameLower !== 'k') {
@@ -21,7 +40,7 @@ export async function onRequestPost(context) {
     // Blacklist check
     const emailBanned = await env.J2ST_DB.get(`blacklist:${emailLower}`);
     const ipBanned = await env.J2ST_DB.get(`blacklist_ip:${ip}`);
-    const fingerBanned = await env.J2ST_DB.get(`blacklist_fingerprint:${fingerprint}`);
+    const fingerBanned = await env.J2ST_DB.get(`blacklist_fingerprint:${fingerprint || "unknown"}`);
 
     if (emailBanned || ipBanned || fingerBanned) {
         return new Response(JSON.stringify({ error: "Your access trace is blacklisted. Breach sequence denied." }), { status: 403 });
@@ -44,12 +63,12 @@ export async function onRequestPost(context) {
         username: usernameLower,
         email: emailLower,
         ip: ip,
-        fingerprint: fingerprint,
+        fingerprint: fingerprint || "unknown",
         password: hashedPassword,
         created_at: new Date().toISOString(),
         verified: false,
         token: token,
-        invite_key: body.key || "WEB-DIRECT"
+        invite_key: inviteKey
     };
 
     // Store user data & token bridge
@@ -103,3 +122,4 @@ export async function onRequestPost(context) {
         headers: { 'Content-Type': 'application/json' }
     });
 }
+

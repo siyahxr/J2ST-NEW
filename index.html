@@ -9,9 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script>
-        if(localStorage.getItem('j2st_vault_access') !== 'true') {
-            window.location.href = 'invite.html';
-        } else if(localStorage.getItem('j2st_session_v2')) {
+        if(localStorage.getItem('j2st_session_v2')) {
             window.location.href = 'dashboard.html';
         }
     </script>

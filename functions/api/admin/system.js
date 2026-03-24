@@ -34,5 +34,20 @@ export async function onRequestPost(context) {
         });
     }
 
+    if (action === 'add-invite') {
+        const key = crypto.randomUUID().split('-')[0].toUpperCase();
+        const inviteData = {
+            key: key,
+            created_at: new Date().toISOString(),
+            used: false,
+            used_by: null
+        };
+        await db.put(`invite:${key}`, JSON.stringify(inviteData));
+        return new Response(JSON.stringify({ success: true, key: key }), {
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+
     return new Response(JSON.stringify({ error: "Invalid action." }), { status: 400 });
 }
+

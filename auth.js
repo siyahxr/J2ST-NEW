@@ -15,6 +15,7 @@ window.handleLogin = async function (e) {
     const errBox = document.getElementById("login-error");
     const emailOrUser = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-pass").value;
+    const turnstileResponse = typeof turnstile !== 'undefined' ? turnstile.getResponse() : null;
 
     if (!emailOrUser || !password) return;
     
@@ -26,7 +27,11 @@ window.handleLogin = async function (e) {
         const res = await fetch("/api/auth/login", { 
             method: "POST", 
             headers: { "Content-Type": "application/json" }, 
-            body: JSON.stringify({ emailOrUser, password }) 
+            body: JSON.stringify({ 
+                emailOrUser, 
+                password,
+                'cf-turnstile-response': turnstileResponse
+            }) 
         });
         const data = await res.json();
         
@@ -37,12 +42,14 @@ window.handleLogin = async function (e) {
             errBox.innerText = data.error || "Giriş başarısız.";
             btn.disabled = false;
             btn.innerHTML = 'Giriş Yap →';
+            if (typeof turnstile !== 'undefined') turnstile.reset();
         }
     } catch (err) {
         console.error("Sunucuya bağlanılamadı:", err);
-        errBox.innerText = "Sunucu bağlantı hatası. Backend'in (node server.js) çalıştığından emin olun.";
+        errBox.innerText = "Sunucu bağlantı hatası.";
         btn.disabled = false;
         btn.innerHTML = 'Giriş Yap →';
+        if (typeof turnstile !== 'undefined') turnstile.reset();
     }
 };
 
@@ -54,6 +61,8 @@ window.handleRegister = async function(e) {
     const email = document.getElementById("reg-email").value.trim();
     const username = document.getElementById("reg-user").value.trim();
     const password = document.getElementById("reg-pass").value;
+    const inviteKey = localStorage.getItem('j2st_used_key');
+    const turnstileResponse = typeof turnstile !== 'undefined' ? turnstile.getResponse() : null;
 
     btn.disabled = true;
     btn.innerHTML = 'Kayıt Yapılıyor...';
@@ -71,7 +80,14 @@ window.handleRegister = async function(e) {
         const res = await fetch("/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, username, password, fingerprint })
+            body: JSON.stringify({ 
+                email, 
+                username, 
+                password, 
+                fingerprint,
+                key: inviteKey,
+                'cf-turnstile-response': turnstileResponse
+            })
         });
         const data = await res.json();
         
@@ -82,7 +98,6 @@ window.handleRegister = async function(e) {
             btn.style.color = '#000';
             btn.style.boxShadow = '0 0 20px #22c55e';
             
-            // Kullanıcıya Mail onayı gerektiğini göster (Dashboard'a YÖNLENDİRME YOK)
             const successDiv = document.createElement('div');
             successDiv.style.background = 'rgba(34, 197, 94, 0.1)';
             successDiv.style.border = '1px solid #22c55e';
@@ -104,14 +119,17 @@ window.handleRegister = async function(e) {
             errBox.innerText = data.error || "Kayıt başarısız.";
             btn.disabled = false;
             btn.innerHTML = 'Hesap Oluştur →';
+            if (typeof turnstile !== 'undefined') turnstile.reset();
         }
     } catch (err) {
         console.error("Sunucu hatası:", err);
-        errBox.innerText = "Sunucu bağlantı hatası. Backend'in çalıştığından emin olun.";
+        errBox.innerText = "Sunucu bağlantı hatası.";
         btn.disabled = false;
         btn.innerHTML = 'Hesap Oluştur →';
+        if (typeof turnstile !== 'undefined') turnstile.reset();
     }
 };
+
 
 window.togglePw = function(id, btn) {
     const input = document.getElementById(id);

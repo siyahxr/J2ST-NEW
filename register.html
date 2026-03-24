@@ -7,11 +7,7 @@
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <script>
-        if(localStorage.getItem('j2st_vault_access') !== 'true') {
-            window.location.href = 'invite.html';
-        }
-    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="animated-bg"><div class="blob"></div><div class="blob-2"></div><div class="blob-3"></div></div>
@@ -38,8 +34,15 @@
                     <button type="button" class="pw-toggle" onclick="togglePw('reg-pass',this)">👁</button>
                 </div>
             </div>
+
+            <!-- Turnstile Widget -->
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAA_jF_a9t0e7NqWj" data-theme="dark"></div>
+            </div>
+
             <div id="register-error" class="form-error"></div>
             <button type="submit" class="auth-submit" id="btn-register">Get Started →</button>
+
             <p class="form-hint">Already have an account? <a href="login.html">Login</a></p>
         </form>
         <p class="auth-back"><a href="index.html">← Back to home</a></p>
