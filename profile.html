@@ -151,17 +151,84 @@
         }
         .stat-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,0.3); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
-        @keyframes card-appear {
-            0% { opacity: 0; transform: translateY(40px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        .card-credit { font-size: 10px; opacity: 0.3; font-weight: 800; letter-spacing: 1px; }
 
+        /* MUSIC CONTROLS — Bottom Right */
+        .void-player {
+            position: fixed; bottom: 30px; right: 30px;
+            background: rgba(10, 10, 10, 0.45);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; padding: 15px 20px;
+            display: flex; align-items: center; gap: 15px;
+            z-index: 1000; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slide-up 1s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 320px;
+        }
+        @keyframes slide-up { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .player-badge {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: var(--accent-primary);
+            display: flex; align-items: center; justify-content: center;
+            color: #000; font-size: 24px; position: relative;
+            overflow: hidden; flex-shrink: 0;
+            box-shadow: 0 5px 15px var(--accent-glow);
+        }
+        .player-badge::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: sweep 2s infinite;
+        }
+        @keyframes sweep { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        .player-info { flex: 1; overflow: hidden; }
+        .player-song { font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .player-artist { font-size: 11px; opacity: 0.5; font-weight: 600; display: block; margin-top: 2px; }
+
+        .player-controls { display: flex; align-items: center; gap: 12px; margin-left: 10px; }
+        .player-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 22px; transition: 0.3s; opacity: 0.7; }
+        .player-btn:hover { opacity: 1; transform: scale(1.1); color: var(--accent-primary); }
+
+        .volume-bar-wrap { width: 60px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; position: relative; cursor: pointer; }
+        .volume-bar-fill { height: 100%; background: var(--accent-primary); border-radius: 2px; width: 80%; }
+
+        /* COMMENCE OVERLAY */
+        .commence-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #000; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .commence-overlay.fade { opacity: 0; pointer-events: none; visibility: hidden; transform: scale(1.1); }
+        .commence-text { font-size: 11px; font-weight: 900; letter-spacing: 5px; color: #fff; text-transform: uppercase; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 
 <body>
     <div id="bg-media-wrap"></div>
     <div class="page-overlay"></div>
+
+    <div class="commence-overlay" id="commence-layer" onclick="commencePresence()">
+        <div class="commence-text">COMMENCE SYNC</div>
+    </div>
+
+    <div class="void-player" id="v-player" style="display: none;">
+        <div class="player-badge"><i class="ph-fill ph-music-note"></i></div>
+        <div class="player-info">
+            <span class="player-song" id="v-song">Void Resonance</span>
+            <span class="player-artist" id="v-artist">System Audio</span>
+        </div>
+        <div class="player-controls">
+            <button class="player-btn" onclick="togglePlayback()"><i class="ph-fill ph-pause" id="play-pause-icon"></i></button>
+            <div class="volume-bar-wrap" onclick="changeVolume(event)">
+                <div class="volume-bar-fill" id="v-volume-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="v-audio" loop></audio>
 
     <div class="profile-container">
         <div class="profile-card" id="main-card">
@@ -443,7 +510,50 @@
             pName.style.color = data.accent || '#ffffff';
             pAvatarFx.innerHTML = '';
             avatarImg.style.borderRadius = '24px';
+
+            // Music Finalizer
+            if (data.mediaSource) {
+                const aud = document.getElementById('v-audio');
+                const pLayer = document.getElementById('v-player');
+                aud.src = data.mediaSource;
+                pLayer.style.display = 'flex';
+                document.getElementById('v-song').innerText = data.muTitle || "Void Resonance";
+                document.getElementById('v-artist').innerText = data.muArtist || "System Audio";
+            }
         });
+
+        function commencePresence() {
+            const layer = document.getElementById('commence-layer');
+            const aud = document.getElementById('v-audio');
+            layer.classList.add('fade');
+            
+            if (aud.src) {
+                aud.play().catch(e => console.warn("Autoplay still blocked, user interaction required elsewhere."));
+            }
+        }
+
+        function togglePlayback() {
+            const aud = document.getElementById('v-audio');
+            const icon = document.getElementById('play-pause-icon');
+            if (aud.paused) {
+                aud.play();
+                icon.className = 'ph-fill ph-pause';
+            } else {
+                aud.pause();
+                icon.className = 'ph-fill ph-play';
+            }
+        }
+
+        function changeVolume(e) {
+            const bar = e.currentTarget;
+            const fill = document.getElementById('v-volume-fill');
+            const rect = bar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            const vol = Math.max(0, Math.min(1, percent));
+            
+            document.getElementById('v-audio').volume = vol;
+            fill.style.width = (vol * 100) + '%';
+        }
     </script>
 </body>
 

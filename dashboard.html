@@ -256,8 +256,14 @@
                                         <input type="range" id="input-card-blur" min="0" max="100" oninput="updateAesthetics()" style="width: 100%; margin-top: 5px;">
                                     </div>
                                     <div class="field-group">
-                                        <label class="field-label">Card Void Base (Color)</label>
-                                        <input type="color" id="input-card-color" onchange="updateAesthetics()" style="width: 100%; height: 42px;">
+                                        <label class="field-label" style="display: flex; justify-content: space-between;">
+                                            Card Void Base (Color)
+                                            <span style="opacity:0.5; cursor:pointer;" onclick="toggleGlassless()">GLASSLESS</span>
+                                        </label>
+                                        <div style="display: flex; gap: 8px;">
+                                            <input type="color" id="input-card-color" onchange="updateAesthetics()" style="flex: 1; height: 42px;">
+                                            <button class="btn-ghost mini" id="glassless-toggle-btn" style="padding: 0 15px; font-size: 10px;" onclick="toggleGlassless()">OFF</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -336,9 +342,9 @@
                 <div class="glass-card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
                         <h3 style="margin:0">Identity Emblems</h3>
-                        <div style="display: flex; gap: 15px;">
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <span id="badge-equipped-count" style="font-size: 10px; font-weight: 950; opacity: 0.4; letter-spacing: 1px;">0 / 3 EQUIPPED</span>
                             <button class="btn-ghost" onclick="claimRandomBadge()">CLAIM LEGACY</button>
-                            <button class="save-btn" style="padding: 10px 25px" onclick="addCustomBadge()">FORGE CUSTOM</button>
                         </div>
                     </div>
                     
@@ -376,6 +382,44 @@
                         <p class="metric-label">SYSTEM UPTIME</p>
                         <h2 class="metric-value">99.9%</h2>
                         <div class="progress-bar" style="width: 100%; box-shadow: 0 0 15px #2ecc71; background: #2ecc71;"></div>
+                    </div>
+                </div>
+
+                <!-- NEW: BADGE MANAGEMENT & PREVIEW -->
+                <div class="glass-card" style="margin-bottom: 30px; padding: 30px;">
+                    <h3 style="margin-bottom: 25px;">Badge Forge & Identity Preview</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 300px; gap: 30px;">
+                        <!-- Left: Search & Badge Selection -->
+                        <div>
+                            <div class="field-group">
+                                <label class="field-label">Target Username</label>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" id="admin-badge-username" class="field-input" placeholder="Wanderer handle...">
+                                    <button class="save-btn mini" onclick="fetchUserForAdmin()">SEARCH</button>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 25px;">
+                                <label class="field-label">Select Emblems to Forge</label>
+                                <div id="admin-badge-selection" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 200px; overflow-y: auto; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid var(--accent-border);">
+                                    <!-- Badges will be listed here -->
+                                </div>
+                            </div>
+                            
+                            <button class="save-btn" style="width: 100%; margin-top: 25px; padding: 15px;" onclick="adminAwardBadges()">AWARD SELECTED EMBLEMS</button>
+                        </div>
+                        
+                        <!-- Right: Live Preview -->
+                        <div style="background: rgba(0,0,0,0.4); border-radius: 20px; border: 1px solid var(--accent-border); overflow: hidden; position: relative;">
+                            <p style="position: absolute; top: 10px; left: 10px; font-size: 9px; font-weight: 900; opacity: 0.3; z-index: 5;">IDENTITY PREVIEW</p>
+                            <div id="admin-user-preview-container" style="padding: 20px; transition: 0.3s; opacity: 0.3;">
+                                <div style="text-align: center;">
+                                    <img src="j2st.webp" id="admin-preview-avatar" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent-border); margin-bottom: 15px;">
+                                    <h4 id="admin-preview-name" style="margin: 0; font-size: 18px;">Search User</h4>
+                                    <div id="admin-preview-badges" style="display: flex; gap: 5px; justify-content: center; margin-top: 10px;"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -538,7 +582,10 @@
             badgeSize: 28,
             socialSize: 24,
             forceNitro: false,
-            forceBoost: false
+            forceBoost: false,
+            mediaSource: '',
+            muTitle: '',
+            muArtist: ''
         };
 
         let userData = { ...defaultData };
@@ -933,9 +980,20 @@
             const r = parseInt(userData.cardColor.slice(1, 3), 16) || 10;
             const g = parseInt(userData.cardColor.slice(3, 5), 16) || 10;
             const b = parseInt(userData.cardColor.slice(5, 7), 16) || 10;
-            preview.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${userData.opacity / 100})`;
-            preview.style.backdropFilter = `blur(${userData.cardBlur || 0}px) saturate(180%)`;
-            preview.style.webkitBackdropFilter = `blur(${userData.cardBlur || 0}px) saturate(180%)`;
+            
+            if (userData.isGlassless) {
+                preview.style.backgroundColor = 'transparent';
+                preview.style.backdropFilter = 'none';
+                preview.style.webkitBackdropFilter = 'none';
+                preview.style.border = 'none';
+                preview.style.boxShadow = 'none';
+            } else {
+                preview.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${userData.opacity / 100})`;
+                preview.style.backdropFilter = `blur(${userData.cardBlur || 0}px) saturate(180%)`;
+                preview.style.webkitBackdropFilter = `blur(${userData.cardBlur || 0}px) saturate(180%)`;
+                preview.style.border = '1px solid var(--accent-border)';
+                preview.style.boxShadow = 'var(--shadow-elite)';
+            }
             
             const radiusMap = { rect: '20px', round: '50px', skew: '10px', capsule: '999px' };
             preview.style.borderRadius = radiusMap[userData.cardShape] || '20px';
@@ -1009,16 +1067,22 @@
         function renderBadges() {
             const grid = document.getElementById('badges-grid');
             const pList = document.getElementById('p-badges-list');
+            const countEl = document.getElementById('badge-equipped-count');
             if(!grid) return;
             
             grid.innerHTML = '';
             if(pList) pList.innerHTML = '';
 
+            const owned = userData.ownedBadges || [];
+            const currentlyEquipped = userData.badges || [];
+            
+            if(countEl) countEl.innerText = `${currentlyEquipped.length} / 5 EQUIPPED`;
+
             badgeRegistry.forEach(b => {
-                const isOwned = (userData.ownedBadges || []).includes(b.name);
+                const isOwned = owned.includes(b.name);
                 if(!isOwned) return;
 
-                const isActive = (userData.badges || []).includes(b.name);
+                const isActive = currentlyEquipped.includes(b.name);
                 const item = document.createElement('div');
                 item.className = 'glass-card badge-selector-card';
                 item.style.padding = '20px';
@@ -1027,8 +1091,8 @@
                 item.style.transition = 'var(--transition)';
                 item.style.position = 'relative';
                 item.style.overflow = 'hidden';
-                item.style.border = isActive ? `1px solid var(--accent-primary)` : '1px solid rgba(255,255,255,0.03)';
-                item.style.background = isActive ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.01)';
+                item.style.border = isActive ? `2px solid var(--accent-primary)` : '1px solid rgba(255,255,255,0.03)';
+                item.style.background = isActive ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.01)';
                 
                 let iconHTML = b.svg ? b.svg.replace('width="24" height="24"', 'width="36" height="36"') : (b.customIcon ? `<img src="${b.customIcon}" style="width:36px; height:36px; object-fit:contain;">` : `<i class="ph ${b.icon}" style="font-size:36px;"></i>`);
                 item.innerHTML = `
@@ -1036,12 +1100,16 @@
                         ${iconHTML}
                     </div>
                     <div style="font-size:11px; font-weight:900; margin-top:12px; letter-spacing:1px; color: ${isActive ? '#fff' : 'var(--text-muted)'}; text-transform:uppercase;">${b.name}</div>
-                    ${isActive ? '<div style="position:absolute; top:8px; right:8px; width:6px; height:6px; background:var(--accent-primary); border-radius:50%; box-shadow:0 0 10px var(--accent-primary);"></div>' : ''}
+                    ${isActive ? '<div style="position:absolute; top:8px; right:8px; width:8px; height:8px; background:var(--accent-primary); border-radius:50%; box-shadow:0 0 10px var(--accent-primary);"></div>' : ''}
                 `;
                 item.onclick = () => {
                     const idx = userData.badges.indexOf(b.name);
-                    if(idx > -1) userData.badges.splice(idx, 1);
-                    else userData.badges.push(b.name);
+                    if(idx > -1) {
+                        userData.badges.splice(idx, 1);
+                    } else {
+                        if(userData.badges.length >= 5) return alert("System max capacity reached (5 badges).");
+                        userData.badges.push(b.name);
+                    }
                     renderBadges();
                     saveEverything();
                 };
@@ -1050,11 +1118,19 @@
                 if(isActive && pList) {
                     const pi = document.createElement('div');
                     pi.className = 'badge-item';
-                    pi.innerHTML = b.svg ? b.svg.replace('width="24" height="24"', 'width="18" height="18"') : (b.customIcon ? `<img src="${b.customIcon}" style="height:18px; width:auto;">` : `<i class="ph ${b.icon}" style="font-size:18px;"></i>`);
+                    pi.innerHTML = b.svg ? b.svg.replace('width="24" height="24"', 'width="20" height="20"') : (b.customIcon ? `<img src="${b.customIcon}" style="height:20px; width:auto;">` : `<i class="ph ${b.icon}" style="font-size:20px;"></i>`);
                     pList.appendChild(pi);
                 }
             });
             updatePreview();
+        }
+
+        function toggleGlassless() {
+            userData.isGlassless = !userData.isGlassless;
+            const btn = document.getElementById('glassless-toggle-btn');
+            if(btn) btn.innerText = userData.isGlassless ? 'ON' : 'OFF';
+            updateAesthetics();
+            saveEverything();
         }
 
         function renderLinks() {
@@ -1167,15 +1243,53 @@
             saveEverything();
         }
 
-        function saveEverything() {
+        async function saveEverything() {
+            // Persistent Sync to Cloud
+            const sess = JSON.parse(localStorage.getItem('j2st_session_v2') || '{}');
+            if (!sess.username) return;
 
+            // UI Elements Sync
+            const dName = document.getElementById('input-display-name');
+            const dBio = document.getElementById('input-bio');
+            const dMuT = document.getElementById('input-mu-title');
+            const dMuA = document.getElementById('input-mu-artist');
+            const dMedia = document.getElementById('input-media-url');
+
+            if(dName) userData.displayName = dName.value;
+            if(dBio) userData.bio = dBio.value;
+            if(dMuT) userData.muTitle = dMuT.value;
+            if(dMuA) userData.muArtist = dMuA.value;
+            if(dMedia) userData.mediaSource = dMedia.value;
+            
             // Priority Feedback
             const saveBtn = document.querySelector('.top-actions .save-btn');
             if(saveBtn) {
                 const original = saveBtn.innerText;
-                saveBtn.innerText = '✨ SAVED CHANGES';
-                saveBtn.style.borderColor = 'var(--accent-primary)';
-                saveBtn.style.boxShadow = '0 0 20px var(--accent-glow)';
+                saveBtn.innerText = '✨ SYNCING...';
+                
+                try {
+                    const res = await fetch('/api/user/settings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: sess.username,
+                            settings: userData
+                        })
+                    });
+                    const d = await res.json();
+                    if(d.success) {
+                        saveBtn.innerText = '✨ SYNCED';
+                        saveBtn.style.borderColor = 'var(--accent-primary)';
+                        saveBtn.style.boxShadow = '0 0 20px var(--accent-glow)';
+                    } else {
+                        saveBtn.innerText = '⚠️ SYNC FAIL';
+                    }
+                } catch(e) {
+                    saveBtn.innerText = '⚠️ OFFLINE';
+                }
+                
                 setTimeout(() => { 
                     saveBtn.innerText = original; 
                     saveBtn.style.borderColor = ''; 
@@ -1704,6 +1818,108 @@
                 localStorage.removeItem('j2st_pending_template');
             }
         });
+
+        // Admin Logic: Fetch User for Badge Management
+        async function fetchUserForAdmin() {
+            const username = document.getElementById('admin-badge-username').value.trim();
+            if(!username) return alert("Please enter a username.");
+            
+            try {
+                const res = await fetch(`/api/user/${username}`);
+                const data = await res.json();
+                if(!data.success) return alert("User not found in the void.");
+                
+                const user = data.profile;
+                const container = document.getElementById('admin-user-preview-container');
+                container.style.opacity = '1';
+                
+                document.getElementById('admin-preview-name').innerText = user.displayName || user.username;
+                document.getElementById('admin-preview-avatar').src = user.avatar || 'j2st.webp';
+                
+                const badgeList = document.getElementById('admin-preview-badges');
+                badgeList.innerHTML = '';
+                
+                const owned = user.ownedBadges || (user.profileSettings && user.profileSettings.ownedBadges) || [];
+                
+                owned.forEach(bName => {
+                    const b = badgeRegistry.find(r => r.name === bName);
+                    if(b) {
+                        const bDiv = document.createElement('div');
+                        bDiv.innerHTML = b.svg || `<i class="ph ${b.icon}"></i>`;
+                        bDiv.style.width = '20px';
+                        bDiv.style.height = '20px';
+                        badgeList.appendChild(bDiv);
+                    }
+                });
+                
+                // Pre-select current badges in the checklist
+                document.querySelectorAll('.admin-badge-check').forEach(check => {
+                    check.checked = owned.includes(check.value);
+                });
+                
+                window.adminTargetUser = username;
+            } catch(e) {
+                alert("Comm link failed.");
+            }
+        }
+
+        function renderAdminBadgeSelection() {
+            const grid = document.getElementById('admin-badge-selection');
+            if(!grid) return;
+            grid.innerHTML = '';
+            
+            const coreBadges = ['Premium', 'Beta Tester', 'OG', 'Booster', 'Developer', 'Staff', 'J2ST'];
+            coreBadges.forEach(name => {
+                const label = document.createElement('label');
+                label.style.display = 'flex';
+                label.style.alignItems = 'center';
+                label.style.gap = '10px';
+                label.style.fontSize = '12px';
+                label.style.cursor = 'pointer';
+                label.innerHTML = `<input type="checkbox" class="admin-badge-check" value="${name}"> <span>${name}</span>`;
+                grid.appendChild(label);
+            });
+        }
+
+        async function adminAwardBadges() {
+            if(!window.adminTargetUser) return alert("Please search for a user first.");
+            
+            const selected = [];
+            document.querySelectorAll('.admin-badge-check:checked').forEach(c => selected.push(c.value));
+            
+            const secret = localStorage.getItem('j2st_admin_secret') || prompt("Enter Administrator Secret Key:");
+            if(!secret) return;
+            localStorage.setItem('j2st_admin_secret', secret);
+            
+            try {
+                const res = await fetch('/api/admin/badges', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: window.adminTargetUser,
+                        badges: selected,
+                        secret: secret
+                    })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert("Badges forged and soul-bound successfully.");
+                    fetchUserForAdmin(); // Refresh preview
+                } else {
+                    alert("Forgery failed: " + data.error);
+                }
+            } catch(e) {
+                alert("Backend sync failed.");
+            }
+        }
+
+        // Add to switchTab
+        const __originalSwitchTab = switchTab;
+        window.switchTab = function(id) {
+            __originalSwitchTab(id);
+            if(id === 'admin') renderAdminBadgeSelection();
+            if(id === 'badges') renderBadges();
+        };
 
         function syncDashboardAesthetics() {
             const bgContainer = document.getElementById('bg-media-wrap');
