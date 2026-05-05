@@ -1,0 +1,17 @@
+# 1. Ana Sayfa (Kritik: Wildcard'dan önce gelmeli)
+/               /index.html     200
+
+# 2. API ve Assets (Functions ve Dosyalar)
+/api/*          /api/:splat      200
+/assets/*       /assets/:splat   200
+
+# 3. Temiz URL'ler
+/login           /index.html     200
+/signup          /index.html     200
+/shop            /shop.html      200
+/dashboard       /dashboard.html 200
+/profile         /profile.html   200
+/checkout        /checkout.html  200
+
+# 4. Kullanıcı Profilleri (Wildcard)
+/*               /profile.html   200

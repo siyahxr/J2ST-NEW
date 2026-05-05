@@ -1,11 +1,8 @@
-name = "j2stbaba"
-pages_build_output_dir = "./"
-compatibility_date = "2024-03-11"
+name = "j2st"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "."
 
-[[kv_namespaces]]
-binding = "J2ST_DB"
-id = "297ce019317646fb8408efb02357d66a"
-
-[vars]
-ADMIN_SECRET_KEY = "J2ST-VOID-SECRET-99"
-RESEND_API_KEY = "re_MnEPtdJ3_MHy7Wx3L36vnC8p4GCqfGnqK"
+[[d1_databases]]
+binding = "DB"
+database_name = "j2st-db"
+database_id = "YOUR_D1_DATABASE_ID" # Replace with your actual D1 ID

@@ -1,6 +1,11 @@
-node_modules/
+# Veritabanı ve Yerel Configler
+db.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
 .env
-*.db.json
-uploads/
-.DS_Store
-package-lock.json
+venv/
+env/
+.venv/
